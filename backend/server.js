@@ -22,6 +22,7 @@ db.serialize(() => {
   // Dreams table - stores user submissions
   db.run(`CREATE TABLE IF NOT EXISTS dreams (
     id TEXT PRIMARY KEY,
+    dreamer_name TEXT NOT NULL,
     origin_station TEXT NOT NULL,
     origin_country TEXT,
     origin_lat REAL,
@@ -35,6 +36,13 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME
   )`);
+
+  // Add dreamer_name column if it doesn't exist (for existing databases)
+  db.run(`ALTER TABLE dreams ADD COLUMN dreamer_name TEXT`, (err) => {
+    if (err && !err.message.includes('duplicate column name')) {
+      console.error('Error adding dreamer_name column:', err);
+    }
+  });
 
   // European railway stations table
   db.run(`CREATE TABLE IF NOT EXISTS stations (
@@ -161,6 +169,7 @@ app.get('/api/stations/search', (req, res) => {
 
 // Submit a new dream
 app.post('/api/dreams', [
+  body('dreamer_name').isLength({ min: 2, max: 255 }).trim(),
   body('origin_station').isLength({ min: 1, max: 255 }).trim(),
   body('destination_city').isLength({ min: 1, max: 255 }).trim(),
   body('email').optional().isEmail().normalizeEmail()
@@ -171,6 +180,7 @@ app.post('/api/dreams', [
   }
 
   const {
+    dreamer_name,
     origin_station,
     origin_country,
     origin_lat,
@@ -187,12 +197,12 @@ app.post('/api/dreams', [
   expiresAt.setDate(expiresAt.getDate() + 30); // 30 days retention
 
   db.run(`INSERT INTO dreams (
-    id, origin_station, origin_country, origin_lat, origin_lng,
+    id, dreamer_name, origin_station, origin_country, origin_lat, origin_lng,
     destination_city, destination_country, destination_lat, destination_lng,
     email, expires_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   [
-    dreamId, origin_station, origin_country, origin_lat, origin_lng,
+    dreamId, dreamer_name, origin_station, origin_country, origin_lat, origin_lng,
     destination_city, destination_country, destination_lat, destination_lng,
     email, expiresAt.toISOString()
   ], function(err) {

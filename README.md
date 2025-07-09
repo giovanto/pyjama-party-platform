@@ -1,226 +1,224 @@
-# Pajama Party Platform: "Where Would You Like to Wake Up Tomorrow?"
+# Pajama Party Platform
 
-## Project Overview
+**"Where would you like to wake up tomorrow?"**
 
-A webapp for Back-on-Track activism that collects European night train destination desires, builds grassroots communities, and coordinates synchronized pajama parties across Europe. The platform bridges the gap between individual travel dreams and collective advocacy action.
+A web platform for European night train advocacy that transforms individual travel dreams into collective action through community building and coordinated pajama parties at train stations.
 
-## Mission Statement
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](CONTRIBUTING.md)
 
-**Primary Goal**: Inspire "normal" people (especially young Europeans) to discover night train possibilities, moving beyond the rail enthusiast bubble to mainstream sustainable travel awareness.
+## 🌟 Mission
 
-**Secondary Goals**:
-- Collect advocacy data showing public demand for specific night train connections
-- Build station-based communities of sustainable travel advocates
-- Coordinate Europe-wide pajama party activism events
-- Spread Back-on-Track mission through accessible, engaging platform
+**Primary Goal**: Inspire everyday Europeans to discover night train possibilities, moving beyond rail enthusiasts to mainstream sustainable travel awareness.
 
-## Core Concept
+**How it works**:
+1. **Dream Collection**: Users share where they want to wake up tomorrow
+2. **Community Building**: Connect people from the same stations
+3. **Coordinated Action**: Organize pajama parties to demand specific routes
+4. **Policy Impact**: Generate advocacy data for European night train expansion
 
-### User Experience
-1. **Landing Question**: "Where would you like to wake up tomorrow?"
-2. **Input Form**: 
-   - "Which station represents you?" (origin)
-   - "Where would you like to wake up?" (destination)
-3. **Map Visualization**: Interactive European map showing all submitted desires
-4. **Community Building**: Connect users from same stations for local action
-5. **Advocacy Integration**: Link to BoT mission, policy papers, main website
+## 🚀 Quick Start
 
-### Strategic Value
-- **Advocacy Data**: "X people want night train connection from A to B"
-- **Community Formation**: 2+ people from same station = pajama party potential
-- **European Solidarity**: Continental-scale coordinated activism
-- **Mainstream Outreach**: Romantic framing attracts non-activists
+### Prerequisites
+- Node.js 18+ and npm
+- A Mapbox account for maps (free tier available)
 
-## Technical Architecture
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/back-on-track/pajama-party-platform.git
+cd pajama-party-platform
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your Mapbox token and other settings
+
+# Import station data
+npm run setup:data
+
+# Start the development server
+npm run dev
+```
+
+Visit `http://localhost:3000` to see the platform in action!
+
+## 🎯 Key Features
+
+### Current (MVP)
+- **Dream Submission**: Simple form for travel destination desires
+- **Interactive Map**: Visualize submitted dreams across Europe
+- **Station Autocomplete**: Smart search for European railway stations
+- **Privacy-First**: 30-day data retention, no tracking
+- **Mobile Responsive**: Works on all devices
+- **Community Messages**: Connect users from same stations
+
+### Coming Soon
+- **Discord Integration**: Real-time community coordination
+- **Pajama Party Kits**: Downloadable event organization materials
+- **Multi-language Support**: Localized for European markets
+- **Real-time Updates**: Live participation tracking
+- **Event Coordination**: Tools for September 2025 pajama parties
+
+## 🏗️ Architecture
 
 ### Frontend
-- **Framework**: Vanilla HTML/CSS/JS (prototype), React (production)
-- **Map**: Mapbox API integration
-- **Design**: Back-on-Track brand guidelines
-- **Mobile-First**: Essential for station-based usage
+- **Technology**: Vanilla HTML, CSS, JavaScript (migrating to React)
+- **Styling**: Custom CSS with Back-on-Track branding
+- **Maps**: Mapbox GL JS for interactive visualization
+- **Form Handling**: Client-side validation with server verification
 
 ### Backend
-- **Prototype**: Node.js/Express + SQLite
-- **Production**: Node.js/Express + PostgreSQL
-- **Database**: European rail stations + user submissions
-- **API**: RESTful endpoints for submissions and map data
+- **Server**: Node.js with Express framework
+- **Database**: SQLite for development (PostgreSQL for production)
+- **API**: RESTful endpoints for dreams, stations, and statistics
+- **Security**: Rate limiting, input validation, CORS protection
 
-### Data Model
-```sql
-user_submissions:
-- id (UUID)
-- origin_station (validated against rail database)
-- destination_station (validated against rail database)
-- email_hash (verification only, privacy-first)
-- created_at
-- verified_at
-- coordinates (lat/long for visualization)
-```
-
-## Privacy-First Design
-
-### Data Collection
-- **Anonymous**: No personal information beyond station preferences
-- **Minimal Email**: Only for verification and Discord invitation
-- **No Tracking**: No analytics, cookies, or user profiling
-- **Transparent**: Clear privacy policy and data usage explanation
-
-### Data Retention
-- **Individual Data**: Deleted after 30 days
-- **Aggregated Statistics**: Retained for advocacy purposes
-- **User Control**: Easy data deletion and Discord opt-out
-
-## Community Building Strategy
-
-### Discord Integration
-- **Main Channel**: #action-group-general for strategy and announcements
-- **Event Coordination**: Station-specific organization through Discord
-- **Threshold**: 2+ people from same station triggers pajama party suggestion
-- **European Coordination**: September 2025 Berlin Conference tie-in
-
-### Pajama Party Coordination
-- **Date**: September 26, 2025 (18:30-19:30 CET)
-- **Format**: Updated pajama party kit from Action Group
-- **Locations**: European train stations with 2+ interested participants
-- **Coordination**: Discord channels for local organization
-
-## Integration with Back-on-Track
-
-### Existing Resources
-- **Night Train Database**: https://back-on-track.eu/open-night-train-database/
-- **Graphics/Branding**: https://back-on-track.eu/graphics/
-- **Berlin Conference**: https://back-on-track.eu/night-train-conference-2025/
-- **Main Website**: Policy papers, mission statement, newsletter
-
-### Brand Alignment
-- **Tone**: Dreamy and inspirational first, advocacy second
-- **Visual**: Clean, professional, youth-friendly
-- **Messaging**: "Dream of sustainable travel" → "Make it reality together"
-
-## Development Timeline
-
-### Phase 1: MVP Prototype (2 Days)
-**Goal**: Demo for Action Group meeting
-
-**Day 1 (Today)**:
-- Frontend: Landing page, form, basic map
-- Backend: Simple server, SQLite database
-- Data: European rail stations from OSM
-- Integration: Basic Mapbox visualization
-
-**Day 2 (Tomorrow)**:
-- Polish: Visual design, mobile responsiveness
-- Demo: Pre-populate with realistic data
-- Presentation: 3-minute Action Group demo script
-- Documentation: Future development roadmap
-
-### Phase 2: Production Development (Post-Demo)
-**Timeline**: July-August 2025
-
-**Features**:
-- Full privacy implementation
-- Discord bot integration
-- Email verification system
-- Multi-language support
-- Enhanced map features
-- Station clustering algorithms
-
-### Phase 3: September 2025 Activation
-**Berlin Conference Integration**:
-- Platform launch coordination
-- European pajama party logistics
-- Real-time event coordination
-- Media and advocacy amplification
-
-## Success Metrics
-
-### Action Group Demo (Short-term)
-- **Emotional Response**: "This makes me want to travel by night train"
-- **Strategic Understanding**: "This gives us concrete advocacy data"
-- **Community Potential**: "I can see local activist networks forming"
-- **Integration Clarity**: "This supports our September coordination perfectly"
-
-### Platform Launch (Medium-term)
-- **Engagement**: 1000+ dream destinations submitted
-- **Community**: 50+ stations with 2+ interested participants
-- **Advocacy**: Concrete data for policy papers and lobbying
-- **Outreach**: 80% of users new to Back-on-Track
-
-### September 2025 Event (Long-term)
-- **Scale**: 20+ European cities with synchronized pajama parties
-- **Media**: International coverage of night train advocacy
-- **Network**: Established activist communities in major European cities
-- **Policy**: EU decision-makers aware of public demand for night trains
-
-## Project Context
-
-### Action Group Background
-- **Co-leads**: Giovanni Antoniazzi, Ellie Cijvat
-- **Core Members**: Howard Osborne, Peter Cornelius, Simone Zambrin
-- **Meeting Schedule**: Monthly coordination meetings
-- **Next Demo**: Action Group meeting in 2 days
-
-### Strategic Alignment
-- **Howard's Vision**: "Where do you want to go?" data collection
-- **Ellie's Experience**: October 2024 pajama party kit and coordination
-- **Giovanni's Skills**: Technical implementation and European coordination
-- **BoT Mission**: Grassroots activism supporting policy advocacy
-
-### European Context
-- **Berlin Conference**: September 26-28, 2025
-- **Existing Events**: Amsterdam, Brussels, Malmö, Paris, Vienna, Zürich
-- **Coalition Partners**: Critical Mass, Stay Grounded, potentially Greenpeace
-- **Policy Timing**: EU night train network development discussions
-
-## File Structure
-
+### Project Structure
 ```
 pajama-party-platform/
-├── README.md (this file)
-├── docs/
-│   ├── CONCEPT.md
-│   ├── TECHNICAL_ARCHITECTURE.md
-│   ├── BRAND_GUIDELINES.md
-│   ├── PRIVACY_POLICY.md
-│   └── IMPLEMENTATION_ROADMAP.md
-├── frontend/
-│   ├── index.html
-│   ├── styles/
-│   ├── scripts/
-│   └── assets/
-├── backend/
-│   ├── server.js
-│   ├── database/
-│   ├── api/
-│   └── config/
-├── data/
-│   ├── european_stations.json
-│   ├── night_train_connections.json
-│   └── demo_data.json
-└── deployment/
-    ├── docker-compose.yml
-    ├── nginx.conf
-    └── deploy.sh
+├── frontend/           # Client-side code
+│   ├── index.html     # Main page
+│   ├── styles/        # CSS files
+│   ├── scripts/       # JavaScript modules
+│   └── assets/        # Images and icons
+├── backend/           # Server-side code
+│   └── server.js      # Main server file
+├── docs/              # Documentation
+├── scripts/           # Setup and utility scripts
+├── data/              # Database and station data
+└── tests/             # Test files
 ```
 
-## Getting Started
+## 🎨 What is a Pajama Party?
 
-1. **Review Documentation**: Read all files in `docs/` directory
-2. **Environment Setup**: Configure Mapbox API, PostgreSQL, Discord bot
-3. **Development**: Start with frontend prototype, add backend functionality
-4. **Testing**: Use demo data for Action Group presentation
-5. **Deployment**: Set up production environment on Linux server
+A pajama party is a creative, peaceful demonstration where people gather at train stations wearing pajamas and sleep accessories to advocate for night trains. It uses a "silent disco" format with synchronized music through headphones, making it:
 
-## Key Contacts
+- **Media-friendly**: Visually engaging and newsworthy
+- **Legally safe**: No amplified sound or disruption
+- **Inclusive**: Accessible to all ages and abilities
+- **Effective**: Proven success in the [2024 Trans-European Pajama Party](https://back-on-track.eu/projects-and-activities/trans-europe-pyjama-party-2024/)
 
-- **Giovanni Antoniazzi**: Technical lead, platform development
-- **Ellie Cijvat**: Action Group co-lead, pajama party expertise
-- **Howard Osborne**: European coordination, web development input
-- **Action Group**: Monthly feedback and strategic guidance
+## 📊 Data & Privacy
+
+We take privacy seriously while generating valuable advocacy data:
+
+### Data Collection
+- **Anonymous submissions**: No personal info beyond travel preferences
+- **Optional email**: Only for community coordination
+- **No tracking**: No cookies, analytics, or user profiling
+- **Transparent**: Clear data usage explanation
+
+### Data Usage
+- **Individual data**: Deleted after 30 days
+- **Aggregated statistics**: Used for advocacy and policy work
+- **Community formation**: Connect users from same stations
+- **Media-friendly stats**: "X people want trains from A to B"
+
+## 🤝 Contributing
+
+We welcome contributions from developers, designers, activists, and anyone passionate about sustainable transport! See our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Ways to Contribute
+- **Code**: Frontend, backend, or infrastructure improvements
+- **Design**: UI/UX, graphics, or user experience enhancements
+- **Documentation**: Guides, translations, or API documentation
+- **Testing**: Quality assurance and accessibility testing
+- **Community**: Organize local pajama parties or Discord moderation
+
+### Development Setup
+```bash
+# Fork the repository and clone your fork
+git clone https://github.com/YOUR_USERNAME/pajama-party-platform.git
+
+# Create a feature branch
+git checkout -b feature/your-feature-name
+
+# Make your changes and test them
+npm run dev
+
+# Run tests and linting
+npm test
+npm run lint
+
+# Submit a pull request
+```
+
+## 🗺️ Roadmap
+
+Our development is organized in phases leading to the September 2025 Trans-European Pajama Party:
+
+- **Phase 1 (✅ Complete)**: MVP demo for Action Group
+- **Phase 2 (Summer 2025)**: Community building and Discord integration
+- **Phase 3 (September 2025)**: Event coordination and media tools
+- **Phase 4 (2026+)**: Sustained growth and policy integration
+
+See the full [Roadmap](ROADMAP.md) for detailed timelines and features.
+
+## 📱 Usage Examples
+
+### Submit a Dream
+```javascript
+// Example API call
+POST /api/dreams
+{
+  "dreamer_name": "Maria",
+  "origin_station": "Amsterdam Central",
+  "destination_city": "Barcelona",
+  "email": "maria@example.com" // optional
+}
+```
+
+### Community Formation
+When 2+ people from the same station want to reach the same destination, the platform:
+1. Shows community messages encouraging coordination
+2. Provides Discord invite links for local organization
+3. Offers pajama party planning resources
+4. Tracks participation for advocacy data
+
+## 🌍 European Integration
+
+The platform is designed for European-wide coordination:
+
+### Supported Languages
+- **Current**: English
+- **Planned**: French, German, Italian, Spanish, Dutch
+
+### Railway Integration
+- **Station Database**: 10,000+ European stations
+- **Route Visualization**: Popular night train connections
+- **Regional Coordination**: Local community features
+
+### Policy Impact
+- **Advocacy Data**: Concrete demand statistics for policymakers
+- **Media Resources**: Press kits and story materials
+- **Coalition Building**: Integration with transport advocacy groups
+
+## 📞 Support & Community
+
+- **Issues**: [GitHub Issues](https://github.com/back-on-track/pajama-party-platform/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/back-on-track/pajama-party-platform/discussions)
+- **Discord**: Join our community server (link in platform)
+- **Email**: contact@back-on-track.eu
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Back-on-Track AISBL**: European night train advocacy organization
+- **Action Group**: Giovanni Antoniazzi, Ellie Cijvat, Howard Osborne, and team
+- **Contributors**: Everyone who helps make European night trains a reality
+- **Inspiration**: The successful 2024 Trans-European Pajama Party
 
 ---
 
-**Platform URL**: pajama-party.back-on-track.eu  
-**Project Status**: Pre-development (documentation phase)  
-**Next Milestone**: Action Group demo presentation  
-**Long-term Goal**: Europe-wide night train advocacy platform
+**Built with ❤️ for sustainable European travel**
+
+*Platform URL: pajama-party.back-on-track.eu*  
+*Organization: [Back-on-Track AISBL](https://back-on-track.eu)*

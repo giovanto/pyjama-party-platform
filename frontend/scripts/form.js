@@ -22,6 +22,7 @@ class PajamaPartyForm {
   // Setup form elements
   setupFormElements() {
     this.elements = {
+      dreamerName: document.getElementById('dreamerName'),
       originStation: document.getElementById('originStation'),
       originSuggestions: document.getElementById('originSuggestions'),
       destinationStation: document.getElementById('destinationStation'),
@@ -40,6 +41,7 @@ class PajamaPartyForm {
     this.form.addEventListener('submit', (e) => this.handleSubmit(e));
 
     // Input validation
+    this.elements.dreamerName.addEventListener('input', () => this.validateName());
     this.elements.originStation.addEventListener('input', () => this.validateOrigin());
     this.elements.destinationStation.addEventListener('input', () => this.validateDestination());
     this.elements.email.addEventListener('input', () => this.validateEmail());
@@ -217,11 +219,31 @@ class PajamaPartyForm {
     return true;
   }
 
-  // Validate email
+  // Validate name
+  validateName() {
+    const input = this.elements.dreamerName;
+    const value = input.value.trim();
+
+    if (!value) {
+      this.setFieldError(input, 'Please enter your name');
+      return false;
+    }
+
+    if (value.length < 2) {
+      this.setFieldError(input, 'Name must be at least 2 characters long');
+      return false;
+    }
+
+    this.clearFieldError(input);
+    return true;
+  }
+
+  // Validate email (only if provided)
   validateEmail() {
     const input = this.elements.email;
     const value = input.value.trim();
 
+    // Email is optional, so only validate if user entered something
     if (value && !this.isValidEmail(value)) {
       this.setFieldError(input, 'Please enter a valid email address');
       return false;
@@ -273,11 +295,12 @@ class PajamaPartyForm {
     if (this.isSubmitting) return;
 
     // Validate all fields
+    const isNameValid = this.validateName();
     const isOriginValid = this.validateOrigin();
     const isDestinationValid = this.validateDestination();
     const isEmailValid = this.validateEmail();
 
-    if (!isOriginValid || !isDestinationValid || !isEmailValid) {
+    if (!isNameValid || !isOriginValid || !isDestinationValid || !isEmailValid) {
       return;
     }
 
@@ -287,6 +310,7 @@ class PajamaPartyForm {
     try {
       // Prepare dream data
       const dreamData = {
+        dreamer_name: this.elements.dreamerName.value.trim(),
         origin_station: this.selectedOrigin.name,
         origin_country: this.selectedOrigin.country,
         origin_lat: this.selectedOrigin.lat,

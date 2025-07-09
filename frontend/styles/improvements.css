@@ -39,7 +39,7 @@
 
 .dream-form__privacy {
   font-size: 0.8rem;
-  color: #92d051;
+  color: #2271b3;
   font-weight: normal;
   margin-left: 0.5rem;
 }
@@ -173,6 +173,46 @@
 }
 
 /* About Section Enhancements */
+.pajama-party-explanation {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e8 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  border-left: 4px solid #2271b3;
+}
+
+.pajama-party-explanation h3 {
+  color: #2271b3;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pajama-party-explanation h3::before {
+  content: "🌙";
+  font-size: 1.5rem;
+}
+
+.pajama-party-explanation p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.pajama-party-explanation a {
+  color: #2271b3;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.pajama-party-explanation a:hover {
+  color: #008f39;
+  border-bottom-color: #008f39;
+}
+
 .about-values {
   display: flex;
   gap: 2rem;
@@ -202,6 +242,7 @@
 }
 
 .about-value__text {
+  color: #008f39;
   font-weight: 600;
   font-size: 1rem;
 }
@@ -490,6 +531,82 @@
     position: static;
     margin: 1rem 0;
   }
+}
+
+/* Form Error Styles */
+.form-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border: 1px solid #f5c6cb;
+  font-size: 0.9rem;
+  display: none;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.dream-form__input.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.dream-form__input.error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2);
+}
+
+/* Autocomplete suggestions */
+.dream-form__suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+}
+
+.suggestion-item {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s ease;
+}
+
+.suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item__name {
+  font-weight: 600;
+  color: #333;
+}
+
+.suggestion-item__country {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Ensure form fields have proper relative positioning for suggestions */
+.dream-form__field {
+  position: relative;
 }
 
 /* Accessibility Improvements */
