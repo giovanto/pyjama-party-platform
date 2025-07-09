@@ -192,15 +192,11 @@ class PajamaPartyForm {
     const value = input.value.trim();
 
     if (!value) {
-      this.setFieldError(input, 'Please select your origin station');
+      this.setFieldError(input, 'Please enter your origin station');
       return false;
     }
 
-    if (!this.selectedOrigin) {
-      this.setFieldError(input, 'Please select a station from the suggestions');
-      return false;
-    }
-
+    // Allow manual entry - don't require selection from suggestions
     this.clearFieldError(input);
     return true;
   }
@@ -311,10 +307,10 @@ class PajamaPartyForm {
       // Prepare dream data
       const dreamData = {
         dreamer_name: this.elements.dreamerName.value.trim(),
-        origin_station: this.selectedOrigin.name,
-        origin_country: this.selectedOrigin.country,
-        origin_lat: this.selectedOrigin.lat,
-        origin_lng: this.selectedOrigin.lng,
+        origin_station: this.selectedOrigin ? this.selectedOrigin.name : this.elements.originStation.value.trim(),
+        origin_country: this.selectedOrigin ? this.selectedOrigin.country : '',
+        origin_lat: this.selectedOrigin ? this.selectedOrigin.lat : null,
+        origin_lng: this.selectedOrigin ? this.selectedOrigin.lng : null,
         destination_city: this.elements.destinationStation.value.trim(),
         destination_country: this.selectedDestination ? this.selectedDestination.country : '',
         destination_lat: this.selectedDestination ? this.selectedDestination.lat : null,
