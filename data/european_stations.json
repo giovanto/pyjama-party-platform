@@ -1,0 +1,1918 @@
+{
+  "metadata": {
+    "generatedAt": "2025-07-09T09:59:44.294Z",
+    "totalStations": 59,
+    "countries": 19,
+    "dataSource": "Curated demo data",
+    "description": "Major European railway stations for development and demo purposes"
+  },
+  "stations": [
+    {
+      "id": "demo_1",
+      "name": "Berlin Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Berlin",
+      "lat": 52.5251,
+      "lon": 13.3691,
+      "type": "station",
+      "coordinates": [
+        13.3691,
+        52.5251
+      ],
+      "searchable": "berlin hauptbahnhof berlin germany"
+    },
+    {
+      "id": "demo_2",
+      "name": "Hamburg Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Hamburg",
+      "lat": 53.5533,
+      "lon": 10.0067,
+      "type": "station",
+      "coordinates": [
+        10.0067,
+        53.5533
+      ],
+      "searchable": "hamburg hauptbahnhof hamburg germany"
+    },
+    {
+      "id": "demo_3",
+      "name": "München Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Munich",
+      "lat": 48.1401,
+      "lon": 11.5583,
+      "type": "station",
+      "coordinates": [
+        11.5583,
+        48.1401
+      ],
+      "searchable": "münchen hauptbahnhof munich germany"
+    },
+    {
+      "id": "demo_4",
+      "name": "Frankfurt (Main) Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Frankfurt",
+      "lat": 50.107,
+      "lon": 8.6634,
+      "type": "station",
+      "coordinates": [
+        8.6634,
+        50.107
+      ],
+      "searchable": "frankfurt (main) hauptbahnhof frankfurt germany"
+    },
+    {
+      "id": "demo_5",
+      "name": "Köln Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Cologne",
+      "lat": 50.943,
+      "lon": 6.9589,
+      "type": "station",
+      "coordinates": [
+        6.9589,
+        50.943
+      ],
+      "searchable": "köln hauptbahnhof cologne germany"
+    },
+    {
+      "id": "demo_6",
+      "name": "Paris Gare du Nord",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Paris",
+      "lat": 48.8809,
+      "lon": 2.3553,
+      "type": "station",
+      "coordinates": [
+        2.3553,
+        48.8809
+      ],
+      "searchable": "paris gare du nord paris france"
+    },
+    {
+      "id": "demo_7",
+      "name": "Paris Gare de Lyon",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Paris",
+      "lat": 48.8447,
+      "lon": 2.3738,
+      "type": "station",
+      "coordinates": [
+        2.3738,
+        48.8447
+      ],
+      "searchable": "paris gare de lyon paris france"
+    },
+    {
+      "id": "demo_8",
+      "name": "Lyon Part-Dieu",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Lyon",
+      "lat": 45.7603,
+      "lon": 4.8594,
+      "type": "station",
+      "coordinates": [
+        4.8594,
+        45.7603
+      ],
+      "searchable": "lyon part-dieu lyon france"
+    },
+    {
+      "id": "demo_9",
+      "name": "Marseille-Saint-Charles",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Marseille",
+      "lat": 43.3032,
+      "lon": 5.3806,
+      "type": "station",
+      "coordinates": [
+        5.3806,
+        43.3032
+      ],
+      "searchable": "marseille-saint-charles marseille france"
+    },
+    {
+      "id": "demo_10",
+      "name": "Strasbourg-Ville",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Strasbourg",
+      "lat": 48.5847,
+      "lon": 7.7349,
+      "type": "station",
+      "coordinates": [
+        7.7349,
+        48.5847
+      ],
+      "searchable": "strasbourg-ville strasbourg france"
+    },
+    {
+      "id": "demo_11",
+      "name": "Roma Termini",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Rome",
+      "lat": 41.901,
+      "lon": 12.5017,
+      "type": "station",
+      "coordinates": [
+        12.5017,
+        41.901
+      ],
+      "searchable": "roma termini rome italy"
+    },
+    {
+      "id": "demo_12",
+      "name": "Milano Centrale",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Milan",
+      "lat": 45.4862,
+      "lon": 9.2051,
+      "type": "station",
+      "coordinates": [
+        9.2051,
+        45.4862
+      ],
+      "searchable": "milano centrale milan italy"
+    },
+    {
+      "id": "demo_13",
+      "name": "Napoli Centrale",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Naples",
+      "lat": 40.8523,
+      "lon": 14.2754,
+      "type": "station",
+      "coordinates": [
+        14.2754,
+        40.8523
+      ],
+      "searchable": "napoli centrale naples italy"
+    },
+    {
+      "id": "demo_14",
+      "name": "Venezia Santa Lucia",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Venice",
+      "lat": 45.4414,
+      "lon": 12.3194,
+      "type": "station",
+      "coordinates": [
+        12.3194,
+        45.4414
+      ],
+      "searchable": "venezia santa lucia venice italy"
+    },
+    {
+      "id": "demo_15",
+      "name": "Firenze Santa Maria Novella",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Florence",
+      "lat": 43.7765,
+      "lon": 11.2484,
+      "type": "station",
+      "coordinates": [
+        11.2484,
+        43.7765
+      ],
+      "searchable": "firenze santa maria novella florence italy"
+    },
+    {
+      "id": "demo_16",
+      "name": "Madrid Atocha",
+      "country": "ES",
+      "country_name": "Spain",
+      "city": "Madrid",
+      "lat": 40.4066,
+      "lon": -3.6892,
+      "type": "station",
+      "coordinates": [
+        -3.6892,
+        40.4066
+      ],
+      "searchable": "madrid atocha madrid spain"
+    },
+    {
+      "id": "demo_17",
+      "name": "Barcelona Sants",
+      "country": "ES",
+      "country_name": "Spain",
+      "city": "Barcelona",
+      "lat": 41.3794,
+      "lon": 2.1404,
+      "type": "station",
+      "coordinates": [
+        2.1404,
+        41.3794
+      ],
+      "searchable": "barcelona sants barcelona spain"
+    },
+    {
+      "id": "demo_18",
+      "name": "Sevilla-Santa Justa",
+      "country": "ES",
+      "country_name": "Spain",
+      "city": "Seville",
+      "lat": 37.3919,
+      "lon": -5.9753,
+      "type": "station",
+      "coordinates": [
+        -5.9753,
+        37.3919
+      ],
+      "searchable": "sevilla-santa justa seville spain"
+    },
+    {
+      "id": "demo_19",
+      "name": "Valencia Joaquín Sorolla",
+      "country": "ES",
+      "country_name": "Spain",
+      "city": "Valencia",
+      "lat": 39.4662,
+      "lon": -0.3774,
+      "type": "station",
+      "coordinates": [
+        -0.3774,
+        39.4662
+      ],
+      "searchable": "valencia joaquín sorolla valencia spain"
+    },
+    {
+      "id": "demo_20",
+      "name": "Amsterdam Centraal",
+      "country": "NL",
+      "country_name": "Netherlands",
+      "city": "Amsterdam",
+      "lat": 52.3789,
+      "lon": 4.9004,
+      "type": "station",
+      "coordinates": [
+        4.9004,
+        52.3789
+      ],
+      "searchable": "amsterdam centraal amsterdam netherlands"
+    },
+    {
+      "id": "demo_21",
+      "name": "Rotterdam Centraal",
+      "country": "NL",
+      "country_name": "Netherlands",
+      "city": "Rotterdam",
+      "lat": 51.9244,
+      "lon": 4.4689,
+      "type": "station",
+      "coordinates": [
+        4.4689,
+        51.9244
+      ],
+      "searchable": "rotterdam centraal rotterdam netherlands"
+    },
+    {
+      "id": "demo_22",
+      "name": "Den Haag Centraal",
+      "country": "NL",
+      "country_name": "Netherlands",
+      "city": "The Hague",
+      "lat": 52.0809,
+      "lon": 4.3243,
+      "type": "station",
+      "coordinates": [
+        4.3243,
+        52.0809
+      ],
+      "searchable": "den haag centraal the hague netherlands"
+    },
+    {
+      "id": "demo_23",
+      "name": "Utrecht Centraal",
+      "country": "NL",
+      "country_name": "Netherlands",
+      "city": "Utrecht",
+      "lat": 52.0889,
+      "lon": 5.1101,
+      "type": "station",
+      "coordinates": [
+        5.1101,
+        52.0889
+      ],
+      "searchable": "utrecht centraal utrecht netherlands"
+    },
+    {
+      "id": "demo_24",
+      "name": "Bruxelles-Central",
+      "country": "BE",
+      "country_name": "Belgium",
+      "city": "Brussels",
+      "lat": 50.8454,
+      "lon": 4.357,
+      "type": "station",
+      "coordinates": [
+        4.357,
+        50.8454
+      ],
+      "searchable": "bruxelles-central brussels belgium"
+    },
+    {
+      "id": "demo_25",
+      "name": "Antwerpen-Centraal",
+      "country": "BE",
+      "country_name": "Belgium",
+      "city": "Antwerp",
+      "lat": 51.2172,
+      "lon": 4.4214,
+      "type": "station",
+      "coordinates": [
+        4.4214,
+        51.2172
+      ],
+      "searchable": "antwerpen-centraal antwerp belgium"
+    },
+    {
+      "id": "demo_26",
+      "name": "Gent-Sint-Pieters",
+      "country": "BE",
+      "country_name": "Belgium",
+      "city": "Ghent",
+      "lat": 51.0358,
+      "lon": 3.7108,
+      "type": "station",
+      "coordinates": [
+        3.7108,
+        51.0358
+      ],
+      "searchable": "gent-sint-pieters ghent belgium"
+    },
+    {
+      "id": "demo_27",
+      "name": "Wien Hauptbahnhof",
+      "country": "AT",
+      "country_name": "Austria",
+      "city": "Vienna",
+      "lat": 48.1851,
+      "lon": 16.3721,
+      "type": "station",
+      "coordinates": [
+        16.3721,
+        48.1851
+      ],
+      "searchable": "wien hauptbahnhof vienna austria"
+    },
+    {
+      "id": "demo_28",
+      "name": "Salzburg Hauptbahnhof",
+      "country": "AT",
+      "country_name": "Austria",
+      "city": "Salzburg",
+      "lat": 47.8132,
+      "lon": 13.0459,
+      "type": "station",
+      "coordinates": [
+        13.0459,
+        47.8132
+      ],
+      "searchable": "salzburg hauptbahnhof salzburg austria"
+    },
+    {
+      "id": "demo_29",
+      "name": "Innsbruck Hauptbahnhof",
+      "country": "AT",
+      "country_name": "Austria",
+      "city": "Innsbruck",
+      "lat": 47.2632,
+      "lon": 11.4008,
+      "type": "station",
+      "coordinates": [
+        11.4008,
+        47.2632
+      ],
+      "searchable": "innsbruck hauptbahnhof innsbruck austria"
+    },
+    {
+      "id": "demo_30",
+      "name": "Zürich Hauptbahnhof",
+      "country": "CH",
+      "country_name": "Switzerland",
+      "city": "Zurich",
+      "lat": 47.3781,
+      "lon": 8.5402,
+      "type": "station",
+      "coordinates": [
+        8.5402,
+        47.3781
+      ],
+      "searchable": "zürich hauptbahnhof zurich switzerland"
+    },
+    {
+      "id": "demo_31",
+      "name": "Basel SBB",
+      "country": "CH",
+      "country_name": "Switzerland",
+      "city": "Basel",
+      "lat": 47.5474,
+      "lon": 7.59,
+      "type": "station",
+      "coordinates": [
+        7.59,
+        47.5474
+      ],
+      "searchable": "basel sbb basel switzerland"
+    },
+    {
+      "id": "demo_32",
+      "name": "Genève-Cornavin",
+      "country": "CH",
+      "country_name": "Switzerland",
+      "city": "Geneva",
+      "lat": 46.2104,
+      "lon": 6.1423,
+      "type": "station",
+      "coordinates": [
+        6.1423,
+        46.2104
+      ],
+      "searchable": "genève-cornavin geneva switzerland"
+    },
+    {
+      "id": "demo_33",
+      "name": "Bern",
+      "country": "CH",
+      "country_name": "Switzerland",
+      "city": "Bern",
+      "lat": 46.9489,
+      "lon": 7.4394,
+      "type": "station",
+      "coordinates": [
+        7.4394,
+        46.9489
+      ],
+      "searchable": "bern bern switzerland"
+    },
+    {
+      "id": "demo_34",
+      "name": "Praha hlavní nádraží",
+      "country": "CZ",
+      "country_name": "Czech Republic",
+      "city": "Prague",
+      "lat": 50.0833,
+      "lon": 14.4358,
+      "type": "station",
+      "coordinates": [
+        14.4358,
+        50.0833
+      ],
+      "searchable": "praha hlavní nádraží prague czech republic"
+    },
+    {
+      "id": "demo_35",
+      "name": "Brno hlavní nádraží",
+      "country": "CZ",
+      "country_name": "Czech Republic",
+      "city": "Brno",
+      "lat": 49.191,
+      "lon": 16.6127,
+      "type": "station",
+      "coordinates": [
+        16.6127,
+        49.191
+      ],
+      "searchable": "brno hlavní nádraží brno czech republic"
+    },
+    {
+      "id": "demo_36",
+      "name": "Warszawa Centralna",
+      "country": "PL",
+      "country_name": "Poland",
+      "city": "Warsaw",
+      "lat": 52.2297,
+      "lon": 21.0122,
+      "type": "station",
+      "coordinates": [
+        21.0122,
+        52.2297
+      ],
+      "searchable": "warszawa centralna warsaw poland"
+    },
+    {
+      "id": "demo_37",
+      "name": "Kraków Główny",
+      "country": "PL",
+      "country_name": "Poland",
+      "city": "Krakow",
+      "lat": 50.0677,
+      "lon": 19.9474,
+      "type": "station",
+      "coordinates": [
+        19.9474,
+        50.0677
+      ],
+      "searchable": "kraków główny krakow poland"
+    },
+    {
+      "id": "demo_38",
+      "name": "Gdańsk Główny",
+      "country": "PL",
+      "country_name": "Poland",
+      "city": "Gdansk",
+      "lat": 54.356,
+      "lon": 18.6445,
+      "type": "station",
+      "coordinates": [
+        18.6445,
+        54.356
+      ],
+      "searchable": "gdańsk główny gdansk poland"
+    },
+    {
+      "id": "demo_39",
+      "name": "Budapest-Keleti",
+      "country": "HU",
+      "country_name": "Hungary",
+      "city": "Budapest",
+      "lat": 47.5,
+      "lon": 19.0833,
+      "type": "station",
+      "coordinates": [
+        19.0833,
+        47.5
+      ],
+      "searchable": "budapest-keleti budapest hungary"
+    },
+    {
+      "id": "demo_40",
+      "name": "Budapest-Nyugati",
+      "country": "HU",
+      "country_name": "Hungary",
+      "city": "Budapest",
+      "lat": 47.5106,
+      "lon": 19.0573,
+      "type": "station",
+      "coordinates": [
+        19.0573,
+        47.5106
+      ],
+      "searchable": "budapest-nyugati budapest hungary"
+    },
+    {
+      "id": "demo_41",
+      "name": "København Hovedbanegård",
+      "country": "DK",
+      "country_name": "Denmark",
+      "city": "Copenhagen",
+      "lat": 55.6723,
+      "lon": 12.5649,
+      "type": "station",
+      "coordinates": [
+        12.5649,
+        55.6723
+      ],
+      "searchable": "københavn hovedbanegård copenhagen denmark"
+    },
+    {
+      "id": "demo_42",
+      "name": "Aarhus Hovedbanegård",
+      "country": "DK",
+      "country_name": "Denmark",
+      "city": "Aarhus",
+      "lat": 56.1496,
+      "lon": 10.2045,
+      "type": "station",
+      "coordinates": [
+        10.2045,
+        56.1496
+      ],
+      "searchable": "aarhus hovedbanegård aarhus denmark"
+    },
+    {
+      "id": "demo_43",
+      "name": "Stockholm Centralstation",
+      "country": "SE",
+      "country_name": "Sweden",
+      "city": "Stockholm",
+      "lat": 59.3307,
+      "lon": 18.0572,
+      "type": "station",
+      "coordinates": [
+        18.0572,
+        59.3307
+      ],
+      "searchable": "stockholm centralstation stockholm sweden"
+    },
+    {
+      "id": "demo_44",
+      "name": "Göteborg Centralstation",
+      "country": "SE",
+      "country_name": "Sweden",
+      "city": "Gothenburg",
+      "lat": 57.7089,
+      "lon": 11.9727,
+      "type": "station",
+      "coordinates": [
+        11.9727,
+        57.7089
+      ],
+      "searchable": "göteborg centralstation gothenburg sweden"
+    },
+    {
+      "id": "demo_45",
+      "name": "Malmö Centralstation",
+      "country": "SE",
+      "country_name": "Sweden",
+      "city": "Malmö",
+      "lat": 55.6093,
+      "lon": 13.0007,
+      "type": "station",
+      "coordinates": [
+        13.0007,
+        55.6093
+      ],
+      "searchable": "malmö centralstation malmö sweden"
+    },
+    {
+      "id": "demo_46",
+      "name": "Oslo Sentralstasjon",
+      "country": "NO",
+      "country_name": "Norway",
+      "city": "Oslo",
+      "lat": 59.9111,
+      "lon": 10.7528,
+      "type": "station",
+      "coordinates": [
+        10.7528,
+        59.9111
+      ],
+      "searchable": "oslo sentralstasjon oslo norway"
+    },
+    {
+      "id": "demo_47",
+      "name": "Bergen stasjon",
+      "country": "NO",
+      "country_name": "Norway",
+      "city": "Bergen",
+      "lat": 60.3906,
+      "lon": 5.3319,
+      "type": "station",
+      "coordinates": [
+        5.3319,
+        60.3906
+      ],
+      "searchable": "bergen stasjon bergen norway"
+    },
+    {
+      "id": "demo_48",
+      "name": "Helsinki Päärautatieasema",
+      "country": "FI",
+      "country_name": "Finland",
+      "city": "Helsinki",
+      "lat": 60.1719,
+      "lon": 24.9414,
+      "type": "station",
+      "coordinates": [
+        24.9414,
+        60.1719
+      ],
+      "searchable": "helsinki päärautatieasema helsinki finland"
+    },
+    {
+      "id": "demo_49",
+      "name": "Tampere rautatieasema",
+      "country": "FI",
+      "country_name": "Finland",
+      "city": "Tampere",
+      "lat": 61.4991,
+      "lon": 23.7739,
+      "type": "station",
+      "coordinates": [
+        23.7739,
+        61.4991
+      ],
+      "searchable": "tampere rautatieasema tampere finland"
+    },
+    {
+      "id": "demo_50",
+      "name": "Lisboa Oriente",
+      "country": "PT",
+      "country_name": "Portugal",
+      "city": "Lisbon",
+      "lat": 38.7681,
+      "lon": -9.0983,
+      "type": "station",
+      "coordinates": [
+        -9.0983,
+        38.7681
+      ],
+      "searchable": "lisboa oriente lisbon portugal"
+    },
+    {
+      "id": "demo_51",
+      "name": "Porto Campanhã",
+      "country": "PT",
+      "country_name": "Portugal",
+      "city": "Porto",
+      "lat": 41.1496,
+      "lon": -8.5834,
+      "type": "station",
+      "coordinates": [
+        -8.5834,
+        41.1496
+      ],
+      "searchable": "porto campanhã porto portugal"
+    },
+    {
+      "id": "demo_52",
+      "name": "Αθήνα (Athens)",
+      "country": "GR",
+      "country_name": "Greece",
+      "city": "Athens",
+      "lat": 37.9906,
+      "lon": 23.7304,
+      "type": "station",
+      "coordinates": [
+        23.7304,
+        37.9906
+      ],
+      "searchable": "αθήνα (athens) athens greece"
+    },
+    {
+      "id": "demo_53",
+      "name": "Θεσσαλονίκη (Thessaloniki)",
+      "country": "GR",
+      "country_name": "Greece",
+      "city": "Thessaloniki",
+      "lat": 40.6334,
+      "lon": 22.9447,
+      "type": "station",
+      "coordinates": [
+        22.9447,
+        40.6334
+      ],
+      "searchable": "θεσσαλονίκη (thessaloniki) thessaloniki greece"
+    },
+    {
+      "id": "demo_54",
+      "name": "London King's Cross",
+      "country": "GB",
+      "country_name": "United Kingdom",
+      "city": "London",
+      "lat": 51.5308,
+      "lon": -0.1238,
+      "type": "station",
+      "coordinates": [
+        -0.1238,
+        51.5308
+      ],
+      "searchable": "london king's cross london united kingdom"
+    },
+    {
+      "id": "demo_55",
+      "name": "London St Pancras International",
+      "country": "GB",
+      "country_name": "United Kingdom",
+      "city": "London",
+      "lat": 51.5319,
+      "lon": -0.1264,
+      "type": "station",
+      "coordinates": [
+        -0.1264,
+        51.5319
+      ],
+      "searchable": "london st pancras international london united kingdom"
+    },
+    {
+      "id": "demo_56",
+      "name": "Manchester Piccadilly",
+      "country": "GB",
+      "country_name": "United Kingdom",
+      "city": "Manchester",
+      "lat": 53.4773,
+      "lon": -2.2309,
+      "type": "station",
+      "coordinates": [
+        -2.2309,
+        53.4773
+      ],
+      "searchable": "manchester piccadilly manchester united kingdom"
+    },
+    {
+      "id": "demo_57",
+      "name": "Edinburgh Waverley",
+      "country": "GB",
+      "country_name": "United Kingdom",
+      "city": "Edinburgh",
+      "lat": 55.9521,
+      "lon": -3.1907,
+      "type": "station",
+      "coordinates": [
+        -3.1907,
+        55.9521
+      ],
+      "searchable": "edinburgh waverley edinburgh united kingdom"
+    },
+    {
+      "id": "demo_58",
+      "name": "Dublin Connolly",
+      "country": "IE",
+      "country_name": "Ireland",
+      "city": "Dublin",
+      "lat": 53.3515,
+      "lon": -6.2497,
+      "type": "station",
+      "coordinates": [
+        -6.2497,
+        53.3515
+      ],
+      "searchable": "dublin connolly dublin ireland"
+    },
+    {
+      "id": "demo_59",
+      "name": "Cork Kent Station",
+      "country": "IE",
+      "country_name": "Ireland",
+      "city": "Cork",
+      "lat": 51.9014,
+      "lon": -8.4597,
+      "type": "station",
+      "coordinates": [
+        -8.4597,
+        51.9014
+      ],
+      "searchable": "cork kent station cork ireland"
+    }
+  ],
+  "by_country": {
+    "DE": [
+      {
+        "id": "demo_1",
+        "name": "Berlin Hauptbahnhof",
+        "country": "DE",
+        "country_name": "Germany",
+        "city": "Berlin",
+        "lat": 52.5251,
+        "lon": 13.3691,
+        "type": "station",
+        "coordinates": [
+          13.3691,
+          52.5251
+        ],
+        "searchable": "berlin hauptbahnhof berlin germany"
+      },
+      {
+        "id": "demo_2",
+        "name": "Hamburg Hauptbahnhof",
+        "country": "DE",
+        "country_name": "Germany",
+        "city": "Hamburg",
+        "lat": 53.5533,
+        "lon": 10.0067,
+        "type": "station",
+        "coordinates": [
+          10.0067,
+          53.5533
+        ],
+        "searchable": "hamburg hauptbahnhof hamburg germany"
+      },
+      {
+        "id": "demo_3",
+        "name": "München Hauptbahnhof",
+        "country": "DE",
+        "country_name": "Germany",
+        "city": "Munich",
+        "lat": 48.1401,
+        "lon": 11.5583,
+        "type": "station",
+        "coordinates": [
+          11.5583,
+          48.1401
+        ],
+        "searchable": "münchen hauptbahnhof munich germany"
+      },
+      {
+        "id": "demo_4",
+        "name": "Frankfurt (Main) Hauptbahnhof",
+        "country": "DE",
+        "country_name": "Germany",
+        "city": "Frankfurt",
+        "lat": 50.107,
+        "lon": 8.6634,
+        "type": "station",
+        "coordinates": [
+          8.6634,
+          50.107
+        ],
+        "searchable": "frankfurt (main) hauptbahnhof frankfurt germany"
+      },
+      {
+        "id": "demo_5",
+        "name": "Köln Hauptbahnhof",
+        "country": "DE",
+        "country_name": "Germany",
+        "city": "Cologne",
+        "lat": 50.943,
+        "lon": 6.9589,
+        "type": "station",
+        "coordinates": [
+          6.9589,
+          50.943
+        ],
+        "searchable": "köln hauptbahnhof cologne germany"
+      }
+    ],
+    "FR": [
+      {
+        "id": "demo_6",
+        "name": "Paris Gare du Nord",
+        "country": "FR",
+        "country_name": "France",
+        "city": "Paris",
+        "lat": 48.8809,
+        "lon": 2.3553,
+        "type": "station",
+        "coordinates": [
+          2.3553,
+          48.8809
+        ],
+        "searchable": "paris gare du nord paris france"
+      },
+      {
+        "id": "demo_7",
+        "name": "Paris Gare de Lyon",
+        "country": "FR",
+        "country_name": "France",
+        "city": "Paris",
+        "lat": 48.8447,
+        "lon": 2.3738,
+        "type": "station",
+        "coordinates": [
+          2.3738,
+          48.8447
+        ],
+        "searchable": "paris gare de lyon paris france"
+      },
+      {
+        "id": "demo_8",
+        "name": "Lyon Part-Dieu",
+        "country": "FR",
+        "country_name": "France",
+        "city": "Lyon",
+        "lat": 45.7603,
+        "lon": 4.8594,
+        "type": "station",
+        "coordinates": [
+          4.8594,
+          45.7603
+        ],
+        "searchable": "lyon part-dieu lyon france"
+      },
+      {
+        "id": "demo_9",
+        "name": "Marseille-Saint-Charles",
+        "country": "FR",
+        "country_name": "France",
+        "city": "Marseille",
+        "lat": 43.3032,
+        "lon": 5.3806,
+        "type": "station",
+        "coordinates": [
+          5.3806,
+          43.3032
+        ],
+        "searchable": "marseille-saint-charles marseille france"
+      },
+      {
+        "id": "demo_10",
+        "name": "Strasbourg-Ville",
+        "country": "FR",
+        "country_name": "France",
+        "city": "Strasbourg",
+        "lat": 48.5847,
+        "lon": 7.7349,
+        "type": "station",
+        "coordinates": [
+          7.7349,
+          48.5847
+        ],
+        "searchable": "strasbourg-ville strasbourg france"
+      }
+    ],
+    "IT": [
+      {
+        "id": "demo_11",
+        "name": "Roma Termini",
+        "country": "IT",
+        "country_name": "Italy",
+        "city": "Rome",
+        "lat": 41.901,
+        "lon": 12.5017,
+        "type": "station",
+        "coordinates": [
+          12.5017,
+          41.901
+        ],
+        "searchable": "roma termini rome italy"
+      },
+      {
+        "id": "demo_12",
+        "name": "Milano Centrale",
+        "country": "IT",
+        "country_name": "Italy",
+        "city": "Milan",
+        "lat": 45.4862,
+        "lon": 9.2051,
+        "type": "station",
+        "coordinates": [
+          9.2051,
+          45.4862
+        ],
+        "searchable": "milano centrale milan italy"
+      },
+      {
+        "id": "demo_13",
+        "name": "Napoli Centrale",
+        "country": "IT",
+        "country_name": "Italy",
+        "city": "Naples",
+        "lat": 40.8523,
+        "lon": 14.2754,
+        "type": "station",
+        "coordinates": [
+          14.2754,
+          40.8523
+        ],
+        "searchable": "napoli centrale naples italy"
+      },
+      {
+        "id": "demo_14",
+        "name": "Venezia Santa Lucia",
+        "country": "IT",
+        "country_name": "Italy",
+        "city": "Venice",
+        "lat": 45.4414,
+        "lon": 12.3194,
+        "type": "station",
+        "coordinates": [
+          12.3194,
+          45.4414
+        ],
+        "searchable": "venezia santa lucia venice italy"
+      },
+      {
+        "id": "demo_15",
+        "name": "Firenze Santa Maria Novella",
+        "country": "IT",
+        "country_name": "Italy",
+        "city": "Florence",
+        "lat": 43.7765,
+        "lon": 11.2484,
+        "type": "station",
+        "coordinates": [
+          11.2484,
+          43.7765
+        ],
+        "searchable": "firenze santa maria novella florence italy"
+      }
+    ],
+    "ES": [
+      {
+        "id": "demo_16",
+        "name": "Madrid Atocha",
+        "country": "ES",
+        "country_name": "Spain",
+        "city": "Madrid",
+        "lat": 40.4066,
+        "lon": -3.6892,
+        "type": "station",
+        "coordinates": [
+          -3.6892,
+          40.4066
+        ],
+        "searchable": "madrid atocha madrid spain"
+      },
+      {
+        "id": "demo_17",
+        "name": "Barcelona Sants",
+        "country": "ES",
+        "country_name": "Spain",
+        "city": "Barcelona",
+        "lat": 41.3794,
+        "lon": 2.1404,
+        "type": "station",
+        "coordinates": [
+          2.1404,
+          41.3794
+        ],
+        "searchable": "barcelona sants barcelona spain"
+      },
+      {
+        "id": "demo_18",
+        "name": "Sevilla-Santa Justa",
+        "country": "ES",
+        "country_name": "Spain",
+        "city": "Seville",
+        "lat": 37.3919,
+        "lon": -5.9753,
+        "type": "station",
+        "coordinates": [
+          -5.9753,
+          37.3919
+        ],
+        "searchable": "sevilla-santa justa seville spain"
+      },
+      {
+        "id": "demo_19",
+        "name": "Valencia Joaquín Sorolla",
+        "country": "ES",
+        "country_name": "Spain",
+        "city": "Valencia",
+        "lat": 39.4662,
+        "lon": -0.3774,
+        "type": "station",
+        "coordinates": [
+          -0.3774,
+          39.4662
+        ],
+        "searchable": "valencia joaquín sorolla valencia spain"
+      }
+    ],
+    "NL": [
+      {
+        "id": "demo_20",
+        "name": "Amsterdam Centraal",
+        "country": "NL",
+        "country_name": "Netherlands",
+        "city": "Amsterdam",
+        "lat": 52.3789,
+        "lon": 4.9004,
+        "type": "station",
+        "coordinates": [
+          4.9004,
+          52.3789
+        ],
+        "searchable": "amsterdam centraal amsterdam netherlands"
+      },
+      {
+        "id": "demo_21",
+        "name": "Rotterdam Centraal",
+        "country": "NL",
+        "country_name": "Netherlands",
+        "city": "Rotterdam",
+        "lat": 51.9244,
+        "lon": 4.4689,
+        "type": "station",
+        "coordinates": [
+          4.4689,
+          51.9244
+        ],
+        "searchable": "rotterdam centraal rotterdam netherlands"
+      },
+      {
+        "id": "demo_22",
+        "name": "Den Haag Centraal",
+        "country": "NL",
+        "country_name": "Netherlands",
+        "city": "The Hague",
+        "lat": 52.0809,
+        "lon": 4.3243,
+        "type": "station",
+        "coordinates": [
+          4.3243,
+          52.0809
+        ],
+        "searchable": "den haag centraal the hague netherlands"
+      },
+      {
+        "id": "demo_23",
+        "name": "Utrecht Centraal",
+        "country": "NL",
+        "country_name": "Netherlands",
+        "city": "Utrecht",
+        "lat": 52.0889,
+        "lon": 5.1101,
+        "type": "station",
+        "coordinates": [
+          5.1101,
+          52.0889
+        ],
+        "searchable": "utrecht centraal utrecht netherlands"
+      }
+    ],
+    "BE": [
+      {
+        "id": "demo_24",
+        "name": "Bruxelles-Central",
+        "country": "BE",
+        "country_name": "Belgium",
+        "city": "Brussels",
+        "lat": 50.8454,
+        "lon": 4.357,
+        "type": "station",
+        "coordinates": [
+          4.357,
+          50.8454
+        ],
+        "searchable": "bruxelles-central brussels belgium"
+      },
+      {
+        "id": "demo_25",
+        "name": "Antwerpen-Centraal",
+        "country": "BE",
+        "country_name": "Belgium",
+        "city": "Antwerp",
+        "lat": 51.2172,
+        "lon": 4.4214,
+        "type": "station",
+        "coordinates": [
+          4.4214,
+          51.2172
+        ],
+        "searchable": "antwerpen-centraal antwerp belgium"
+      },
+      {
+        "id": "demo_26",
+        "name": "Gent-Sint-Pieters",
+        "country": "BE",
+        "country_name": "Belgium",
+        "city": "Ghent",
+        "lat": 51.0358,
+        "lon": 3.7108,
+        "type": "station",
+        "coordinates": [
+          3.7108,
+          51.0358
+        ],
+        "searchable": "gent-sint-pieters ghent belgium"
+      }
+    ],
+    "AT": [
+      {
+        "id": "demo_27",
+        "name": "Wien Hauptbahnhof",
+        "country": "AT",
+        "country_name": "Austria",
+        "city": "Vienna",
+        "lat": 48.1851,
+        "lon": 16.3721,
+        "type": "station",
+        "coordinates": [
+          16.3721,
+          48.1851
+        ],
+        "searchable": "wien hauptbahnhof vienna austria"
+      },
+      {
+        "id": "demo_28",
+        "name": "Salzburg Hauptbahnhof",
+        "country": "AT",
+        "country_name": "Austria",
+        "city": "Salzburg",
+        "lat": 47.8132,
+        "lon": 13.0459,
+        "type": "station",
+        "coordinates": [
+          13.0459,
+          47.8132
+        ],
+        "searchable": "salzburg hauptbahnhof salzburg austria"
+      },
+      {
+        "id": "demo_29",
+        "name": "Innsbruck Hauptbahnhof",
+        "country": "AT",
+        "country_name": "Austria",
+        "city": "Innsbruck",
+        "lat": 47.2632,
+        "lon": 11.4008,
+        "type": "station",
+        "coordinates": [
+          11.4008,
+          47.2632
+        ],
+        "searchable": "innsbruck hauptbahnhof innsbruck austria"
+      }
+    ],
+    "CH": [
+      {
+        "id": "demo_30",
+        "name": "Zürich Hauptbahnhof",
+        "country": "CH",
+        "country_name": "Switzerland",
+        "city": "Zurich",
+        "lat": 47.3781,
+        "lon": 8.5402,
+        "type": "station",
+        "coordinates": [
+          8.5402,
+          47.3781
+        ],
+        "searchable": "zürich hauptbahnhof zurich switzerland"
+      },
+      {
+        "id": "demo_31",
+        "name": "Basel SBB",
+        "country": "CH",
+        "country_name": "Switzerland",
+        "city": "Basel",
+        "lat": 47.5474,
+        "lon": 7.59,
+        "type": "station",
+        "coordinates": [
+          7.59,
+          47.5474
+        ],
+        "searchable": "basel sbb basel switzerland"
+      },
+      {
+        "id": "demo_32",
+        "name": "Genève-Cornavin",
+        "country": "CH",
+        "country_name": "Switzerland",
+        "city": "Geneva",
+        "lat": 46.2104,
+        "lon": 6.1423,
+        "type": "station",
+        "coordinates": [
+          6.1423,
+          46.2104
+        ],
+        "searchable": "genève-cornavin geneva switzerland"
+      },
+      {
+        "id": "demo_33",
+        "name": "Bern",
+        "country": "CH",
+        "country_name": "Switzerland",
+        "city": "Bern",
+        "lat": 46.9489,
+        "lon": 7.4394,
+        "type": "station",
+        "coordinates": [
+          7.4394,
+          46.9489
+        ],
+        "searchable": "bern bern switzerland"
+      }
+    ],
+    "CZ": [
+      {
+        "id": "demo_34",
+        "name": "Praha hlavní nádraží",
+        "country": "CZ",
+        "country_name": "Czech Republic",
+        "city": "Prague",
+        "lat": 50.0833,
+        "lon": 14.4358,
+        "type": "station",
+        "coordinates": [
+          14.4358,
+          50.0833
+        ],
+        "searchable": "praha hlavní nádraží prague czech republic"
+      },
+      {
+        "id": "demo_35",
+        "name": "Brno hlavní nádraží",
+        "country": "CZ",
+        "country_name": "Czech Republic",
+        "city": "Brno",
+        "lat": 49.191,
+        "lon": 16.6127,
+        "type": "station",
+        "coordinates": [
+          16.6127,
+          49.191
+        ],
+        "searchable": "brno hlavní nádraží brno czech republic"
+      }
+    ],
+    "PL": [
+      {
+        "id": "demo_36",
+        "name": "Warszawa Centralna",
+        "country": "PL",
+        "country_name": "Poland",
+        "city": "Warsaw",
+        "lat": 52.2297,
+        "lon": 21.0122,
+        "type": "station",
+        "coordinates": [
+          21.0122,
+          52.2297
+        ],
+        "searchable": "warszawa centralna warsaw poland"
+      },
+      {
+        "id": "demo_37",
+        "name": "Kraków Główny",
+        "country": "PL",
+        "country_name": "Poland",
+        "city": "Krakow",
+        "lat": 50.0677,
+        "lon": 19.9474,
+        "type": "station",
+        "coordinates": [
+          19.9474,
+          50.0677
+        ],
+        "searchable": "kraków główny krakow poland"
+      },
+      {
+        "id": "demo_38",
+        "name": "Gdańsk Główny",
+        "country": "PL",
+        "country_name": "Poland",
+        "city": "Gdansk",
+        "lat": 54.356,
+        "lon": 18.6445,
+        "type": "station",
+        "coordinates": [
+          18.6445,
+          54.356
+        ],
+        "searchable": "gdańsk główny gdansk poland"
+      }
+    ],
+    "HU": [
+      {
+        "id": "demo_39",
+        "name": "Budapest-Keleti",
+        "country": "HU",
+        "country_name": "Hungary",
+        "city": "Budapest",
+        "lat": 47.5,
+        "lon": 19.0833,
+        "type": "station",
+        "coordinates": [
+          19.0833,
+          47.5
+        ],
+        "searchable": "budapest-keleti budapest hungary"
+      },
+      {
+        "id": "demo_40",
+        "name": "Budapest-Nyugati",
+        "country": "HU",
+        "country_name": "Hungary",
+        "city": "Budapest",
+        "lat": 47.5106,
+        "lon": 19.0573,
+        "type": "station",
+        "coordinates": [
+          19.0573,
+          47.5106
+        ],
+        "searchable": "budapest-nyugati budapest hungary"
+      }
+    ],
+    "DK": [
+      {
+        "id": "demo_41",
+        "name": "København Hovedbanegård",
+        "country": "DK",
+        "country_name": "Denmark",
+        "city": "Copenhagen",
+        "lat": 55.6723,
+        "lon": 12.5649,
+        "type": "station",
+        "coordinates": [
+          12.5649,
+          55.6723
+        ],
+        "searchable": "københavn hovedbanegård copenhagen denmark"
+      },
+      {
+        "id": "demo_42",
+        "name": "Aarhus Hovedbanegård",
+        "country": "DK",
+        "country_name": "Denmark",
+        "city": "Aarhus",
+        "lat": 56.1496,
+        "lon": 10.2045,
+        "type": "station",
+        "coordinates": [
+          10.2045,
+          56.1496
+        ],
+        "searchable": "aarhus hovedbanegård aarhus denmark"
+      }
+    ],
+    "SE": [
+      {
+        "id": "demo_43",
+        "name": "Stockholm Centralstation",
+        "country": "SE",
+        "country_name": "Sweden",
+        "city": "Stockholm",
+        "lat": 59.3307,
+        "lon": 18.0572,
+        "type": "station",
+        "coordinates": [
+          18.0572,
+          59.3307
+        ],
+        "searchable": "stockholm centralstation stockholm sweden"
+      },
+      {
+        "id": "demo_44",
+        "name": "Göteborg Centralstation",
+        "country": "SE",
+        "country_name": "Sweden",
+        "city": "Gothenburg",
+        "lat": 57.7089,
+        "lon": 11.9727,
+        "type": "station",
+        "coordinates": [
+          11.9727,
+          57.7089
+        ],
+        "searchable": "göteborg centralstation gothenburg sweden"
+      },
+      {
+        "id": "demo_45",
+        "name": "Malmö Centralstation",
+        "country": "SE",
+        "country_name": "Sweden",
+        "city": "Malmö",
+        "lat": 55.6093,
+        "lon": 13.0007,
+        "type": "station",
+        "coordinates": [
+          13.0007,
+          55.6093
+        ],
+        "searchable": "malmö centralstation malmö sweden"
+      }
+    ],
+    "NO": [
+      {
+        "id": "demo_46",
+        "name": "Oslo Sentralstasjon",
+        "country": "NO",
+        "country_name": "Norway",
+        "city": "Oslo",
+        "lat": 59.9111,
+        "lon": 10.7528,
+        "type": "station",
+        "coordinates": [
+          10.7528,
+          59.9111
+        ],
+        "searchable": "oslo sentralstasjon oslo norway"
+      },
+      {
+        "id": "demo_47",
+        "name": "Bergen stasjon",
+        "country": "NO",
+        "country_name": "Norway",
+        "city": "Bergen",
+        "lat": 60.3906,
+        "lon": 5.3319,
+        "type": "station",
+        "coordinates": [
+          5.3319,
+          60.3906
+        ],
+        "searchable": "bergen stasjon bergen norway"
+      }
+    ],
+    "FI": [
+      {
+        "id": "demo_48",
+        "name": "Helsinki Päärautatieasema",
+        "country": "FI",
+        "country_name": "Finland",
+        "city": "Helsinki",
+        "lat": 60.1719,
+        "lon": 24.9414,
+        "type": "station",
+        "coordinates": [
+          24.9414,
+          60.1719
+        ],
+        "searchable": "helsinki päärautatieasema helsinki finland"
+      },
+      {
+        "id": "demo_49",
+        "name": "Tampere rautatieasema",
+        "country": "FI",
+        "country_name": "Finland",
+        "city": "Tampere",
+        "lat": 61.4991,
+        "lon": 23.7739,
+        "type": "station",
+        "coordinates": [
+          23.7739,
+          61.4991
+        ],
+        "searchable": "tampere rautatieasema tampere finland"
+      }
+    ],
+    "PT": [
+      {
+        "id": "demo_50",
+        "name": "Lisboa Oriente",
+        "country": "PT",
+        "country_name": "Portugal",
+        "city": "Lisbon",
+        "lat": 38.7681,
+        "lon": -9.0983,
+        "type": "station",
+        "coordinates": [
+          -9.0983,
+          38.7681
+        ],
+        "searchable": "lisboa oriente lisbon portugal"
+      },
+      {
+        "id": "demo_51",
+        "name": "Porto Campanhã",
+        "country": "PT",
+        "country_name": "Portugal",
+        "city": "Porto",
+        "lat": 41.1496,
+        "lon": -8.5834,
+        "type": "station",
+        "coordinates": [
+          -8.5834,
+          41.1496
+        ],
+        "searchable": "porto campanhã porto portugal"
+      }
+    ],
+    "GR": [
+      {
+        "id": "demo_52",
+        "name": "Αθήνα (Athens)",
+        "country": "GR",
+        "country_name": "Greece",
+        "city": "Athens",
+        "lat": 37.9906,
+        "lon": 23.7304,
+        "type": "station",
+        "coordinates": [
+          23.7304,
+          37.9906
+        ],
+        "searchable": "αθήνα (athens) athens greece"
+      },
+      {
+        "id": "demo_53",
+        "name": "Θεσσαλονίκη (Thessaloniki)",
+        "country": "GR",
+        "country_name": "Greece",
+        "city": "Thessaloniki",
+        "lat": 40.6334,
+        "lon": 22.9447,
+        "type": "station",
+        "coordinates": [
+          22.9447,
+          40.6334
+        ],
+        "searchable": "θεσσαλονίκη (thessaloniki) thessaloniki greece"
+      }
+    ],
+    "GB": [
+      {
+        "id": "demo_54",
+        "name": "London King's Cross",
+        "country": "GB",
+        "country_name": "United Kingdom",
+        "city": "London",
+        "lat": 51.5308,
+        "lon": -0.1238,
+        "type": "station",
+        "coordinates": [
+          -0.1238,
+          51.5308
+        ],
+        "searchable": "london king's cross london united kingdom"
+      },
+      {
+        "id": "demo_55",
+        "name": "London St Pancras International",
+        "country": "GB",
+        "country_name": "United Kingdom",
+        "city": "London",
+        "lat": 51.5319,
+        "lon": -0.1264,
+        "type": "station",
+        "coordinates": [
+          -0.1264,
+          51.5319
+        ],
+        "searchable": "london st pancras international london united kingdom"
+      },
+      {
+        "id": "demo_56",
+        "name": "Manchester Piccadilly",
+        "country": "GB",
+        "country_name": "United Kingdom",
+        "city": "Manchester",
+        "lat": 53.4773,
+        "lon": -2.2309,
+        "type": "station",
+        "coordinates": [
+          -2.2309,
+          53.4773
+        ],
+        "searchable": "manchester piccadilly manchester united kingdom"
+      },
+      {
+        "id": "demo_57",
+        "name": "Edinburgh Waverley",
+        "country": "GB",
+        "country_name": "United Kingdom",
+        "city": "Edinburgh",
+        "lat": 55.9521,
+        "lon": -3.1907,
+        "type": "station",
+        "coordinates": [
+          -3.1907,
+          55.9521
+        ],
+        "searchable": "edinburgh waverley edinburgh united kingdom"
+      }
+    ],
+    "IE": [
+      {
+        "id": "demo_58",
+        "name": "Dublin Connolly",
+        "country": "IE",
+        "country_name": "Ireland",
+        "city": "Dublin",
+        "lat": 53.3515,
+        "lon": -6.2497,
+        "type": "station",
+        "coordinates": [
+          -6.2497,
+          53.3515
+        ],
+        "searchable": "dublin connolly dublin ireland"
+      },
+      {
+        "id": "demo_59",
+        "name": "Cork Kent Station",
+        "country": "IE",
+        "country_name": "Ireland",
+        "city": "Cork",
+        "lat": 51.9014,
+        "lon": -8.4597,
+        "type": "station",
+        "coordinates": [
+          -8.4597,
+          51.9014
+        ],
+        "searchable": "cork kent station cork ireland"
+      }
+    ]
+  },
+  "countries": [
+    {
+      "code": "AT",
+      "name": "Austria",
+      "stationCount": 3
+    },
+    {
+      "code": "BE",
+      "name": "Belgium",
+      "stationCount": 3
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland",
+      "stationCount": 4
+    },
+    {
+      "code": "CZ",
+      "name": "Czech Republic",
+      "stationCount": 2
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "stationCount": 5
+    },
+    {
+      "code": "DK",
+      "name": "Denmark",
+      "stationCount": 2
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "stationCount": 4
+    },
+    {
+      "code": "FI",
+      "name": "Finland",
+      "stationCount": 2
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "stationCount": 5
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "stationCount": 4
+    },
+    {
+      "code": "GR",
+      "name": "Greece",
+      "stationCount": 2
+    },
+    {
+      "code": "HU",
+      "name": "Hungary",
+      "stationCount": 2
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "stationCount": 2
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "stationCount": 5
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "stationCount": 4
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "stationCount": 2
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "stationCount": 3
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "stationCount": 2
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "stationCount": 3
+    }
+  ]
+}

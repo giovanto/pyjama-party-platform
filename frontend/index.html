@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Where would you like to wake up tomorrow? Join the European night train community and help build the sustainable transport network Europe deserves.">
+    <meta name="keywords" content="night trains, sustainable transport, europe, back-on-track, pajama party, community">
+    <meta name="author" content="Back-on-Track">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Where Would You Like to Wake Up Tomorrow?">
+    <meta property="og:description" content="Share your dream destination and connect with fellow sustainable travel advocates across Europe.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://pajama-party.back-on-track.eu">
+    <meta property="og:image" content="https://pajama-party.back-on-track.eu/assets/og-image.jpg">
+    
+    <title>Where Would You Like to Wake Up Tomorrow? | Back-on-Track</title>
+    
+    <!-- Mapbox CSS -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/improvements.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <div class="header__logo">
+                <img src="assets/bot-logo.svg" alt="Back-on-Track" class="header__logo-img">
+            </div>
+            <nav class="header__nav">
+                <a href="#about" class="header__link">About</a>
+                <a href="#community" class="header__link">Community</a>
+                <a href="https://back-on-track.eu" class="header__link" target="_blank">Main Website</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero__container">
+                <h1 class="hero__title">Where would you like to wake up tomorrow?</h1>
+                <p class="hero__subtitle">
+                    Join the movement for sustainable night trains across Europe! Share your dream destination, 
+                    connect with fellow travelers, and organize pajama parties at train stations to make your voice heard.
+                </p>
+                <div class="hero__badges">
+                    <span class="hero__badge">🚂 Night Train Advocacy</span>
+                    <span class="hero__badge">🌍 European Community</span>
+                    <span class="hero__badge">👥 Local Action</span>
+                </div>
+                
+                <!-- Dream Form -->
+                <form class="dream-form" id="dreamForm">
+                    <div class="dream-form__field">
+                        <label for="dreamerName" class="dream-form__label">What's your name? (First name is enough)</label>
+                        <input 
+                            type="text" 
+                            id="dreamerName" 
+                            name="dreamerName" 
+                            class="dream-form__input" 
+                            placeholder="Maria, João, Emma, Lars..."
+                            autocomplete="given-name"
+                            required
+                        >
+                        <p class="dream-form__help">We'll use this to connect you with fellow travelers from your area</p>
+                    </div>
+                    
+                    <div class="dream-form__field">
+                        <label for="originStation" class="dream-form__label">Which station represents you?</label>
+                        <input 
+                            type="text" 
+                            id="originStation" 
+                            name="originStation" 
+                            class="dream-form__input" 
+                            placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
+                            autocomplete="off"
+                            required
+                        >
+                        <div class="dream-form__suggestions" id="originSuggestions"></div>
+                    </div>
+                    
+                    <div class="dream-form__field">
+                        <label for="destinationStation" class="dream-form__label">Where would you like to wake up?</label>
+                        <input 
+                            type="text" 
+                            id="destinationStation" 
+                            name="destinationStation" 
+                            class="dream-form__input" 
+                            placeholder="Barcelona beach sunrise, Prague castle view, Stockholm archipelago..."
+                            autocomplete="off"
+                            required
+                        >
+                        <div class="dream-form__suggestions" id="destinationSuggestions"></div>
+                    </div>
+                    
+                    <div class="dream-form__field dream-form__field--optional">
+                        <label for="email" class="dream-form__label">
+                            Email (only if you want to join pajama parties)
+                            <span class="dream-form__privacy">For local organizing only - never spam</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="dream-form__input" 
+                            placeholder="your.email@example.com"
+                        >
+                        <p class="dream-form__help">We'll connect you with others planning pajama parties at your station</p>
+                    </div>
+                    
+                    <button type="submit" class="dream-form__submit" id="submitButton">
+                        Add my dream to the map
+                    </button>
+                    
+                    <p class="dream-form__privacy-note">
+                        <a href="#privacy" class="dream-form__privacy-link">Privacy-first</a> - 
+                        your data is automatically deleted after 30 days
+                    </p>
+                </form>
+                
+                <!-- Success Message -->
+                <div class="success-message" id="successMessage" style="display: none;">
+                    <div class="success-message__content">
+                        <h3 class="success-message__title">Your dream is on the map! 🌟</h3>
+                        <p class="success-message__text">
+                            Thank you for sharing your sustainable travel dream. 
+                            Check the map below to see all the places Europeans want to wake up tomorrow.
+                        </p>
+                        <div class="success-message__community" id="communityInfo"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map Section -->
+        <section class="map-section">
+            <div class="map-section__container">
+                <h2 class="map-section__title">European Dream Destinations</h2>
+                <p class="map-section__subtitle">
+                    Every pin represents someone's dream of sustainable travel across Europe
+                </p>
+                
+                <div class="map-container">
+                    <div id="map" class="map"></div>
+                    <div class="map-legend">
+                        <div class="map-legend__item">
+                            <div class="map-legend__pin map-legend__pin--origin"></div>
+                            <span>Where people are</span>
+                        </div>
+                        <div class="map-legend__item">
+                            <div class="map-legend__pin map-legend__pin--destination"></div>
+                            <span>Where they dream of waking up</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-stats" id="mapStats">
+                    <div class="map-stats__item">
+                        <span class="map-stats__number" id="totalDreams">0</span>
+                        <span class="map-stats__label">Dreams shared</span>
+                    </div>
+                    <div class="map-stats__item">
+                        <span class="map-stats__number" id="totalStations">0</span>
+                        <span class="map-stats__label">Stations represented</span>
+                    </div>
+                    <div class="map-stats__item">
+                        <span class="map-stats__number" id="totalCommunities">0</span>
+                        <span class="map-stats__label">Communities forming</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section class="community-section" id="community">
+            <div class="community-section__container">
+                <h2 class="community-section__title">Organize Pajama Parties for Night Trains</h2>
+                <p class="community-section__subtitle">
+                    This platform connects you with fellow activists to organize pajama parties at train stations. 
+                    Together, we show Europe we want better night train connections!
+                </p>
+                
+                <div class="community-features">
+                    <div class="community-feature">
+                        <div class="community-feature__icon">🏠</div>
+                        <h3 class="community-feature__title">Pajama Party Organizing</h3>
+                        <p class="community-feature__text">
+                            When 2+ people from your station want the same destination, we'll help you organize a cozy pajama party to demand that night train route
+                        </p>
+                    </div>
+                    
+                    <div class="community-feature">
+                        <div class="community-feature__icon">🌍</div>
+                        <h3 class="community-feature__title">European-Wide Action</h3>
+                        <p class="community-feature__text">
+                            Join simultaneous pajama parties across Europe on September 26, 2025 - imagine the impact when hundreds of stations unite!
+                        </p>
+                    </div>
+                    
+                    <div class="community-feature">
+                        <div class="community-feature__icon">🎯</div>
+                        <h3 class="community-feature__title">Grassroots Activism</h3>
+                        <p class="community-feature__text">
+                            Your participation creates real data that Back-on-Track uses to lobby for policy changes. Every pajama party counts!
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="community-cta">
+                    <a href="#" class="community-cta__button" id="discordButton">
+                        Join our Discord Community
+                    </a>
+                    <p class="community-cta__note">
+                        Connect with fellow Europeans, get pajama party organizing kits, and coordinate local activism. All backgrounds welcome!
+                    </p>
+                </div>
+                
+                <div class="community-welcome">
+                    <h3 class="community-welcome__title">🤗 Everyone is Welcome</h3>
+                    <p class="community-welcome__text">
+                        Whether you're a seasoned activist or someone who just loves trains, whether you're 16 or 60, 
+                        from any background or corner of Europe - this movement needs YOU. No experience required, 
+                        just passion for sustainable travel and community.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="about">
+            <div class="about-section__container">
+                <h2 class="about-section__title">Why Pajama Parties Can Change Europe</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>
+                            Night trains are the most climate-friendly and comfortable way to travel long distances in Europe. 
+                            But the network that once connected our continent has largely disappeared due to political neglect.
+                        </p>
+                        <p>
+                            <strong>That's where you come in!</strong> By organizing pajama parties at train stations, we create 
+                            visible, media-friendly protests that show politicians exactly where people want night trains to go. 
+                            Your participation helps generate the data and pressure needed for policy change.
+                        </p>
+                        <p>
+                            This platform is part of <strong>Back-on-Track</strong>, a European association advocating 
+                            for the return of night trains. We believe grassroots activism - starting with you - can rebuild 
+                            the sustainable transport network Europe deserves.
+                        </p>
+                        <div class="about-values">
+                            <div class="about-value">
+                                <span class="about-value__icon">🌱</span>
+                                <span class="about-value__text">Climate Action</span>
+                            </div>
+                            <div class="about-value">
+                                <span class="about-value__icon">🤝</span>
+                                <span class="about-value__text">Community Building</span>
+                            </div>
+                            <div class="about-value">
+                                <span class="about-value__icon">🎯</span>
+                                <span class="about-value__text">Political Impact</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-links">
+                        <a href="https://back-on-track.eu" class="about-link" target="_blank">
+                            Learn about Back-on-Track
+                        </a>
+                        <a href="https://back-on-track.eu/position-paper" class="about-link" target="_blank">
+                            Read our Policy Paper
+                        </a>
+                        <a href="https://back-on-track.eu/night-train-conference-2025" class="about-link" target="_blank">
+                            Berlin Conference 2025
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__content">
+                <div class="footer__section">
+                    <img src="assets/bot-logo.svg" alt="Back-on-Track" class="footer__logo">
+                    <p class="footer__description">
+                        Building the sustainable transport network Europe deserves
+                    </p>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__title">Platform</h4>
+                    <ul class="footer__links">
+                        <li><a href="#privacy" class="footer__link">Privacy Policy</a></li>
+                        <li><a href="#terms" class="footer__link">Terms of Use</a></li>
+                        <li><a href="#contact" class="footer__link">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__title">Back-on-Track</h4>
+                    <ul class="footer__links">
+                        <li><a href="https://back-on-track.eu" class="footer__link" target="_blank">Main Website</a></li>
+                        <li><a href="https://back-on-track.eu/newsletter" class="footer__link" target="_blank">Newsletter</a></li>
+                        <li><a href="https://back-on-track.eu/position-paper" class="footer__link" target="_blank">Policy Paper</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer__section">
+                    <h4 class="footer__title">Community</h4>
+                    <ul class="footer__links">
+                        <li><a href="#" class="footer__link" id="footerDiscordLink">Discord</a></li>
+                        <li><a href="https://back-on-track.eu/night-train-conference-2025" class="footer__link" target="_blank">Berlin Conference</a></li>
+                        <li><a href="#" class="footer__link">Pajama Party Kit</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer__bottom">
+                <p class="footer__copyright">
+                    © 2025 Back-on-Track AISBL. Made with ❤️ for sustainable European travel.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Adding your dream to the map...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/api.js"></script>
+    <script src="scripts/map.js"></script>
+    <script src="scripts/form.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
