@@ -67,6 +67,9 @@ class PajamaPartyApp {
     // Initialize any other components
     this.initializeScrollToTop();
     this.initializeSmoothScrolling();
+    this.initializeCountdownTimer();
+    this.initializeDreamersList();
+    this.initializeFloatingNav();
   }
 
   // Setup global event listeners
@@ -265,6 +268,133 @@ class PajamaPartyApp {
         });
       }
     }
+  }
+
+  // Initialize countdown timer for September 26, 2025
+  initializeCountdownTimer() {
+    const countdownElement = document.getElementById('daysLeft');
+    if (!countdownElement) return;
+
+    const targetDate = new Date('2025-09-26T00:00:00Z');
+    
+    const updateCountdown = () => {
+      const now = new Date();
+      const difference = targetDate - now;
+      
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        countdownElement.textContent = days.toString().padStart(3, '0');
+      } else {
+        countdownElement.textContent = '000';
+      }
+    };
+
+    // Update immediately and then every hour
+    updateCountdown();
+    setInterval(updateCountdown, 1000 * 60 * 60);
+  }
+
+  // Initialize dreamers list
+  initializeDreamersList() {
+    this.loadDreamers();
+    // Refresh dreamers list every 30 seconds
+    setInterval(() => this.loadDreamers(), 30000);
+  }
+
+  // Load and display dreamers
+  async loadDreamers() {
+    try {
+      const dreams = await pajamaAPI.getDreams();
+      this.updateDreamersList(dreams);
+    } catch (error) {
+      console.error('Error loading dreamers:', error);
+    }
+  }
+
+  // Update dreamers list display
+  updateDreamersList(dreams) {
+    const dreamersList = document.getElementById('dreamersList');
+    if (!dreamersList) return;
+
+    if (!dreams || dreams.length === 0) {
+      dreamersList.innerHTML = '<div class="dreamers-list__item">No dreamers yet. Be the first!</div>';
+      return;
+    }
+
+    // Get recent dreamers (last 20)
+    const recentDreamers = dreams.slice(-20).reverse();
+    
+    const dreamersHtml = recentDreamers.map(dream => `
+      <div class="dreamers-list__item">
+        <span class="dreamers-list__name">${this.escapeHtml(dream.dreamer_name || 'Anonymous')}</span>
+        <span class="dreamers-list__destination">→ ${this.escapeHtml(dream.destination_city || 'Unknown')}</span>
+      </div>
+    `).join('');
+
+    dreamersList.innerHTML = dreamersHtml;
+  }
+
+  // Escape HTML to prevent XSS
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Initialize floating navigation
+  initializeFloatingNav() {
+    const floatingNav = document.getElementById('floatingNav');
+    if (!floatingNav) return;
+
+    let lastScrollY = window.scrollY;
+    
+    const toggleFloatingNav = () => {
+      const currentScrollY = window.scrollY;
+      const isScrollingDown = currentScrollY > lastScrollY;
+      const isScrolledPastHero = currentScrollY > 300;
+
+      if (isScrolledPastHero && !isScrollingDown) {
+        floatingNav.classList.add('visible');
+      } else if (!isScrolledPastHero || isScrollingDown) {
+        floatingNav.classList.remove('visible');
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    // Show/hide on scroll
+    window.addEventListener('scroll', debounce(toggleFloatingNav, 100));
+    
+    // Highlight active section
+    this.updateActiveNavItem();
+    window.addEventListener('scroll', debounce(() => this.updateActiveNavItem(), 100));
+  }
+
+  // Update active navigation item based on scroll position
+  updateActiveNavItem() {
+    const sections = ['hero', 'map', 'community', 'about'];
+    const floatingNav = document.getElementById('floatingNav');
+    if (!floatingNav) return;
+
+    let activeSection = '';
+    
+    sections.forEach(sectionId => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 200 && rect.bottom >= 200) {
+          activeSection = sectionId;
+        }
+      }
+    });
+
+    // Update active state
+    floatingNav.querySelectorAll('.floating-nav__item').forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('href') === `#${activeSection}`) {
+        item.classList.add('active');
+      }
+    });
   }
 }
 

@@ -99,14 +99,14 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'frontend')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 // API Routes
 
 // Get all dreams for map visualization
 app.get('/api/dreams', (req, res) => {
   db.all(`SELECT 
-    origin_station, origin_country, origin_lat, origin_lng,
+    dreamer_name, origin_station, origin_country, origin_lat, origin_lng,
     destination_city, destination_country, destination_lat, destination_lng,
     created_at
     FROM dreams 
@@ -277,7 +277,7 @@ app.get('/api/health', (req, res) => {
 
 // Serve the main application
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
 // 404 handler

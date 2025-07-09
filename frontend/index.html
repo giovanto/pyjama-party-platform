@@ -37,25 +37,69 @@
             <nav class="header__nav">
                 <a href="#about" class="header__link">About</a>
                 <a href="#community" class="header__link">Community</a>
-                <a href="https://back-on-track.eu" class="header__link" target="_blank">Main Website</a>
+                <a href="https://back-on-track.eu" class="header__link header__link--primary" target="_blank">Back-on-Track</a>
             </nav>
         </div>
     </header>
 
+    <!-- Floating Navigation -->
+    <nav class="floating-nav" id="floatingNav">
+        <div class="floating-nav__container">
+            <a href="#hero" class="floating-nav__item" title="Dream Form">
+                <span class="floating-nav__icon">🌙</span>
+                <span class="floating-nav__label">Dream</span>
+            </a>
+            <a href="#map" class="floating-nav__item" title="Map">
+                <span class="floating-nav__icon">🗺️</span>
+                <span class="floating-nav__label">Map</span>
+            </a>
+            <a href="#community" class="floating-nav__item" title="Community">
+                <span class="floating-nav__icon">👥</span>
+                <span class="floating-nav__label">Community</span>
+            </a>
+            <a href="#about" class="floating-nav__item" title="About">
+                <span class="floating-nav__icon">ℹ️</span>
+                <span class="floating-nav__label">About</span>
+            </a>
+        </div>
+    </nav>
+
     <!-- Main Content -->
     <main class="main">
         <!-- Hero Section -->
-        <section class="hero">
+        <section class="hero" id="hero">
             <div class="hero__container">
                 <h1 class="hero__title">Where would you like to wake up tomorrow?</h1>
                 <p class="hero__subtitle">
                     Join the movement for sustainable night trains across Europe! Share your dream destination, 
                     connect with fellow travelers, and organize pajama parties at train stations to make your voice heard.
                 </p>
+                <p class="hero__entry-point">
+                    ✨ New to activism? Perfect! This is your gateway to grassroots action for climate-friendly transport.
+                </p>
                 <div class="hero__badges">
                     <span class="hero__badge">🚂 Night Train Advocacy</span>
                     <span class="hero__badge">🌍 European Community</span>
                     <span class="hero__badge">👥 Local Action</span>
+                </div>
+                
+                <!-- September 26 Event Banner -->
+                <div class="event-banner">
+                    <div class="event-banner__content">
+                        <h2 class="event-banner__title">🎉 Europe-Wide Pajama Party</h2>
+                        <p class="event-banner__date">September 26, 2025</p>
+                        <p class="event-banner__description">
+                            Join thousands across Europe for synchronized pajama parties at train stations. 
+                            Your dream becomes part of a continental movement for night trains!
+                        </p>
+                        <div class="event-banner__countdown" id="eventCountdown">
+                            <span class="countdown-item">
+                                <span class="countdown-number" id="daysLeft">000</span>
+                                <span class="countdown-label">days left</span>
+                            </span>
+                        </div>
+                        <a href="#community" class="event-banner__cta">Join the Movement</a>
+                    </div>
                 </div>
                 
                 <!-- Dream Form -->
@@ -142,7 +186,7 @@
         </section>
 
         <!-- Map Section -->
-        <section class="map-section">
+        <section class="map-section" id="map">
             <div class="map-section__container">
                 <h2 class="map-section__title">European Dream Destinations</h2>
                 <p class="map-section__subtitle">
@@ -177,6 +221,16 @@
                         <span class="map-stats__label">Communities forming</span>
                     </div>
                 </div>
+                
+                <!-- Dreamers List -->
+                <div class="dreamers-list">
+                    <h3 class="dreamers-list__title">Recent Dreamers</h3>
+                    <div class="dreamers-list__container" id="dreamersContainer">
+                        <div class="dreamers-list__scroll" id="dreamersList">
+                            <div class="dreamers-list__item">Loading dreamers...</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -190,26 +244,26 @@
                 </p>
                 
                 <div class="community-features">
-                    <div class="community-feature">
+                    <div class="community-feature" style="background: white !important;">
                         <div class="community-feature__icon">🏠</div>
-                        <h3 class="community-feature__title">Pajama Party Organizing</h3>
-                        <p class="community-feature__text">
+                        <h3 class="community-feature__title" style="color: #2d3748 !important;">Pajama Party Organizing</h3>
+                        <p class="community-feature__text" style="color: #2d3748 !important;">
                             When 2+ people from your station want the same destination, we'll help you organize a cozy pajama party to demand that night train route
                         </p>
                     </div>
                     
-                    <div class="community-feature">
+                    <div class="community-feature" style="background: white !important;">
                         <div class="community-feature__icon">🌍</div>
-                        <h3 class="community-feature__title">European-Wide Action</h3>
-                        <p class="community-feature__text">
+                        <h3 class="community-feature__title" style="color: #2d3748 !important;">European-Wide Action</h3>
+                        <p class="community-feature__text" style="color: #2d3748 !important;">
                             Join simultaneous pajama parties across Europe on September 26, 2025 - imagine the impact when hundreds of stations unite!
                         </p>
                     </div>
                     
-                    <div class="community-feature">
+                    <div class="community-feature" style="background: white !important;">
                         <div class="community-feature__icon">🎯</div>
-                        <h3 class="community-feature__title">Grassroots Activism</h3>
-                        <p class="community-feature__text">
+                        <h3 class="community-feature__title" style="color: #2d3748 !important;">Grassroots Activism</h3>
+                        <p class="community-feature__text" style="color: #2d3748 !important;">
                             Your participation creates real data that Back-on-Track uses to lobby for policy changes. Every pajama party counts!
                         </p>
                     </div>
@@ -224,9 +278,51 @@
                     </p>
                 </div>
                 
-                <div class="community-welcome">
-                    <h3 class="community-welcome__title">🤗 Everyone is Welcome</h3>
-                    <p class="community-welcome__text">
+                <!-- Action Group Explanation -->
+                <div class="action-group-section" style="background: #f8f9fa; padding: 2rem; border-radius: 8px; margin: 2rem 0;">
+                    <h3 class="action-group-section__title" style="color: #008f39; margin-bottom: 1rem;">
+                        🎯 Join the Back-on-Track Action Group
+                    </h3>
+                    <p class="action-group-section__description" style="color: #2d3748; margin-bottom: 1.5rem;">
+                        The Action Group is one of three working groups within Back-on-Track, focused on <strong>grassroots activism</strong> 
+                        and creative public engagement. While our Lobby Group works on policy and our Communications Group spreads awareness, 
+                        we organize fun, impactful activities like pajama parties that bring the night train movement to the streets.
+                    </p>
+                    
+                    <div class="action-group-features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="action-group-feature">
+                            <h4 style="color: #008f39; margin-bottom: 0.5rem;">🎪 Creative Activism</h4>
+                            <p style="color: #2d3748; font-size: 0.9rem;">
+                                Organize pajama parties, flash mobs, and other fun events that attract media attention and public support for night trains.
+                            </p>
+                        </div>
+                        <div class="action-group-feature">
+                            <h4 style="color: #008f39; margin-bottom: 0.5rem;">🗺️ Local Coordination</h4>
+                            <p style="color: #2d3748; font-size: 0.9rem;">
+                                Help coordinate activities in your city or region. No policy expertise needed - just enthusiasm and organization skills!
+                            </p>
+                        </div>
+                        <div class="action-group-feature">
+                            <h4 style="color: #008f39; margin-bottom: 0.5rem;">🚀 Growing Impact</h4>
+                            <p style="color: #2d3748; font-size: 0.9rem;">
+                                Be part of a growing movement. The Action Group is expanding across Europe - help us reach more cities and more people!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="action-group-cta" style="text-align: center;">
+                        <a href="mailto:action-wg@back-on-track.eu" class="action-group-cta__button" style="background: #008f39; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; margin-right: 1rem;">
+                            Join Action Group
+                        </a>
+                        <a href="https://back-on-track.eu/about/" class="action-group-cta__link" style="color: #2271b3; text-decoration: none;" target="_blank">
+                            Learn more about Back-on-Track →
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="community-welcome" style="background: white !important;">
+                    <h3 class="community-welcome__title" style="color: #2d3748 !important;">🤗 Everyone is Welcome</h3>
+                    <p class="community-welcome__text" style="color: #2d3748 !important;">
                         Whether you're a seasoned activist or someone who just loves trains, whether you're 16 or 60, 
                         from any background or corner of Europe - this movement needs YOU. No experience required, 
                         just passion for sustainable travel and community.
@@ -271,6 +367,38 @@
                             for the return of night trains. We believe grassroots activism - starting with you - can rebuild 
                             the sustainable transport network Europe deserves.
                         </p>
+                        
+                        <!-- Back-on-Track Mission Integration -->
+                        <div class="bot-mission-section" style="background: #f0f8ff; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 4px solid #008f39;">
+                            <h3 style="color: #008f39; margin-bottom: 1rem;">🚂 Back-on-Track: Rebuilding Europe's Night Train Network</h3>
+                            <p style="color: #2d3748; margin-bottom: 1rem;">
+                                Back-on-Track is a European non-profit organization with <strong>476 members across 9 countries</strong>, 
+                                working to restore sustainable night train connections across Europe. We operate through three coordinated groups:
+                            </p>
+                            <div class="bot-groups" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div class="bot-group">
+                                    <h4 style="color: #2271b3; margin-bottom: 0.5rem;">🏛️ Lobby Group</h4>
+                                    <p style="color: #2d3748; font-size: 0.9rem;">Policy advocacy and government relations</p>
+                                </div>
+                                <div class="bot-group">
+                                    <h4 style="color: #2271b3; margin-bottom: 0.5rem;">📢 Communications Group</h4>
+                                    <p style="color: #2d3748; font-size: 0.9rem;">Media outreach and public awareness</p>
+                                </div>
+                                <div class="bot-group">
+                                    <h4 style="color: #008f39; margin-bottom: 0.5rem;">🎪 Action Group</h4>
+                                    <p style="color: #2d3748; font-size: 0.9rem;">Grassroots activism and creative engagement</p>
+                                </div>
+                            </div>
+                            <div class="bot-cta" style="text-align: center;">
+                                <a href="https://back-on-track.eu" class="bot-cta__button" style="background: #008f39; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block; margin-right: 1rem;">
+                                    Explore Back-on-Track →
+                                </a>
+                                <a href="https://back-on-track.eu/mailing-lists/" class="bot-cta__link" style="color: #2271b3; text-decoration: none;" target="_blank">
+                                    Join our Newsletter
+                                </a>
+                            </div>
+                        </div>
+                        
                         <div class="about-values">
                             <div class="about-value">
                                 <span class="about-value__icon">🌱</span>
@@ -288,13 +416,22 @@
                     </div>
                     <div class="about-links">
                         <a href="https://back-on-track.eu" class="about-link" target="_blank">
-                            Learn about Back-on-Track
+                            🏠 Back-on-Track Main Website
                         </a>
-                        <a href="https://back-on-track.eu/position-paper" class="about-link" target="_blank">
-                            Read our Policy Paper
+                        <a href="https://back-on-track.eu/general-position-paper/" class="about-link" target="_blank">
+                            📄 Our Policy Position Paper
                         </a>
-                        <a href="https://back-on-track.eu/night-train-conference-2025" class="about-link" target="_blank">
-                            Berlin Conference 2025
+                        <a href="https://back-on-track.eu/night-train-map/" class="about-link" target="_blank">
+                            🗺️ Night Train Map
+                        </a>
+                        <a href="https://back-on-track.eu/mailing-lists/" class="about-link" target="_blank">
+                            📧 Join Our Newsletter
+                        </a>
+                        <a href="https://back-on-track.eu/groups/" class="about-link" target="_blank">
+                            👥 Join Our Groups
+                        </a>
+                        <a href="https://back-on-track.eu/projects-and-activities/" class="about-link" target="_blank">
+                            🎯 All Our Projects
                         </a>
                     </div>
                 </div>
@@ -323,20 +460,22 @@
                 </div>
                 
                 <div class="footer__section">
-                    <h4 class="footer__title">Back-on-Track</h4>
+                    <h4 class="footer__title">🚂 Back-on-Track</h4>
                     <ul class="footer__links">
-                        <li><a href="https://back-on-track.eu" class="footer__link" target="_blank">Main Website</a></li>
-                        <li><a href="https://back-on-track.eu/newsletter" class="footer__link" target="_blank">Newsletter</a></li>
-                        <li><a href="https://back-on-track.eu/position-paper" class="footer__link" target="_blank">Policy Paper</a></li>
+                        <li><a href="https://back-on-track.eu" class="footer__link footer__link--primary" target="_blank">🏠 Main Website</a></li>
+                        <li><a href="https://back-on-track.eu/membership" class="footer__link" target="_blank">👥 Become a Member</a></li>
+                        <li><a href="https://back-on-track.eu/newsletter" class="footer__link" target="_blank">📧 Newsletter</a></li>
+                        <li><a href="https://back-on-track.eu/position-paper" class="footer__link" target="_blank">📄 Policy Paper</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer__section">
-                    <h4 class="footer__title">Community</h4>
+                    <h4 class="footer__title">🎪 Action Group</h4>
                     <ul class="footer__links">
-                        <li><a href="#" class="footer__link" id="footerDiscordLink">Discord</a></li>
-                        <li><a href="https://back-on-track.eu/night-train-conference-2025" class="footer__link" target="_blank">Berlin Conference</a></li>
-                        <li><a href="#" class="footer__link">Pajama Party Kit</a></li>
+                        <li><a href="mailto:action-wg@back-on-track.eu" class="footer__link">✉️ Join Action Group</a></li>
+                        <li><a href="#" class="footer__link" id="footerDiscordLink">💬 Discord</a></li>
+                        <li><a href="https://back-on-track.eu/night-train-conference-2025" class="footer__link" target="_blank">🏛️ Berlin Conference</a></li>
+                        <li><a href="#" class="footer__link">📦 Pajama Party Kit</a></li>
                     </ul>
                 </div>
             </div>

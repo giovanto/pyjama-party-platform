@@ -128,8 +128,8 @@
   gap: 0.5rem;
 }
 
-.community-welcome__text {
-  color: #555;
+.community-section .community-welcome .community-welcome__text {
+  color: #2d3748 !important;
   line-height: 1.6;
   font-size: 1rem;
 }
@@ -167,9 +167,28 @@
   margin-bottom: 1rem;
 }
 
-.community-feature__text {
-  color: #666;
+.community-section .community-features .community-feature .community-feature__text {
+  color: #2d3748 !important;
   line-height: 1.6;
+}
+
+/* Additional specificity for paragraphs in community features */
+.community-section .community-features .community-feature p {
+  color: #2d3748 !important;
+}
+
+/* Nuclear option - override all text in community section */
+.community-section * {
+  color: #2d3748 !important;
+}
+
+/* Specifically target the dark cards */
+.community-feature {
+  background: white !important;
+}
+
+.community-welcome {
+  background: white !important;
 }
 
 /* About Section Enhancements */
