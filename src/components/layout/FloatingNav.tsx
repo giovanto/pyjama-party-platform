@@ -22,36 +22,53 @@ export function FloatingNav() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    // Port V1 scroll detection logic exactly
+    // V1-style scroll detection: show after 300px scroll
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const isScrollingDown = scrollY > lastScrollY.current;
-      const isScrolledPastHero = scrollY > 300;
+      const isScrolledPast = scrollY > 300;
       
-      if (isScrolledPastHero && !isScrollingDown) {
-        setIsVisible(true);
-      } else if (!isScrolledPastHero || isScrollingDown) {
-        setIsVisible(false);
-      }
-      
+      setIsVisible(isScrolledPast);
       lastScrollY.current = scrollY;
     };
     
-    // Port V1 active section detection
+    // Enhanced active section detection with better accuracy
     const updateActiveSection = () => {
       const sections = ['hero', 'map', 'community', 'about'];
-      const sectionElements = sections.map(id => document.getElementById(id)).filter(Boolean);
+      const sectionElements = sections
+        .map(id => document.getElementById(id))
+        .filter((el): el is HTMLElement => el !== null);
       
       let currentSection = '';
+      const viewportHeight = window.innerHeight;
+      const centerPoint = viewportHeight / 2;
+      
       for (const section of sectionElements) {
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            currentSection = section.id;
-            break;
-          }
+        const rect = section.getBoundingClientRect();
+        // Check if section center is in viewport or if section covers the center
+        if (rect.top <= centerPoint && rect.bottom >= centerPoint) {
+          currentSection = section.id;
+          break;
         }
       }
+      
+      // Fallback to the section closest to viewport center if none found
+      if (!currentSection && sectionElements.length > 0) {
+        let closestSection = sectionElements[0];
+        let closestDistance = Math.abs(closestSection.getBoundingClientRect().top + closestSection.getBoundingClientRect().height / 2 - centerPoint);
+        
+        for (const section of sectionElements) {
+          const rect = section.getBoundingClientRect();
+          const sectionCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(sectionCenter - centerPoint);
+          
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestSection = section;
+          }
+        }
+        currentSection = closestSection.id;
+      }
+      
       setActiveSection(currentSection);
     };
     
@@ -64,8 +81,8 @@ export function FloatingNav() {
       };
     };
     
-    const debouncedHandleScroll = debounce(handleScroll, 100);
-    const debouncedUpdateActiveSection = debounce(updateActiveSection, 100);
+    const debouncedHandleScroll = debounce(handleScroll, 50);
+    const debouncedUpdateActiveSection = debounce(updateActiveSection, 50);
     
     window.addEventListener('scroll', debouncedHandleScroll);
     window.addEventListener('scroll', debouncedUpdateActiveSection);
@@ -77,31 +94,39 @@ export function FloatingNav() {
   }, []);
 
   const handleNavClick = (href: string) => {
-    const target = document.querySelector(href);
+    const target = document.querySelector(href) as HTMLElement | null;
     if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
+      // Enhanced smooth scrolling with offset for better positioning
+      const targetPosition = target.offsetTop - 80;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
-    <nav className={`floating-nav fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-white rounded-2xl shadow-xl p-2 flex items-center gap-2 z-40 transition-all duration-300 ${
-      isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-24'
+    <nav className={`floating-nav fixed top-1/2 right-6 transform -translate-y-1/2 z-40 transition-all duration-300 ${
+      isVisible ? 'opacity-95 translate-x-0' : 'opacity-0 translate-x-24'
     }`}>
-      {navItems.map((item) => (
-        <button
-          key={item.href}
-          onClick={() => handleNavClick(item.href)}
-          className={`floating-nav__item flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-150 hover:-translate-y-0.5 ${
-            activeSection === item.href.substring(1)
-              ? 'bg-bot-green text-white shadow-md'
-              : 'text-gray-600 hover:bg-bot-green hover:text-white'
-          }`}
-          title={item.title}
-        >
-          <span className="floating-nav__icon text-base">{item.icon}</span>
-          <span className="floating-nav__label hidden sm:inline">{item.label}</span>
-        </button>
-      ))}
+      <div className="floating-nav__container bg-gradient-to-b from-white via-bot-light-green to-bot-green rounded-2xl shadow-2xl border-2 border-bot-green p-3">
+        <div className="flex flex-col gap-2">
+          {navItems.map((item) => (
+            <button
+              key={item.href}
+              onClick={() => handleNavClick(item.href)}
+              className={`floating-nav__item flex items-center justify-center w-14 h-14 rounded-xl text-lg font-medium transition-all duration-200 hover:scale-110 hover:shadow-xl border-2 ${
+                activeSection === item.href.substring(1)
+                  ? 'bg-gradient-to-br from-bot-green to-bot-dark-green text-white shadow-xl transform scale-105 border-bot-light-green'
+                  : 'text-bot-dark hover:bg-gradient-to-br hover:from-bot-green hover:to-bot-light-green hover:text-white border-bot-green hover:border-bot-green bg-white'
+              }`}
+              title={item.title}
+            >
+              <span className="floating-nav__icon">{item.icon}</span>
+            </button>
+          ))}
+        </div>
+      </div>
     </nav>
   );
 }

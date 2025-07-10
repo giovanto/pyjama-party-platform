@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 interface DreamData {
   from: string;
   to: string;
-  name: string;
+  dreamerName: string;
   email: string;
   why: string;
 }
@@ -14,17 +14,18 @@ export async function POST(request: NextRequest) {
     const supabase = await createClient();
     const body: DreamData = await request.json();
     
-    const { from, to, name, email, why } = body;
+    const { from, to, dreamerName, email, why } = body;
     
     // Validation
-    if (!from || !to || !name || !email || !why) {
+    if (!from || !to || !dreamerName || !why) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Required fields missing' },
         { status: 400 }
       );
     }
-
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    
+    // Email is optional
+    if (email && !/\S+@\S+\.\S+/.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -52,8 +53,8 @@ export async function POST(request: NextRequest) {
       .insert({
         from_station: from.trim(),
         to_station: to.trim(),
-        dreamer_name: name.trim(),
-        dreamer_email: email.trim().toLowerCase(),
+        dreamer_name: dreamerName.trim(),
+        dreamer_email: email ? email.trim().toLowerCase() : null,
         why_important: why.trim(),
         from_latitude: fromStation?.latitude || null,
         from_longitude: fromStation?.longitude || null,

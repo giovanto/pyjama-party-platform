@@ -12,9 +12,9 @@ interface StationSuggestion {
 }
 
 interface DreamFormData {
+  dreamerName: string;
   from: string;
   to: string;
-  name: string;
   email: string;
   why: string;
 }
@@ -26,9 +26,9 @@ interface DreamFormProps {
 
 export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) {
   const [formData, setFormData] = useState<DreamFormData>({
+    dreamerName: '',
     from: '',
     to: '',
-    name: '',
     email: '',
     why: ''
   });
@@ -39,6 +39,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const [showToSuggestions, setShowToSuggestions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Partial<DreamFormData>>({});
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const searchStations = async (query: string): Promise<StationSuggestion[]> => {
     if (query.length < 2) return [];
@@ -86,10 +88,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
 
     if (!formData.from.trim()) newErrors.from = 'Departure station is required';
     if (!formData.to.trim()) newErrors.to = 'Destination station is required';
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.dreamerName.trim()) newErrors.dreamerName = 'Name is required';
+    if (formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
     if (!formData.why.trim()) newErrors.why = 'Please tell us why this route matters to you';
@@ -119,7 +119,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
         }
       }
 
-      setFormData({ from: '', to: '', name: '', email: '', why: '' });
+      // Show success message
+      setShowSuccess(true);
+      setSuccessMessage(`🌟 Thank you ${formData.dreamerName}! Your dream route is now on the map. Check below to see all European dreams for sustainable travel.`);
+      
+      // Refresh the map with new data
+      if (typeof window !== 'undefined' && (window as unknown as { refreshDreamMap?: () => void }).refreshDreamMap) {
+        (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap();
+      }
+      
+      // Reset form
+      setFormData({ dreamerName: '', from: '', to: '', email: '', why: '' });
+      
+      // Hide success message after 5 seconds
+      setTimeout(() => setShowSuccess(false), 8000);
     } catch (error) {
       console.error('Error submitting dream:', error);
     } finally {
@@ -130,19 +143,47 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`dream-form bg-white rounded-lg shadow-lg p-6 ${className}`}
+      className={`dream-form bg-gradient-to-br from-bot-green via-white to-bot-light-green rounded-2xl shadow-2xl p-8 sm:p-10 border-4 border-bot-green ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-2xl font-bold text-bot-dark mb-6 text-center">
-        Share Your Dream Route
+      <h2 className="text-xl sm:text-2xl font-bold text-bot-dark mb-4 sm:mb-6 text-center">
+        Where would you like to wake up tomorrow?
       </h2>
 
-      <div className="space-y-4">
-        <div className="relative">
-          <label htmlFor="from" className="block text-sm font-medium text-gray-700 mb-1">
-            From Station
+      <div className="space-y-4 sm:space-y-6">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+        >
+          <label htmlFor="dreamerName" className="block text-sm font-medium text-bot-dark mb-1">
+            What&apos;s your name? (First name is enough)
+          </label>
+          <input
+            type="text"
+            id="dreamerName"
+            value={formData.dreamerName}
+            onChange={(e) => handleInputChange('dreamerName', e.target.value)}
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
+              errors.dreamerName ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            }`}
+            placeholder="Maria, João, Emma, Lars..."
+            required
+          />
+          <p className="text-xs text-bot-blue mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          {errors.dreamerName && <p className="text-red-500 text-sm mt-1">{errors.dreamerName}</p>}
+        </motion.div>
+
+        <motion.div 
+          className="relative"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
+        >
+          <label htmlFor="from" className="block text-sm font-medium text-bot-dark mb-1">
+            Which station represents you?
           </label>
           <input
             type="text"
@@ -151,11 +192,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             onChange={(e) => handleInputChange('from', e.target.value)}
             onFocus={() => setShowFromSuggestions(formData.from.length > 0)}
             onBlur={() => setTimeout(() => setShowFromSuggestions(false), 200)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
-              errors.from ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
+              errors.from ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
-            placeholder="e.g., Berlin Hauptbahnhof"
+            placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
           />
+          <p className="text-xs text-bot-blue mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
           {errors.from && <p className="text-red-500 text-sm mt-1">{errors.from}</p>}
           
           {showFromSuggestions && fromSuggestions.length > 0 && (
@@ -173,11 +215,16 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
-        <div className="relative">
-          <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-1">
-            To Station
+        <motion.div 
+          className="relative"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <label htmlFor="to" className="block text-sm font-medium text-bot-dark mb-1">
+            Where would you like to wake up?
           </label>
           <input
             type="text"
@@ -186,10 +233,10 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             onChange={(e) => handleInputChange('to', e.target.value)}
             onFocus={() => setShowToSuggestions(formData.to.length > 0)}
             onBlur={() => setTimeout(() => setShowToSuggestions(false), 200)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
-              errors.to ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
+              errors.to ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
-            placeholder="e.g., Vienna Central Station"
+            placeholder="Barcelona beach sunrise, Prague castle view, Stockholm archipelago..."
           />
           {errors.to && <p className="text-red-500 text-sm mt-1">{errors.to}</p>}
           
@@ -208,44 +255,37 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               ))}
             </div>
           )}
-        </div>
+        </motion.div>
 
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Your Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            }`}
-            placeholder="Your name"
-          />
-          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-        </div>
-
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.25, duration: 0.5 }}
+        >
+          <label htmlFor="email" className="block text-sm font-medium text-bot-dark mb-1">
+            Email (only if you want to join pajama parties) 
+            <span className="text-xs text-bot-blue font-normal">For local organizing only - never spam</span>
           </label>
           <input
             type="email"
             id="email"
             value={formData.email}
             onChange={(e) => handleInputChange('email', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
-              errors.email ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
+              errors.email ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
             placeholder="your.email@example.com"
           />
+          <p className="text-xs text-bot-blue mt-1">We&apos;ll connect you with others planning pajama parties at your station</p>
           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-        </div>
+        </motion.div>
 
-        <div>
-          <label htmlFor="why" className="block text-sm font-medium text-gray-700 mb-1">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <label htmlFor="why" className="block text-sm font-medium text-bot-dark mb-1">
             Why does this route matter to you?
           </label>
           <textarea
@@ -253,29 +293,61 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             value={formData.why}
             onChange={(e) => handleInputChange('why', e.target.value)}
             rows={3}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
-              errors.why ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 resize-none ${
+              errors.why ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
             placeholder="Tell us about your connection to this route, why it's important for sustainability, or how it would impact your travel..."
           />
           {errors.why && <p className="text-red-500 text-sm mt-1">{errors.why}</p>}
-        </div>
+        </motion.div>
 
         <motion.button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-bot-green text-white py-3 px-4 rounded-md hover:bg-bot-dark-green focus:outline-none focus:ring-2 focus:ring-bot-green focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          className="w-full bg-gradient-to-r from-bot-green via-bot-light-green to-bot-green text-white py-5 sm:py-6 px-8 rounded-2xl hover:from-bot-dark-green hover:via-bot-green hover:to-bot-dark-green focus:outline-none focus:ring-6 focus:ring-bot-light-green/40 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed font-black text-xl sm:text-2xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl border-2 border-bot-green/30"
+          whileHover={{ scale: 1.08, y: -4 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
         >
-          {isSubmitting ? 'Sharing Your Dream...' : 'Share Your Dream Route'}
+          {isSubmitting ? (
+            <>
+              <span className="inline-block animate-spin mr-2">🌍</span>
+              Sharing Your Dream...
+            </>
+          ) : (
+            <>
+              🚂 Add my dream to the map
+            </>
+          )}
         </motion.button>
       </div>
 
-      <p className="text-xs text-gray-500 mt-4 text-center">
-        By submitting, you agree to join the movement for sustainable night trains in Europe.
-        Your email will only be used for campaign updates.
+      <p className="text-xs text-gray-500 mt-6 text-center leading-relaxed">
+        <span className="text-bot-green font-medium">Privacy-first</span> - your data is automatically deleted after 30 days
       </p>
+      
+      {/* Success Message */}
+      {showSuccess && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="mt-6 bg-bot-green text-white p-4 rounded-lg shadow-lg"
+        >
+          <div className="text-center">
+            <h3 className="font-bold text-lg mb-2">Your dream is on the map! 🌟</h3>
+            <p className="text-sm">{successMessage}</p>
+            <div className="mt-3">
+              <p className="text-xs opacity-90">
+                We&apos;ll connect you with fellow travelers from your station. 
+                Join the movement for sustainable European transport!
+              </p>
+            </div>
+          </div>
+        </motion.div>
+      )}
     </motion.form>
   );
 }

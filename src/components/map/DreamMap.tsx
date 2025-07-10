@@ -28,7 +28,7 @@ interface DreamMapProps {
 
 export default function DreamMap({ 
   className = '',
-  routes = [],
+  routes,
   style = 'mapbox://styles/mapbox/light-v11',
   center = [13.4050, 52.5200],
   zoom = 4
@@ -37,6 +37,58 @@ export default function DreamMap({
   const map = useRef<mapboxgl.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dreamRoutes, setDreamRoutes] = useState<DreamRoute[]>(routes || []);
+
+  // Fetch dreams from API
+  const fetchDreams = useCallback(async () => {
+    try {
+      const response = await fetch('/api/dreams');
+      if (!response.ok) throw new Error('Failed to fetch dreams');
+      
+      const data = await response.json();
+      
+      // Transform API data to match DreamRoute interface
+      const transformedRoutes: DreamRoute[] = data.dreams.map((dream: {
+        id: number;
+        from_station: string;
+        to_station: string;
+        dreamer_name: string;
+        from_longitude: number | null;
+        from_latitude: number | null;
+        to_longitude: number | null;
+        to_latitude: number | null;
+      }) => ({
+        id: dream.id.toString(),
+        from: {
+          name: dream.from_station,
+          coordinates: [dream.from_longitude || 0, dream.from_latitude || 0] as [number, number]
+        },
+        to: {
+          name: dream.to_station,
+          coordinates: [dream.to_longitude || 0, dream.to_latitude || 0] as [number, number]
+        },
+        dreamerName: dream.dreamer_name,
+        count: 1 // For now, each dream counts as 1
+      }));
+      
+      setDreamRoutes(transformedRoutes);
+    } catch (error) {
+      console.error('Error fetching dreams:', error);
+    }
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    fetchDreams();
+  }, [fetchDreams]);
+
+  // Set up global refresh function for form submissions
+  useEffect(() => {
+    (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap = fetchDreams;
+    return () => {
+      delete (window as unknown as { refreshDreamMap?: () => void }).refreshDreamMap;
+    };
+  }, [fetchDreams]);
 
   useEffect(() => {
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -90,7 +142,7 @@ export default function DreamMap({
   const updateMapData = useCallback(() => {
     if (!map.current || !isLoaded) return;
 
-    const routeFeatures = routes.map(route => ({
+    const routeFeatures = dreamRoutes.map(route => ({
       type: 'Feature' as const,
       geometry: {
         type: 'LineString' as const,
@@ -106,7 +158,7 @@ export default function DreamMap({
     }));
 
     const stationMap = new Map();
-    routes.forEach(route => {
+    dreamRoutes.forEach(route => {
       const fromKey = `${route.from.coordinates[0]},${route.from.coordinates[1]}`;
       const toKey = `${route.to.coordinates[0]},${route.to.coordinates[1]}`;
       
@@ -159,13 +211,13 @@ export default function DreamMap({
         features: stationFeatures
       });
     }
-  }, [routes, isLoaded]);
+  }, [dreamRoutes, isLoaded]);
 
   useEffect(() => {
     if (isLoaded && map.current) {
       updateMapData();
     }
-  }, [routes, isLoaded, updateMapData]);
+  }, [dreamRoutes, isLoaded, updateMapData]);
 
   const initializeMapSources = () => {
     if (!map.current) return;

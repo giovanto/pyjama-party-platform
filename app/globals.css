@@ -1,4 +1,48 @@
 @import "tailwindcss";
+
+/* Tailwind CSS v4 custom theme configuration */
+@theme {
+  --color-bot-green: #008f39;
+  --color-bot-dark-green: #006b2d;
+  --color-bot-light-green: #92d051;
+  --color-bot-blue: #2271b3;
+  --color-bot-dark: #1a1a1a;
+  --color-bot-light: #f8f9fa;
+  
+  --font-family-mark: 'Mark Pro', 'system-ui', '-apple-system', 'sans-serif';
+  
+  --animate-pulse-soft: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.3s ease-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @import "../src/styles/brand.css";
 @import "../src/styles/animations.css";
 
@@ -9,7 +53,6 @@
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-family);
   margin: 0;
