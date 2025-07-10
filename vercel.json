@@ -3,10 +3,14 @@
   "devCommand": "npm run dev",
   "installCommand": "npm ci",
   "framework": "nextjs",
+  "nodeVersion": "18.x",
   "functions": {
     "app/api/**/*.ts": {
       "maxDuration": 30
     }
+  },
+  "env": {
+    "NODE_ENV": "production"
   },
   "headers": [
     {

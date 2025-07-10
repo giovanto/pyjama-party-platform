@@ -9,7 +9,9 @@
     "lint": "next lint",
     "test": "node tests/api-integration.test.js",
     "test:supabase": "node tests/supabase-integration.test.js",
-    "test:all": "npm run test && npm run test:supabase"
+    "test:all": "npm run test && npm run test:supabase",
+    "check-deployment": "node scripts/check-deployment.js",
+    "prebuild": "npm run check-deployment"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
