@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "../src/styles/brand.css";
+@import "../src/styles/animations.css";
+
+/* V1 brand styles ported to V3 */
+:root {
+  --background: var(--color-light);
+  --foreground: var(--color-dark);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-family);
+  margin: 0;
+  padding: 0;
+}
+
+/* Global styles matching V1 */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
