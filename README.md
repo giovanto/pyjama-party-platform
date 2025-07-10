@@ -1,6 +1,6 @@
-# 🚂 Pajama Party Platform
+# 🚂 Pajama Party Platform - Back-on-Track Action Group
 
-> **Advocating for sustainable night trains across Europe through community-driven mapping and pajama party activism**
+> **Grassroots European activism platform for coordinating synchronized pajama parties across train stations to advocate for sustainable night train networks**
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
@@ -8,19 +8,29 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.com)
 
-## 🌟 **What is Pajama Party Platform?**
+## 🌟 **September 26th, 2025: European Pajama Party Event**
 
-A modern web platform that empowers European citizens to advocate for sustainable night train connections. Users can:
+*"Where would you like to wake up tomorrow?"*
 
-- 🗺️ **Explore & Dream** - Interactive map of potential night train routes across Europe
-- 🚂 **Share Routes** - Submit dream destinations and connect with fellow travelers  
-- 👥 **Build Community** - Organize pajama parties at train stations to show demand
-- 📊 **Track Impact** - Monitor campaign progress and community growth
-- 🌱 **Climate Action** - Support low-carbon transport alternatives to short-haul flights
+The Pajama Party Platform coordinates **synchronized pajama parties across European train stations** on September 26th, 2025 (19:00-20:00 CEST). This grassroots activism tool serves the Back-on-Track Action Group's mission to advocate for sustainable night train networks through community engagement.
+
+### 🎯 **Two-Tier Engagement System**
+
+**Tier 1: Dream Journey Mapping (Open to All)**
+- 🗺️ **Interactive Map** - Visualize dream night train routes across Europe
+- 🚂 **Station Search** - Autocomplete for European train stations
+- 👥 **Community Building** - Track interest levels by station
+- 📊 **Real-time Tracking** - Monitor participation and route popularity
+
+**Tier 2: Event Participation (Email Signup)**
+- 🎉 **Critical Mass Detection** - Automatic identification of stations with 2+ participants
+- 🎵 **Silent Disco Coordination** - Europe-wide synchronized music listening
+- 📹 **Cross-Station Video** - Eurovision-style connectivity between participating stations
+- 📋 **Resource Access** - 2025 Party Kit and coordination materials
 
 ## 🚀 **Live Demo**
 
-🔗 **[See it in action →](https://your-demo-link.vercel.app)**
+🔗 **[Join the movement →](https://pajama-party-platform.vercel.app)**
 
 ![Pajama Party Platform Screenshot](https://via.placeholder.com/800x400/22c55e/ffffff?text=Night+Train+Map+%2B+Community+Features)
 
@@ -188,6 +198,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ### 🚂 **Ready to dream about your next night train journey?**
 
-**[Start Exploring →](https://your-demo-link.vercel.app)**
+**[Join the Movement →](https://pajama-party-platform.vercel.app)**
 
 *Built with ❤️ for the climate and 🚂 for sustainable travel*
