@@ -4,12 +4,8 @@
 
 ### 🎯 Current Branch Structure
 ```
-✅ production-main       - Production-ready V3 code (USE THIS)
+✅ main                  - Production-ready V3 code (USE THIS)
 ✅ archive/legacy-v1-v2  - Legacy versions archived  
-❌ main                  - Old messy code (ignore)
-❌ development          - Legacy (ignore)
-❌ v2-development       - Legacy (ignore)
-❌ v3-nextjs-implementation - Use production-main instead
 ```
 
 ## 🚀 **DEPLOY TO VERCEL NOW**
@@ -20,8 +16,8 @@
 
 ### Step 2: Import Repository
 1. **Repository:** `giovanto/pajama-party-platform`
-2. **Branch:** `production-main` ⭐ (IMPORTANT: Use this branch)
-3. **Root Directory:** `pajama-party-v3` ⭐ (IMPORTANT: V3 is in subdirectory)
+2. **Branch:** `main` ⭐ (IMPORTANT: Use this branch)
+3. **Root Directory:** `.` ⭐ (Code is now in root directory)
 
 ### Step 3: Configure Build Settings
 ```
@@ -29,7 +25,7 @@ Framework Preset: Next.js
 Build Command: npm run build
 Output Directory: .next
 Install Command: npm ci
-Root Directory: pajama-party-v3
+Root Directory: . (leave empty or use . for root)
 ```
 
 ### Step 4: Environment Variables
