@@ -1,0 +1,104 @@
+{
+  "stations": [
+    {
+      "id": "amsterdam-centraal",
+      "name": "Amsterdam Centraal",
+      "country": "NL",
+      "country_name": "Netherlands",
+      "city": "Amsterdam",
+      "lat": 52.3791,
+      "lng": 4.9003,
+      "type": "station"
+    },
+    {
+      "id": "berlin-hauptbahnhof",
+      "name": "Berlin Hauptbahnhof",
+      "country": "DE",
+      "country_name": "Germany",
+      "city": "Berlin",
+      "lat": 52.5251,
+      "lng": 13.3691,
+      "type": "station"
+    },
+    {
+      "id": "paris-gare-du-nord",
+      "name": "Paris Gare du Nord",
+      "country": "FR",
+      "country_name": "France",
+      "city": "Paris",
+      "lat": 48.8809,
+      "lng": 2.3553,
+      "type": "station"
+    },
+    {
+      "id": "milano-centrale",
+      "name": "Milano Centrale",
+      "country": "IT",
+      "country_name": "Italy",
+      "city": "Milano",
+      "lat": 45.4871,
+      "lng": 9.2049,
+      "type": "station"
+    },
+    {
+      "id": "madrid-atocha",
+      "name": "Madrid Atocha",
+      "country": "ES",
+      "country_name": "Spain",
+      "city": "Madrid",
+      "lat": 40.4067,
+      "lng": -3.6892,
+      "type": "station"
+    },
+    {
+      "id": "brussels-central",
+      "name": "Brussels Central",
+      "country": "BE",
+      "country_name": "Belgium",
+      "city": "Brussels",
+      "lat": 50.8459,
+      "lng": 4.3571,
+      "type": "station"
+    },
+    {
+      "id": "zurich-hauptbahnhof",
+      "name": "Zürich Hauptbahnhof",
+      "country": "CH",
+      "country_name": "Switzerland",
+      "city": "Zürich",
+      "lat": 47.3782,
+      "lng": 8.5402,
+      "type": "station"
+    },
+    {
+      "id": "vienna-hauptbahnhof",
+      "name": "Wien Hauptbahnhof",
+      "country": "AT",
+      "country_name": "Austria",
+      "city": "Vienna",
+      "lat": 48.1849,
+      "lng": 16.3787,
+      "type": "station"
+    },
+    {
+      "id": "prague-hlavni-nadrazi",
+      "name": "Praha hlavní nádraží",
+      "country": "CZ",
+      "country_name": "Czech Republic",
+      "city": "Prague",
+      "lat": 50.0835,
+      "lng": 14.4361,
+      "type": "station"
+    },
+    {
+      "id": "stockholm-central",
+      "name": "Stockholm Central",
+      "country": "SE",
+      "country_name": "Sweden",
+      "city": "Stockholm",
+      "lat": 59.3304,
+      "lng": 18.0575,
+      "type": "station"
+    }
+  ]
+}
