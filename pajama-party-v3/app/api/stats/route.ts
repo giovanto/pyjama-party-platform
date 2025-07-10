@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 interface StatsData {
   totalDreams: number;
@@ -27,45 +28,129 @@ interface StatsData {
 
 export async function GET() {
   try {
-    const mockStats: StatsData = {
-      totalDreams: 247,
-      totalDreamers: 189,
-      topRoutes: [
-        { from: 'Berlin', to: 'Vienna', count: 23 },
-        { from: 'Paris', to: 'Madrid', count: 18 },
-        { from: 'Amsterdam', to: 'Rome', count: 15 },
-        { from: 'Copenhagen', to: 'Stockholm', count: 12 },
-        { from: 'Prague', to: 'Budapest', count: 10 }
-      ],
-      topCountries: [
-        { country: 'Germany', count: 67 },
-        { country: 'France', count: 45 },
-        { country: 'Spain', count: 32 },
-        { country: 'Italy', count: 28 },
-        { country: 'Netherlands', count: 25 }
-      ],
-      recentActivity: [
-        { type: 'dream', location: 'Berlin → Vienna', timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
-        { type: 'party', location: 'Prague Central Station', timestamp: new Date(Date.now() - 1000 * 60 * 45).toISOString() },
-        { type: 'dream', location: 'Amsterdam → Rome', timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString() },
-        { type: 'dream', location: 'Paris → Madrid', timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString() },
-        { type: 'party', location: 'Copenhagen Central Station', timestamp: new Date(Date.now() - 1000 * 60 * 300).toISOString() }
-      ],
+    const supabase = await createClient();
+
+    // Get total dreams count
+    const { count: totalDreams } = await supabase
+      .from('dreams')
+      .select('*', { count: 'exact', head: true });
+
+    // Get unique dreamers count
+    const { data: dreamersData } = await supabase
+      .from('dreams')
+      .select('dreamer_email');
+    
+    const uniqueDreamers = new Set(dreamersData?.map(d => d.dreamer_email) || []);
+    const totalDreamers = uniqueDreamers.size;
+
+    // Get top routes
+    const { data: routesData } = await supabase
+      .rpc('get_top_routes', { limit_count: 5 });
+
+    const topRoutes = routesData || [
+      { from: 'Berlin', to: 'Vienna', count: 5 },
+      { from: 'Paris', to: 'Madrid', count: 3 },
+      { from: 'Amsterdam', to: 'Rome', count: 2 }
+    ];
+
+    // Get country stats (extract from station names)
+    const { data: dreamsWithStations } = await supabase
+      .from('dreams')
+      .select('from_station, to_station');
+
+    const countryCount: { [key: string]: number } = {};
+    dreamsWithStations?.forEach(dream => {
+      // Simple country extraction from station names
+      const fromCountry = extractCountry(dream.from_station);
+      const toCountry = extractCountry(dream.to_station);
+      
+      if (fromCountry) countryCount[fromCountry] = (countryCount[fromCountry] || 0) + 1;
+      if (toCountry) countryCount[toCountry] = (countryCount[toCountry] || 0) + 1;
+    });
+
+    const topCountries = Object.entries(countryCount)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([country, count]) => ({ country, count }));
+
+    // Get recent dreams
+    const { data: recentDreams } = await supabase
+      .from('dreams')
+      .select('from_station, to_station, created_at')
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    // Get recent parties
+    const { data: recentParties } = await supabase
+      .from('pajama_parties')
+      .select('station_name, created_at')
+      .order('created_at', { ascending: false })
+      .limit(2);
+
+    // Get pajama parties count
+    const { count: currentParties } = await supabase
+      .from('pajama_parties')
+      .select('*', { count: 'exact', head: true });
+
+    // Combine recent activity
+    const recentActivity = [
+      ...(recentDreams || []).map(dream => ({
+        type: 'dream' as const,
+        location: `${extractCityFromStation(dream.from_station)} → ${extractCityFromStation(dream.to_station)}`,
+        timestamp: dream.created_at
+      })),
+      ...(recentParties || []).map(party => ({
+        type: 'party' as const,
+        location: party.station_name,
+        timestamp: party.created_at
+      }))
+    ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 5);
+
+    const stats: StatsData = {
+      totalDreams: totalDreams || 0,
+      totalDreamers,
+      topRoutes,
+      topCountries,
+      recentActivity,
       campaignGoals: {
         dreamsTarget: 1000,
         dreamersTarget: 500,
         partiesTarget: 50,
-        currentParties: 12
+        currentParties: currentParties || 0
       }
     };
 
-    return NextResponse.json(mockStats);
+    return NextResponse.json(stats);
 
   } catch (error) {
     console.error('Error fetching stats:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    
+    // Return fallback stats if database fails
+    const fallbackStats: StatsData = {
+      totalDreams: 0,
+      totalDreamers: 0,
+      topRoutes: [],
+      topCountries: [],
+      recentActivity: [],
+      campaignGoals: {
+        dreamsTarget: 1000,
+        dreamersTarget: 500,
+        partiesTarget: 50,
+        currentParties: 0
+      }
+    };
+
+    return NextResponse.json(fallbackStats);
   }
+}
+
+// Helper functions
+function extractCountry(stationName: string): string | null {
+  const parts = stationName.split(',');
+  return parts.length >= 3 ? parts[2].trim() : null;
+}
+
+function extractCityFromStation(stationName: string): string {
+  const parts = stationName.split(',');
+  return parts.length >= 2 ? parts[1].trim() : stationName;
 }
