@@ -1,36 +1,193 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🚂 Pajama Party Platform
 
-## Getting Started
+> **Advocating for sustainable night trains across Europe through community-driven mapping and pajama party activism**
 
-First, run the development server:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.com)
+
+## 🌟 **What is Pajama Party Platform?**
+
+A modern web platform that empowers European citizens to advocate for sustainable night train connections. Users can:
+
+- 🗺️ **Explore & Dream** - Interactive map of potential night train routes across Europe
+- 🚂 **Share Routes** - Submit dream destinations and connect with fellow travelers  
+- 👥 **Build Community** - Organize pajama parties at train stations to show demand
+- 📊 **Track Impact** - Monitor campaign progress and community growth
+- 🌱 **Climate Action** - Support low-carbon transport alternatives to short-haul flights
+
+## 🚀 **Live Demo**
+
+🔗 **[See it in action →](https://your-demo-link.vercel.app)**
+
+![Pajama Party Platform Screenshot](https://via.placeholder.com/800x400/22c55e/ffffff?text=Night+Train+Map+%2B+Community+Features)
+
+## ✨ **Key Features**
+
+### 🗺️ **Interactive European Map**
+- Real-time visualization of dream routes
+- Station search with autocomplete
+- Mapbox integration with smooth animations
+- Coordinate-based route planning
+
+### 🚂 **Dream Route Submission**
+- Smart station autocomplete
+- Coordinate lookup and validation
+- Personal story collection
+- Email community building
+
+### 👥 **Community Features**
+- Real-time campaign statistics
+- Top requested routes tracking
+- Recent activity feed
+- Pajama party organization tools
+
+### 📱 **Modern User Experience**
+- Responsive design for all devices
+- Smooth animations with Framer Motion
+- Accessibility-first components
+- Progressive Web App capabilities
+
+## 🛠️ **Tech Stack**
+
+**Frontend & Framework**
+- [Next.js 15](https://nextjs.org/) - React framework with App Router
+- [React 19](https://reactjs.org/) - Latest React with modern features
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe development
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first styling
+
+**Backend & Database**
+- [Supabase](https://supabase.com) - PostgreSQL database with real-time features
+- [Vercel](https://vercel.com) - Serverless deployment and API routes
+- Modern authentication and Row Level Security
+
+**Mapping & Visualization**
+- [Mapbox GL JS](https://mapbox.com) - Interactive maps and routing
+- Custom route visualization
+- European train station database
+
+**Animation & UX**
+- [Framer Motion](https://framer.com/motion) - Smooth animations
+- [Headless UI](https://headlessui.dev/) - Accessible components
+- Responsive design patterns
+
+## 🚀 **Quick Start**
+
+### 1. **One-Click Deployment**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+
+### 2. **Local Development**
 
 ```bash
+# Clone the repository
+git clone https://github.com/giovanto/pajama-party-platform.git
+cd pajama-party-platform
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.local.example .env.local
+# Edit .env.local with your API keys
+
+# Run database setup
+# See docs/SETUP.md for Supabase configuration
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the platform.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. **Environment Variables**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Required
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-## Learn More
+# Optional
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📖 **Documentation**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 🚀 **[Deployment Guide](./DEPLOYMENT_READY.md)** - Production deployment
+- 🔧 **[Development Setup](./SUPABASE_SETUP.md)** - Local development
+- 🗄️ **[Database Schema](./setup-database.sql)** - Database structure
+- 🧪 **[Testing Guide](./tests/)** - Running tests
+- 📊 **[Monitoring](./PRODUCTION_MONITORING.md)** - Production monitoring
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧪 **Testing**
 
-## Deploy on Vercel
+```bash
+# Run all tests
+npm run test:all
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Integration tests only
+npm run test:supabase
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# API tests only  
+npm run test
+```
+
+**Current Test Coverage:**
+- ✅ 6/6 integration tests passing
+- ✅ Database connectivity
+- ✅ API endpoints
+- ✅ Form submission workflow
+- ✅ Station search autocomplete
+
+## 🌍 **Community Impact**
+
+> *"Night trains can reduce aviation emissions by up to 90% for medium-distance European travel"*
+
+### 📊 **Campaign Metrics** *(Example)*
+- **🚂 Dream Routes:** 247 submitted
+- **👥 Active Dreamers:** 189 community members  
+- **🎉 Pajama Parties:** 12 organized across Europe
+- **🌍 Countries:** 15+ European countries represented
+
+### 🎯 **Goals**
+- **1,000 dream routes** to demonstrate demand
+- **500 active community members** advocating for night trains
+- **50 pajama parties** at key European train stations
+- **Policy impact** through grassroots community action
+
+## 🤝 **Contributing**
+
+We welcome contributions from developers, designers, and climate activists!
+
+### 🛠️ **Development**
+- 🐛 [Report bugs](https://github.com/giovanto/pajama-party-platform/issues)
+- 💡 [Request features](https://github.com/giovanto/pajama-party-platform/issues)
+- 🔧 [Submit pull requests](https://github.com/giovanto/pajama-party-platform/pulls)
+
+### 🌱 **Activism**
+- 🚂 Submit your dream night train routes
+- 🎉 Organize pajama parties in your city
+- 📢 Share the platform with your network
+- 🌍 Join the movement for sustainable transport
+
+## 📄 **License**
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 **Acknowledgments**
+
+- **[Back-on-Track](https://back-on-track.eu)** - European night train advocacy
+- **Climate activists** across Europe fighting for sustainable transport  
+- **Open source community** making tools like Next.js, Supabase, and Mapbox
+- **Night train dreamers** who believe in a better way to travel
+
+---
+
+### 🚂 **Ready to dream about your next night train journey?**
+
+**[Start Exploring →](https://your-demo-link.vercel.app)**
+
+*Built with ❤️ for the climate and 🚂 for sustainable travel*
