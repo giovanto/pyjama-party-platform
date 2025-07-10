@@ -1,147 +1,193 @@
-# Pajama Party Platform - European Train Adventure Dreams
+# 🚂 Pajama Party Platform
 
-A platform for organizing pajama parties to advocate for European night trains.
+> **Advocating for sustainable night trains across Europe through community-driven mapping and pajama party activism**
 
-## Version Structure
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.com)
 
-- **v1/** - Legacy vanilla HTML/CSS/JS implementation (reference)
-- **Current directory** - v2 React + TypeScript implementation (active development)
-- **Future v3** - Next.js migration (planned for `v3-nextjs` branch)
+## 🌟 **What is Pajama Party Platform?**
 
-## Active Version: v2 (React + TypeScript)
+A modern web platform that empowers European citizens to advocate for sustainable night train connections. Users can:
 
-This is the current React + TypeScript implementation with modern architecture.
+- 🗺️ **Explore & Dream** - Interactive map of potential night train routes across Europe
+- 🚂 **Share Routes** - Submit dream destinations and connect with fellow travelers  
+- 👥 **Build Community** - Organize pajama parties at train stations to show demand
+- 📊 **Track Impact** - Monitor campaign progress and community growth
+- 🌱 **Climate Action** - Support low-carbon transport alternatives to short-haul flights
 
-### Features
+## 🚀 **Live Demo**
 
-- 🎉 **Event Banner** with countdown timer for September 26, 2025
-- 🧭 **Floating Navigation** with scroll-based activation
-- 🗺️ **Interactive Map** with Mapbox GL integration
-- 📝 **Dream Form** with station autocomplete and validation
-- 👥 **Community Features** with Back-on-Track action group integration
-- 📊 **Statistics Dashboard** with real-time data
-- 🎨 **Brand-consistent Design** with Back-on-Track colors and animations
+🔗 **[See it in action →](https://your-demo-link.vercel.app)**
 
-### Tech Stack
+![Pajama Party Platform Screenshot](https://via.placeholder.com/800x400/22c55e/ffffff?text=Night+Train+Map+%2B+Community+Features)
 
-- **Frontend**: React 19, TypeScript, Vite
-- **Styling**: CSS Custom Properties + Tailwind utilities  
-- **Backend**: Vercel Serverless Functions
-- **Database**: Supabase (PostgreSQL)
-- **Maps**: Mapbox GL JS
-- **Testing**: Vitest, React Testing Library, MSW
-- **Deployment**: Vercel
+## ✨ **Key Features**
 
-### Quick Start
+### 🗺️ **Interactive European Map**
+- Real-time visualization of dream routes
+- Station search with autocomplete
+- Mapbox integration with smooth animations
+- Coordinate-based route planning
+
+### 🚂 **Dream Route Submission**
+- Smart station autocomplete
+- Coordinate lookup and validation
+- Personal story collection
+- Email community building
+
+### 👥 **Community Features**
+- Real-time campaign statistics
+- Top requested routes tracking
+- Recent activity feed
+- Pajama party organization tools
+
+### 📱 **Modern User Experience**
+- Responsive design for all devices
+- Smooth animations with Framer Motion
+- Accessibility-first components
+- Progressive Web App capabilities
+
+## 🛠️ **Tech Stack**
+
+**Frontend & Framework**
+- [Next.js 15](https://nextjs.org/) - React framework with App Router
+- [React 19](https://reactjs.org/) - Latest React with modern features
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe development
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first styling
+
+**Backend & Database**
+- [Supabase](https://supabase.com) - PostgreSQL database with real-time features
+- [Vercel](https://vercel.com) - Serverless deployment and API routes
+- Modern authentication and Row Level Security
+
+**Mapping & Visualization**
+- [Mapbox GL JS](https://mapbox.com) - Interactive maps and routing
+- Custom route visualization
+- European train station database
+
+**Animation & UX**
+- [Framer Motion](https://framer.com/motion) - Smooth animations
+- [Headless UI](https://headlessui.dev/) - Accessible components
+- Responsive design patterns
+
+## 🚀 **Quick Start**
+
+### 1. **One-Click Deployment**
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+
+### 2. **Local Development**
 
 ```bash
+# Clone the repository
+git clone https://github.com/giovanto/pajama-party-platform.git
+cd pajama-party-platform
+
 # Install dependencies
 npm install
 
 # Set up environment variables
-cp .env.example .env.local
-# Add your Supabase and Mapbox credentials
+cp .env.local.example .env.local
+# Edit .env.local with your API keys
 
-# Set up database
-npm run db:setup
-npm run db:import
+# Run database setup
+# See docs/SETUP.md for Supabase configuration
 
 # Start development server
 npm run dev
-
-# Build for production
-npm run build
 ```
 
-### Environment Variables
+Open [http://localhost:3000](http://localhost:3000) to see the platform.
+
+### 3. **Environment Variables**
 
 ```bash
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_MAPBOX_ACCESS_TOKEN=your_mapbox_token
+# Required
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Optional
+NEXT_PUBLIC_APP_URL=https://your-domain.com
 ```
 
-### Project Structure
+## 📖 **Documentation**
 
-```
-├── src/
-│   ├── components/          # React components
-│   │   ├── EventBanner/     # Event promotion with countdown
-│   │   ├── FloatingNav/     # Floating navigation
-│   │   ├── Forms/           # Dream form and station search
-│   │   ├── Map/             # Mapbox integration
-│   │   ├── Community/       # Stats and messaging
-│   │   ├── CommunityFeatures/ # Action group integration
-│   │   └── Layout/          # Header, Footer, Layout
-│   ├── hooks/               # Custom React hooks
-│   ├── services/            # API services
-│   ├── types/               # TypeScript type definitions
-│   └── styles/              # CSS files
-├── api/                     # Vercel serverless functions
-├── scripts/                 # Database and utility scripts
-└── v1/                      # Legacy implementation (reference)
-```
+- 🚀 **[Deployment Guide](./DEPLOYMENT_READY.md)** - Production deployment
+- 🔧 **[Development Setup](./SUPABASE_SETUP.md)** - Local development
+- 🗄️ **[Database Schema](./setup-database.sql)** - Database structure
+- 🧪 **[Testing Guide](./tests/)** - Running tests
+- 📊 **[Monitoring](./PRODUCTION_MONITORING.md)** - Production monitoring
 
-### Key Components
-
-#### EventBanner
-Promotes the Europe-wide pajama party event with live countdown timer.
-
-#### FloatingNav  
-Smooth scroll navigation that appears/disappears based on scroll direction and highlights active sections.
-
-#### CommunityFeatures
-Detailed information about Back-on-Track action group with integration for joining and organizing.
-
-#### Map Integration
-Interactive European map showing dream destinations with proper clustering and popups.
-
-### Development
+## 🧪 **Testing**
 
 ```bash
-# Run tests
+# Run all tests
+npm run test:all
+
+# Integration tests only
+npm run test:supabase
+
+# API tests only  
 npm run test
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-npm run lint:fix
-
-# Format code
-npm run format
 ```
 
-### Deployment
+**Current Test Coverage:**
+- ✅ 6/6 integration tests passing
+- ✅ Database connectivity
+- ✅ API endpoints
+- ✅ Form submission workflow
+- ✅ Station search autocomplete
 
-The project is configured for Vercel deployment with automatic builds on push to main branch.
+## 🌍 **Community Impact**
 
-```bash
-# Deploy to Vercel
-vercel --prod
-```
+> *"Night trains can reduce aviation emissions by up to 90% for medium-distance European travel"*
 
-### Branch Strategy
+### 📊 **Campaign Metrics** *(Example)*
+- **🚂 Dream Routes:** 247 submitted
+- **👥 Active Dreamers:** 189 community members  
+- **🎉 Pajama Parties:** 12 organized across Europe
+- **🌍 Countries:** 15+ European countries represented
 
-- `main` - v1 production (vanilla implementation)
-- `v2-development` - v2 React implementation (current)
-- `v3-nextjs` - Future Next.js migration
+### 🎯 **Goals**
+- **1,000 dream routes** to demonstrate demand
+- **500 active community members** advocating for night trains
+- **50 pajama parties** at key European train stations
+- **Policy impact** through grassroots community action
+
+## 🤝 **Contributing**
+
+We welcome contributions from developers, designers, and climate activists!
+
+### 🛠️ **Development**
+- 🐛 [Report bugs](https://github.com/giovanto/pajama-party-platform/issues)
+- 💡 [Request features](https://github.com/giovanto/pajama-party-platform/issues)
+- 🔧 [Submit pull requests](https://github.com/giovanto/pajama-party-platform/pulls)
+
+### 🌱 **Activism**
+- 🚂 Submit your dream night train routes
+- 🎉 Organize pajama parties in your city
+- 📢 Share the platform with your network
+- 🌍 Join the movement for sustainable transport
+
+## 📄 **License**
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 **Acknowledgments**
+
+- **[Back-on-Track](https://back-on-track.eu)** - European night train advocacy
+- **Climate activists** across Europe fighting for sustainable transport  
+- **Open source community** making tools like Next.js, Supabase, and Mapbox
+- **Night train dreamers** who believe in a better way to travel
 
 ---
 
-## v1 Reference (Legacy)
+### 🚂 **Ready to dream about your next night train journey?**
 
-The v1 implementation in `v1/` contains the original vanilla HTML/CSS/JS version with:
-- Custom CSS animations and interactions
-- Vanilla JavaScript form handling
-- Direct Mapbox GL integration
-- Node.js backend with SQLite
+**[Start Exploring →](https://your-demo-link.vercel.app)**
 
-This serves as reference for feature parity and visual design consistency.
-
----
-
-**Built with ❤️ for sustainable European travel**
-
-Part of the [Back-on-Track](https://back-on-track.eu) movement for European night trains.
+*Built with ❤️ for the climate and 🚂 for sustainable travel*

@@ -1,345 +1,281 @@
-/**
- * DreamForm Component
- * Main form for submitting pajama party dreams
- */
+'use client';
 
-import React, { useState, useCallback } from 'react';
-import { useForm } from '../../hooks';
-import { api } from '../../services/api';
-import { StationSearch } from './StationSearch';
-import type { 
-  DreamFormProps, 
-  DreamSubmission, 
-  Station,
-  DreamSubmissionResponse,
-} from '../../types';
-import { VALIDATION_RULES } from '../../types';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 
-export function DreamForm({
-  onSubmitSuccess,
-  onSubmitError,
-  onFieldChange,
-  initialData = {},
-  disabled = false,
-}: DreamFormProps) {
-  const [selectedOrigin, setSelectedOrigin] = useState<Station | null>(null);
-  const [selectedDestination, setSelectedDestination] = useState<Station | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [communityMessage, setCommunityMessage] = useState<string | null>(null);
-
-  // Form validation rules
-  const validationRules = {
-    dreamer_name: {
-      required: true,
-      minLength: VALIDATION_RULES.dreamer_name.minLength,
-      maxLength: VALIDATION_RULES.dreamer_name.maxLength,
-      pattern: VALIDATION_RULES.dreamer_name.pattern,
-      custom: (value: string) => {
-        if (value && !VALIDATION_RULES.dreamer_name.pattern.test(value)) {
-          return 'Name can only contain letters, spaces, hyphens, apostrophes, and dots';
-        }
-        return null;
-      },
-    },
-    origin_station: {
-      required: true,
-      minLength: VALIDATION_RULES.origin_station.minLength,
-      maxLength: VALIDATION_RULES.origin_station.maxLength,
-    },
-    destination_city: {
-      required: true,
-      minLength: VALIDATION_RULES.destination_city.minLength,
-      maxLength: VALIDATION_RULES.destination_city.maxLength,
-    },
-    email: {
-      required: false,
-      maxLength: VALIDATION_RULES.email.maxLength,
-      pattern: VALIDATION_RULES.email.pattern,
-      custom: (value: string) => {
-        if (value && !VALIDATION_RULES.email.pattern.test(value)) {
-          return 'Please enter a valid email address';
-        }
-        return null;
-      },
-    },
-  };
-
-  // Initialize form
-  const form = useForm<DreamSubmission>({
-    initialData: {
-      dreamer_name: '',
-      origin_station: '',
-      destination_city: '',
-      email: '',
-      ...initialData,
-    },
-    validationRules,
-    validateOnChange: false,
-    validateOnBlur: true,
-  });
-
-  // Handle form submission
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (disabled || form.isSubmitting) return;
-
-    try {
-      await form.submit(async (data) => {
-        // Add station coordinates if available
-        const submissionData: DreamSubmission = {
-          ...data,
-          origin_country: selectedOrigin?.country,
-          origin_lat: selectedOrigin?.lat,
-          origin_lng: selectedOrigin?.lng,
-          destination_country: selectedDestination?.country,
-          destination_lat: selectedDestination?.lat,
-          destination_lng: selectedDestination?.lng,
-        };
-
-        const response = await api.dreams.submitDream(submissionData);
-        
-        // Show success state
-        setShowSuccessMessage(true);
-        setCommunityMessage(response.community_message || null);
-        
-        // Clear selected stations
-        setSelectedOrigin(null);
-        setSelectedDestination(null);
-        
-        // Call success callback
-        onSubmitSuccess?.(response);
-        
-        // Hide success message after 5 seconds
-        setTimeout(() => {
-          setShowSuccessMessage(false);
-          setCommunityMessage(null);
-        }, 5000);
-      });
-    } catch (error) {
-      const err = error instanceof Error ? error : new Error('Submission failed');
-      onSubmitError?.(err);
-    }
-  }, [form, selectedOrigin, selectedDestination, disabled, onSubmitSuccess, onSubmitError]);
-
-  // Handle field changes with callback
-  const handleFieldChange = useCallback((field: keyof DreamSubmission, value: string) => {
-    form.updateField(field, value);
-    onFieldChange?.(field, value);
-  }, [form, onFieldChange]);
-
-  // Handle station selection
-  const handleOriginStationSelect = useCallback((station: Station | null) => {
-    setSelectedOrigin(station);
-    if (station) {
-      handleFieldChange('origin_station', station.name);
-    }
-  }, [handleFieldChange]);
-
-  const handleDestinationCityChange = useCallback((value: string) => {
-    handleFieldChange('destination_city', value);
-    // Clear destination station if user types manually
-    setSelectedDestination(null);
-  }, [handleFieldChange]);
-
-  // Success message component
-  const SuccessMessage = () => (
-    <div className="success-message mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-      <div className="flex items-center gap-2 mb-2">
-        <span className="text-green-600 text-xl">🎉</span>
-        <h3 className="text-green-800 font-semibold">Dream Added Successfully!</h3>
-      </div>
-      <p className="text-green-700 text-sm mb-2">
-        Your pajama party adventure has been added to the map! 🚂✨
-      </p>
-      {communityMessage && (
-        <div className="mt-3 p-3 bg-green-100 rounded-md">
-          <p className="text-green-800 text-sm font-medium">
-            {communityMessage}
-          </p>
-        </div>
-      )}
-    </div>
-  );
-
-  const formClasses = `
-    max-w-2xl mx-auto p-6
-    ${disabled ? 'opacity-60 pointer-events-none' : ''}
-  `;
-
-  const fieldClasses = 'mb-6';
-  const labelClasses = 'block text-sm font-medium text-gray-700 mb-2';
-  const inputClasses = `
-    w-full px-4 py-3 border rounded-lg 
-    text-gray-900 placeholder-gray-500
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
-    transition-colors duration-200
-    ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white hover:border-gray-400'}
-  `;
-  const errorClasses = 'mt-1 text-sm text-red-600';
-  const helpTextClasses = 'mt-1 text-xs text-gray-500';
-
-  return (
-    <form onSubmit={handleSubmit} className={`dream-form ${formClasses}`} noValidate>
-      {/* Success Message */}
-      {showSuccessMessage && <SuccessMessage />}
-
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Share Your Pajama Party Dream 🚂
-        </h2>
-        <p className="text-gray-600">
-          Tell us where you'd like to wake up after a magical train journey
-        </p>
-      </div>
-
-      {/* Dreamer Name Field */}
-      <div className={fieldClasses}>
-        <label htmlFor="dreamerName" className={labelClasses}>
-          What's your name? <span className="text-red-500">*</span>
-          <span className="font-normal text-gray-500">(First name is enough)</span>
-        </label>
-        <input
-          id="dreamerName"
-          type="text"
-          {...form.getFieldProps('dreamer_name')}
-          className={`${inputClasses} ${form.hasFieldError('dreamer_name') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}`}
-          placeholder="Maria, João, Emma, Lars..."
-          disabled={disabled || form.isSubmitting}
-        />
-        {form.getFieldError('dreamer_name') && (
-          <div className={errorClasses}>{form.getFieldError('dreamer_name')}</div>
-        )}
-        <div className={helpTextClasses}>
-          This will be displayed publicly on the map
-        </div>
-      </div>
-
-      {/* Origin Station Field */}
-      <div className={fieldClasses}>
-        <label htmlFor="originStation" className={labelClasses}>
-          Which train station represents you? <span className="text-red-500">*</span>
-        </label>
-        <StationSearch
-          id="originStation"
-          placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
-          value={form.data.origin_station}
-          onValueChange={(value) => handleFieldChange('origin_station', value)}
-          onStationSelect={handleOriginStationSelect}
-          error={form.getFieldError('origin_station')}
-          disabled={disabled || form.isSubmitting}
-        />
-        <div className={helpTextClasses}>
-          Choose the European train station closest to you or that you identify with
-        </div>
-      </div>
-
-      {/* Destination Field */}
-      <div className={fieldClasses}>
-        <label htmlFor="destinationCity" className={labelClasses}>
-          Where would you like to wake up? <span className="text-red-500">*</span>
-        </label>
-        <input
-          id="destinationCity"
-          type="text"
-          value={form.data.destination_city}
-          onChange={(e) => handleDestinationCityChange(e.target.value)}
-          onBlur={() => form.handleFieldBlur('destination_city')}
-          className={`${inputClasses} ${form.hasFieldError('destination_city') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}`}
-          placeholder="Barcelona beach sunrise, Prague castle view, Paris café morning..."
-          disabled={disabled || form.isSubmitting}
-        />
-        {form.getFieldError('destination_city') && (
-          <div className={errorClasses}>{form.getFieldError('destination_city')}</div>
-        )}
-        <div className={helpTextClasses}>
-          Describe your dream destination - be creative and poetic!
-        </div>
-      </div>
-
-      {/* Email Field (Optional) */}
-      <div className={fieldClasses}>
-        <label htmlFor="email" className={labelClasses}>
-          Email <span className="text-gray-400">(optional)</span>
-        </label>
-        <input
-          id="email"
-          type="email"
-          {...form.getFieldProps('email')}
-          className={`${inputClasses} ${form.hasFieldError('email') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}`}
-          placeholder="your.email@example.com"
-          disabled={disabled || form.isSubmitting}
-        />
-        {form.getFieldError('email') && (
-          <div className={errorClasses}>{form.getFieldError('email')}</div>
-        )}
-        <div className={helpTextClasses}>
-          <span className="font-medium">Only if you want to join pajama parties!</span> We'll use this for local organizing only - never spam
-        </div>
-      </div>
-
-      {/* Submit Button */}
-      <div className="text-center">
-        <button
-          type="submit"
-          disabled={disabled || form.isSubmitting || !form.isValid}
-          className={`
-            btn px-8 py-4 rounded-lg font-semibold text-white text-lg
-            transition-all duration-200 transform
-            ${(disabled || form.isSubmitting || !form.isValid)
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl'
-            }
-          `}
-        >
-          {form.isSubmitting ? (
-            <span className="flex items-center gap-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              Adding to map...
-            </span>
-          ) : (
-            'Add my dream to the map ✨'
-          )}
-        </button>
-      </div>
-
-      {/* Privacy Note */}
-      <div className="mt-6 text-center text-xs text-gray-500">
-        <span className="font-medium text-blue-600">Privacy-first:</span> your data is automatically deleted after 30 days.{' '}
-        <button
-          type="button"
-          className="text-blue-600 hover:text-blue-700 underline"
-          onClick={() => {/* Handle privacy info modal */}}
-        >
-          Learn more
-        </button>
-      </div>
-
-      {/* Form Debug Info (Development Only) */}
-      {import.meta.env.DEV && (
-        <details className="mt-8 p-4 bg-gray-50 rounded-lg">
-          <summary className="cursor-pointer text-sm text-gray-600 font-medium">
-            Debug Info (Dev Only)
-          </summary>
-          <pre className="mt-2 text-xs text-gray-600 overflow-auto">
-            {JSON.stringify(
-              {
-                formData: form.data,
-                errors: form.errors,
-                isValid: form.isValid,
-                isDirty: form.isDirty,
-                selectedOrigin,
-                selectedDestination,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </details>
-      )}
-    </form>
-  );
+interface StationSuggestion {
+  id: string;
+  name: string;
+  city: string;
+  country: string;
+  coordinates: [number, number];
 }
 
-export default DreamForm;
+interface DreamFormData {
+  from: string;
+  to: string;
+  name: string;
+  email: string;
+  why: string;
+}
+
+interface DreamFormProps {
+  onSubmit?: (data: DreamFormData) => Promise<void>;
+  className?: string;
+}
+
+export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) {
+  const [formData, setFormData] = useState<DreamFormData>({
+    from: '',
+    to: '',
+    name: '',
+    email: '',
+    why: ''
+  });
+
+  const [fromSuggestions, setFromSuggestions] = useState<StationSuggestion[]>([]);
+  const [toSuggestions, setToSuggestions] = useState<StationSuggestion[]>([]);
+  const [showFromSuggestions, setShowFromSuggestions] = useState(false);
+  const [showToSuggestions, setShowToSuggestions] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Partial<DreamFormData>>({});
+
+  const searchStations = async (query: string): Promise<StationSuggestion[]> => {
+    if (query.length < 2) return [];
+    
+    try {
+      const response = await fetch(`/api/stations/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) return [];
+      const data = await response.json();
+      return data.stations || [];
+    } catch {
+      return [];
+    }
+  };
+
+  const handleInputChange = async (field: keyof DreamFormData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setErrors(prev => ({ ...prev, [field]: '' }));
+
+    if (field === 'from') {
+      const suggestions = await searchStations(value);
+      setFromSuggestions(suggestions);
+      setShowFromSuggestions(value.length > 0);
+    } else if (field === 'to') {
+      const suggestions = await searchStations(value);
+      setToSuggestions(suggestions);
+      setShowToSuggestions(value.length > 0);
+    }
+  };
+
+  const selectStation = (field: 'from' | 'to', station: StationSuggestion) => {
+    const stationName = `${station.name}, ${station.city}, ${station.country}`;
+    setFormData(prev => ({ ...prev, [field]: stationName }));
+    
+    if (field === 'from') {
+      setShowFromSuggestions(false);
+      setFromSuggestions([]);
+    } else {
+      setShowToSuggestions(false);
+      setToSuggestions([]);
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<DreamFormData> = {};
+
+    if (!formData.from.trim()) newErrors.from = 'Departure station is required';
+    if (!formData.to.trim()) newErrors.to = 'Destination station is required';
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+    if (!formData.why.trim()) newErrors.why = 'Please tell us why this route matters to you';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    try {
+      if (onSubmit) {
+        await onSubmit(formData);
+      } else {
+        const response = await fetch('/api/dreams', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to submit dream');
+        }
+      }
+
+      setFormData({ from: '', to: '', name: '', email: '', why: '' });
+    } catch (error) {
+      console.error('Error submitting dream:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <motion.form
+      onSubmit={handleSubmit}
+      className={`dream-form bg-white rounded-lg shadow-lg p-6 ${className}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h2 className="text-2xl font-bold text-bot-dark mb-6 text-center">
+        Share Your Dream Route
+      </h2>
+
+      <div className="space-y-4">
+        <div className="relative">
+          <label htmlFor="from" className="block text-sm font-medium text-gray-700 mb-1">
+            From Station
+          </label>
+          <input
+            type="text"
+            id="from"
+            value={formData.from}
+            onChange={(e) => handleInputChange('from', e.target.value)}
+            onFocus={() => setShowFromSuggestions(formData.from.length > 0)}
+            onBlur={() => setTimeout(() => setShowFromSuggestions(false), 200)}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
+              errors.from ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="e.g., Berlin Hauptbahnhof"
+          />
+          {errors.from && <p className="text-red-500 text-sm mt-1">{errors.from}</p>}
+          
+          {showFromSuggestions && fromSuggestions.length > 0 && (
+            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
+              {fromSuggestions.map((station) => (
+                <button
+                  key={station.id}
+                  type="button"
+                  onClick={() => selectStation('from', station)}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                >
+                  <div className="font-medium">{station.name}</div>
+                  <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-1">
+            To Station
+          </label>
+          <input
+            type="text"
+            id="to"
+            value={formData.to}
+            onChange={(e) => handleInputChange('to', e.target.value)}
+            onFocus={() => setShowToSuggestions(formData.to.length > 0)}
+            onBlur={() => setTimeout(() => setShowToSuggestions(false), 200)}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
+              errors.to ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="e.g., Vienna Central Station"
+          />
+          {errors.to && <p className="text-red-500 text-sm mt-1">{errors.to}</p>}
+          
+          {showToSuggestions && toSuggestions.length > 0 && (
+            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
+              {toSuggestions.map((station) => (
+                <button
+                  key={station.id}
+                  type="button"
+                  onClick={() => selectStation('to', station)}
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                >
+                  <div className="font-medium">{station.name}</div>
+                  <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            Your Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
+              errors.name ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="Your name"
+          />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
+              errors.email ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="your.email@example.com"
+          />
+          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="why" className="block text-sm font-medium text-gray-700 mb-1">
+            Why does this route matter to you?
+          </label>
+          <textarea
+            id="why"
+            value={formData.why}
+            onChange={(e) => handleInputChange('why', e.target.value)}
+            rows={3}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-bot-green ${
+              errors.why ? 'border-red-500' : 'border-gray-300'
+            }`}
+            placeholder="Tell us about your connection to this route, why it's important for sustainability, or how it would impact your travel..."
+          />
+          {errors.why && <p className="text-red-500 text-sm mt-1">{errors.why}</p>}
+        </div>
+
+        <motion.button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-bot-green text-white py-3 px-4 rounded-md hover:bg-bot-dark-green focus:outline-none focus:ring-2 focus:ring-bot-green focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+        >
+          {isSubmitting ? 'Sharing Your Dream...' : 'Share Your Dream Route'}
+        </motion.button>
+      </div>
+
+      <p className="text-xs text-gray-500 mt-4 text-center">
+        By submitting, you agree to join the movement for sustainable night trains in Europe.
+        Your email will only be used for campaign updates.
+      </p>
+    </motion.form>
+  );
+}
