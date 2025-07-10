@@ -56,11 +56,11 @@ export function FloatingNav() {
     };
     
     // Debounce scroll events (same as V1)
-    const debounce = (func: Function, wait: number) => {
+    const debounce = (func: (...args: unknown[]) => void, wait: number) => {
       let timeout: NodeJS.Timeout;
-      return (...args: any[]) => {
+      return (...args: unknown[]) => {
         clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(null, args), wait);
+        timeout = setTimeout(() => func(...args), wait);
       };
     };
     

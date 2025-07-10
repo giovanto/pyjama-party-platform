@@ -1,13 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
-interface HeaderProps {
-  showFloatingNav?: boolean;
-}
-
-export function Header({ showFloatingNav }: HeaderProps) {
+export function Header() {
   return (
     <header className="header bg-white border-b border-gray-200 sticky top-0 z-50 backdrop-blur-sm">
       <div className="header__container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
