@@ -1,1 +1,0 @@
-export { default as DreamMap } from './DreamMap';
