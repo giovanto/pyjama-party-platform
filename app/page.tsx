@@ -1,6 +1,6 @@
 import { DreamForm } from '@/components/forms';
 import { DreamMap } from '@/components/map';
-import { StatsPanel } from '@/components/community';
+import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { FloatingNav } from '@/components/layout';
 import { Countdown } from '@/components/ui';
 
@@ -107,8 +107,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div>
+            <div className="space-y-6">
               <StatsPanel />
+              <CriticalMassPanel />
             </div>
           </div>
         </div>

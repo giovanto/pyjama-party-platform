@@ -24,6 +24,13 @@ interface StatsData {
     partiesTarget: number;
     currentParties: number;
   };
+  criticalMassStations: Array<{
+    stationName: string;
+    city: string;
+    country: string;
+    attendees: number;
+    status: string;
+  }>;
 }
 
 export async function GET() {
@@ -87,10 +94,17 @@ export async function GET() {
       .order('created_at', { ascending: false })
       .limit(2);
 
-    // Get pyjama parties count
+    // Get pyjama parties count and critical mass detection
     const { count: currentParties } = await supabase
       .from('pyjama_parties')
       .select('*', { count: 'exact', head: true });
+
+    // Get critical mass stations (2+ participants)
+    const { data: partiesData } = await supabase
+      .from('pyjama_parties')
+      .select('station_name, city, country, attendees_count, status')
+      .gte('attendees_count', 2)
+      .eq('status', 'planned');
 
     // Combine recent activity
     const recentActivity = [
@@ -117,7 +131,14 @@ export async function GET() {
         dreamersTarget: 500,
         partiesTarget: 50,
         currentParties: currentParties || 0
-      }
+      },
+      criticalMassStations: (partiesData || []).map(party => ({
+        stationName: party.station_name,
+        city: party.city,
+        country: party.country,
+        attendees: party.attendees_count,
+        status: party.status
+      }))
     };
 
     return NextResponse.json(stats);
@@ -137,7 +158,8 @@ export async function GET() {
         dreamersTarget: 500,
         partiesTarget: 50,
         currentParties: 0
-      }
+      },
+      criticalMassStations: []
     };
 
     return NextResponse.json(fallbackStats);

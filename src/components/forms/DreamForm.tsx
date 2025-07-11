@@ -17,6 +17,10 @@ interface DreamFormData {
   to: string;
   email: string;
   why: string;
+  // Two-tier engagement system
+  tier: 'dreamer' | 'participant';
+  pyjamaPartyInterest: boolean;
+  participationLevel: 'dream_only' | 'organize_party' | 'join_party';
 }
 
 interface DreamFormProps {
@@ -30,7 +34,10 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     from: '',
     to: '',
     email: '',
-    why: ''
+    why: '',
+    tier: 'dreamer',
+    pyjamaPartyInterest: false,
+    participationLevel: 'dream_only'
   });
 
   const [fromSuggestions, setFromSuggestions] = useState<StationSuggestion[]>([]);
@@ -41,6 +48,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const [errors, setErrors] = useState<Partial<DreamFormData>>({});
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [showTierTwo, setShowTierTwo] = useState(false);
 
   const searchStations = async (query: string): Promise<StationSuggestion[]> => {
     if (query.length < 2) return [];
@@ -89,9 +97,18 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     if (!formData.from.trim()) newErrors.from = 'Departure station is required';
     if (!formData.to.trim()) newErrors.to = 'Destination station is required';
     if (!formData.dreamerName.trim()) newErrors.dreamerName = 'Name is required';
-    if (formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
+    
+    // Email validation based on tier
+    if (formData.tier === 'participant' || formData.pyjamaPartyInterest) {
+      if (!formData.email.trim()) {
+        newErrors.email = 'Email is required for pyjama party participation';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Please enter a valid email';
+      }
+    } else if (formData.email.trim() && !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email';
     }
+    
     if (!formData.why.trim()) newErrors.why = 'Please tell us why this route matters to you';
 
     setErrors(newErrors);
@@ -129,7 +146,17 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
       }
       
       // Reset form
-      setFormData({ dreamerName: '', from: '', to: '', email: '', why: '' });
+      setFormData({ 
+        dreamerName: '', 
+        from: '', 
+        to: '', 
+        email: '', 
+        why: '',
+        tier: 'dreamer',
+        pyjamaPartyInterest: false,
+        participationLevel: 'dream_only'
+      });
+      setShowTierTwo(false);
       
       // Hide success message after 5 seconds
       setTimeout(() => setShowSuccess(false), 8000);
@@ -257,28 +284,133 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           )}
         </motion.div>
 
+        {/* Two-Tier Engagement System */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
         >
-          <label htmlFor="email" className="block text-sm font-medium text-bot-dark mb-1">
-            Email (only if you want to join pyjama parties) 
-            <span className="text-xs text-bot-blue font-normal">For local organizing only - never spam</span>
-          </label>
-          <input
-            type="email"
-            id="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
-              errors.email ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
-            }`}
-            placeholder="your.email@example.com"
-          />
-          <p className="text-xs text-bot-blue mt-1">We&apos;ll connect you with others planning pyjama parties at your station</p>
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+          <div className="bg-gradient-to-r from-bot-green/10 to-bot-blue/10 rounded-xl p-6 border-2 border-bot-green/20">
+            <h3 className="text-lg font-bold text-bot-dark mb-4">🎉 Join the September 26th Pyjama Party?</h3>
+            <p className="text-sm text-gray-700 mb-4">
+              After sharing your dream route, you can join thousands across Europe for synchronized pyjama parties at train stations!
+            </p>
+            
+            <div className="space-y-3">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="participationLevel"
+                  value="dream_only"
+                  checked={formData.participationLevel === 'dream_only'}
+                  onChange={(e) => {
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      pyjamaPartyInterest: false,
+                      tier: 'dreamer'
+                    }));
+                    setShowTierTwo(false);
+                  }}
+                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                />
+                <div>
+                  <span className="font-medium text-bot-dark">🗺️ Just share my dream route</span>
+                  <p className="text-xs text-gray-600">Add to the map, no email required</p>
+                </div>
+              </label>
+              
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="participationLevel"
+                  value="join_party"
+                  checked={formData.participationLevel === 'join_party'}
+                  onChange={(e) => {
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      pyjamaPartyInterest: true,
+                      tier: 'participant'
+                    }));
+                    setShowTierTwo(true);
+                  }}
+                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                />
+                <div>
+                  <span className="font-medium text-bot-dark">🎉 Join a pyjama party at my station</span>
+                  <p className="text-xs text-gray-600">Get Discord invite + Party Kit access</p>
+                </div>
+              </label>
+              
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="radio"
+                  name="participationLevel"
+                  value="organize_party"
+                  checked={formData.participationLevel === 'organize_party'}
+                  onChange={(e) => {
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      pyjamaPartyInterest: true,
+                      tier: 'participant'
+                    }));
+                    setShowTierTwo(true);
+                  }}
+                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                />
+                <div>
+                  <span className="font-medium text-bot-dark">🎪 Organize a pyjama party at my station</span>
+                  <p className="text-xs text-gray-600">Lead the event + get organizer resources</p>
+                </div>
+              </label>
+            </div>
+          </div>
         </motion.div>
+
+        {/* Tier 2: Email Collection */}
+        {showTierTwo && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20">
+              <h4 className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h4>
+              <p className="text-sm text-gray-700 mb-4">
+                Join the Back-on-Track Action Group coordination! We'll send you:
+              </p>
+              <ul className="text-sm text-gray-700 mb-4 space-y-1">
+                <li>📧 Discord invite for September 26th coordination</li>
+                <li>📋 Party Kit PDF with organizing resources</li>
+                <li>🤝 Connection with other participants at your station</li>
+                <li>📢 Updates on station permissions and event details</li>
+              </ul>
+              
+              <label htmlFor="email" className="block text-sm font-medium text-bot-dark mb-1">
+                Email for pyjama party coordination <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                value={formData.email}
+                onChange={(e) => handleInputChange('email', e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-blue/50 focus:border-bot-blue bg-white transition-all duration-200 ${
+                  errors.email ? 'border-red-500' : 'border-bot-blue hover:border-bot-dark-blue shadow-lg hover:shadow-xl'
+                }`}
+                placeholder="your.email@example.com"
+                required={formData.pyjamaPartyInterest}
+              />
+              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              
+              <p className="text-xs text-bot-blue mt-2">
+                Privacy-first: Used only for September 26th coordination, never spam
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -314,11 +446,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           {isSubmitting ? (
             <>
               <span className="inline-block animate-spin mr-2">🌍</span>
-              Sharing Your Dream...
+              {formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
             </>
           ) : (
             <>
-              🚂 Add my dream to the map
+              {formData.participationLevel === 'dream_only' && '🗺️ Add my dream to the map'}
+              {formData.participationLevel === 'join_party' && '🎉 Join pyjama party + add dream'}
+              {formData.participationLevel === 'organize_party' && '🎪 Organize pyjama party + add dream'}
             </>
           )}
         </motion.button>
