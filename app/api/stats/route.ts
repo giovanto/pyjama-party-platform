@@ -82,14 +82,14 @@ export async function GET() {
 
     // Get recent parties
     const { data: recentParties } = await supabase
-      .from('pajama_parties')
+      .from('pyjama_parties')
       .select('station_name, created_at')
       .order('created_at', { ascending: false })
       .limit(2);
 
-    // Get pajama parties count
+    // Get pyjama parties count
     const { count: currentParties } = await supabase
-      .from('pajama_parties')
+      .from('pyjama_parties')
       .select('*', { count: 'exact', head: true });
 
     // Combine recent activity

@@ -5,16 +5,16 @@ import { Header, Footer, FloatingNav, EventBanner } from "@/components/layout";
 export const metadata: Metadata = {
   title: "Where Would You Like to Wake Up Tomorrow? | Back-on-Track",
   description: "Where would you like to wake up tomorrow? Join the European night train community and help build the sustainable transport network Europe deserves.",
-  keywords: "night trains, sustainable transport, europe, back-on-track, pajama party, community",
+  keywords: "night trains, sustainable transport, europe, back-on-track, pyjama party, community",
   authors: [{ name: "Back-on-Track" }],
   openGraph: {
     title: "Where Would You Like to Wake Up Tomorrow?",
     description: "Share your dream destination and connect with fellow sustainable travel advocates across Europe.",
     type: "website",
-    url: "https://pajama-party.back-on-track.eu",
+    url: "https://pyjama-party.back-on-track.eu",
     images: [
       {
-        url: "https://pajama-party.back-on-track.eu/assets/og-image.jpg",
+        url: "https://pyjama-party.back-on-track.eu/assets/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Pajama Party Platform",

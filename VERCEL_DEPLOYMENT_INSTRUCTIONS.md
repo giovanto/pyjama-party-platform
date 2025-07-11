@@ -15,7 +15,7 @@
 2. Click **"Add New Project"**
 
 ### Step 2: Import Repository
-1. **Repository:** `giovanto/pajama-party-platform`
+1. **Repository:** `giovanto/pyjama-party-platform`
 2. **Branch:** `main` ⭐ (IMPORTANT: Use this branch)
 3. **Root Directory:** `.` ⭐ (Code is now in root directory)
 
@@ -87,7 +87,7 @@ https://your-app.vercel.app/api/stats
 
 ### Build Errors
 - Check environment variables are set correctly
-- Verify root directory is `pajama-party-v3`
+- Verify root directory is `pyjama-party-v3`
 - Ensure branch is `production-main`
 
 ### Runtime Errors  

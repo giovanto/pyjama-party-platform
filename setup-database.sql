@@ -44,7 +44,7 @@ CREATE INDEX IF NOT EXISTS idx_dreams_route ON dreams (from_station, to_station)
 CREATE INDEX IF NOT EXISTS idx_dreams_email ON dreams (dreamer_email);
 
 -- Pajama parties table
-CREATE TABLE IF NOT EXISTS pajama_parties (
+CREATE TABLE IF NOT EXISTS pyjama_parties (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   station_name VARCHAR(255) NOT NULL,
   city VARCHAR(100) NOT NULL,
@@ -59,9 +59,9 @@ CREATE TABLE IF NOT EXISTS pajama_parties (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create index for pajama parties
-CREATE INDEX IF NOT EXISTS idx_pajama_parties_date ON pajama_parties (party_date);
-CREATE INDEX IF NOT EXISTS idx_pajama_parties_location ON pajama_parties (city, country);
+-- Create index for pyjama parties
+CREATE INDEX IF NOT EXISTS idx_pyjama_parties_date ON pyjama_parties (party_date);
+CREATE INDEX IF NOT EXISTS idx_pyjama_parties_location ON pyjama_parties (city, country);
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -81,8 +81,8 @@ DROP TRIGGER IF EXISTS update_dreams_updated_at ON dreams;
 CREATE TRIGGER update_dreams_updated_at BEFORE UPDATE ON dreams
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-DROP TRIGGER IF EXISTS update_pajama_parties_updated_at ON pajama_parties;
-CREATE TRIGGER update_pajama_parties_updated_at BEFORE UPDATE ON pajama_parties
+DROP TRIGGER IF EXISTS update_pyjama_parties_updated_at ON pyjama_parties;
+CREATE TRIGGER update_pyjama_parties_updated_at BEFORE UPDATE ON pyjama_parties
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 -- Insert sample European train stations
@@ -112,7 +112,7 @@ ON CONFLICT (name, city, country) DO NOTHING;
 -- Enable Row Level Security (RLS)
 ALTER TABLE stations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE dreams ENABLE ROW LEVEL SECURITY;
-ALTER TABLE pajama_parties ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pyjama_parties ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for public read access
 CREATE POLICY "Allow public read access on stations" ON stations
@@ -121,12 +121,12 @@ CREATE POLICY "Allow public read access on stations" ON stations
 CREATE POLICY "Allow public read access on dreams" ON dreams
   FOR SELECT USING (true);
 
-CREATE POLICY "Allow public read access on pajama_parties" ON pajama_parties
+CREATE POLICY "Allow public read access on pyjama_parties" ON pyjama_parties
   FOR SELECT USING (true);
 
 -- Create policies for public insert access
 CREATE POLICY "Allow public insert access on dreams" ON dreams
   FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Allow public insert access on pajama_parties" ON pajama_parties
+CREATE POLICY "Allow public insert access on pyjama_parties" ON pyjama_parties
   FOR INSERT WITH CHECK (true);

@@ -263,7 +263,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.25, duration: 0.5 }}
         >
           <label htmlFor="email" className="block text-sm font-medium text-bot-dark mb-1">
-            Email (only if you want to join pajama parties) 
+            Email (only if you want to join pyjama parties) 
             <span className="text-xs text-bot-blue font-normal">For local organizing only - never spam</span>
           </label>
           <input
@@ -276,7 +276,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             }`}
             placeholder="your.email@example.com"
           />
-          <p className="text-xs text-bot-blue mt-1">We&apos;ll connect you with others planning pajama parties at your station</p>
+          <p className="text-xs text-bot-blue mt-1">We&apos;ll connect you with others planning pyjama parties at your station</p>
           {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
         </motion.div>
 

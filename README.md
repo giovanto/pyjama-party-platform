@@ -1,8 +1,8 @@
 # 🚂 Pajama Party Platform - Back-on-Track Action Group
 
-> **Grassroots European activism platform for coordinating synchronized pajama parties across train stations to advocate for sustainable night train networks**
+> **European climate activism coordination hub: Building grassroots power for sustainable night train networks through synchronized community action**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pyjama-party-platform&project-name=pyjama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -12,7 +12,7 @@
 
 *"Where would you like to wake up tomorrow?"*
 
-The Pajama Party Platform coordinates **synchronized pajama parties across European train stations** on September 26th, 2025 (19:00-20:00 CEST). This grassroots activism tool serves the Back-on-Track Action Group's mission to advocate for sustainable night train networks through community engagement.
+The Pajama Party Platform coordinates **synchronized pyjama parties across European train stations** on September 26th, 2025 (19:00-20:00 CEST). This grassroots activism tool serves the Back-on-Track Action Group's mission to advocate for sustainable night train networks through community engagement.
 
 ### 🎯 **Two-Tier Engagement System**
 
@@ -30,7 +30,7 @@ The Pajama Party Platform coordinates **synchronized pajama parties across Europ
 
 ## 🚀 **Live Demo**
 
-🔗 **[Join the movement →](https://pajama-party-platform.vercel.app)**
+🔗 **[Join the movement →](https://pyjama-party-platform.vercel.app)**
 
 ![Pajama Party Platform Screenshot](https://via.placeholder.com/800x400/22c55e/ffffff?text=Night+Train+Map+%2B+Community+Features)
 
@@ -87,14 +87,14 @@ The Pajama Party Platform coordinates **synchronized pajama parties across Europ
 
 ### 1. **One-Click Deployment**
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pajama-party-platform&project-name=pajama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pyjama-party-platform&project-name=pyjama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
 
 ### 2. **Local Development**
 
 ```bash
 # Clone the repository
-git clone https://github.com/giovanto/pajama-party-platform.git
-cd pajama-party-platform
+git clone https://github.com/giovanto/pyjama-party-platform.git
+cd pyjama-party-platform
 
 # Install dependencies
 npm install
@@ -165,7 +165,7 @@ npm run test
 ### 🎯 **Goals**
 - **1,000 dream routes** to demonstrate demand
 - **500 active community members** advocating for night trains
-- **50 pajama parties** at key European train stations
+- **50 pyjama parties** at key European train stations
 - **Policy impact** through grassroots community action
 
 ## 🤝 **Contributing**
@@ -173,13 +173,13 @@ npm run test
 We welcome contributions from developers, designers, and climate activists!
 
 ### 🛠️ **Development**
-- 🐛 [Report bugs](https://github.com/giovanto/pajama-party-platform/issues)
-- 💡 [Request features](https://github.com/giovanto/pajama-party-platform/issues)
-- 🔧 [Submit pull requests](https://github.com/giovanto/pajama-party-platform/pulls)
+- 🐛 [Report bugs](https://github.com/giovanto/pyjama-party-platform/issues)
+- 💡 [Request features](https://github.com/giovanto/pyjama-party-platform/issues)
+- 🔧 [Submit pull requests](https://github.com/giovanto/pyjama-party-platform/pulls)
 
 ### 🌱 **Activism**
 - 🚂 Submit your dream night train routes
-- 🎉 Organize pajama parties in your city
+- 🎉 Organize pyjama parties in your city
 - 📢 Share the platform with your network
 - 🌍 Join the movement for sustainable transport
 
@@ -198,6 +198,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ### 🚂 **Ready to dream about your next night train journey?**
 
-**[Join the Movement →](https://pajama-party-platform.vercel.app)**
+**[Join the Movement →](https://pyjama-party-platform.vercel.app)**
 
 *Built with ❤️ for the climate and 🚂 for sustainable travel*

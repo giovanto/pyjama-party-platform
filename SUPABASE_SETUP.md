@@ -7,7 +7,7 @@ The current API errors are because the database schema hasn't been applied yet.
 ### Step 1: Access Supabase SQL Editor
 
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
-2. Select your project: `pajama-party-v3`
+2. Select your project: `pyjama-party-v3`
 3. Navigate to **SQL Editor** in the left sidebar
 
 ### Step 2: Apply Schema
@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS dreams (
 );
 
 -- Pajama parties table
-CREATE TABLE IF NOT EXISTS pajama_parties (
+CREATE TABLE IF NOT EXISTS pyjama_parties (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   station_name VARCHAR(255) NOT NULL,
   city VARCHAR(100) NOT NULL,
@@ -92,14 +92,14 @@ ON CONFLICT (name, city, country) DO NOTHING;
 -- Enable RLS
 ALTER TABLE stations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE dreams ENABLE ROW LEVEL SECURITY;
-ALTER TABLE pajama_parties ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pyjama_parties ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
 CREATE POLICY "Allow public read access on stations" ON stations FOR SELECT USING (true);
 CREATE POLICY "Allow public read access on dreams" ON dreams FOR SELECT USING (true);
-CREATE POLICY "Allow public read access on pajama_parties" ON pajama_parties FOR SELECT USING (true);
+CREATE POLICY "Allow public read access on pyjama_parties" ON pyjama_parties FOR SELECT USING (true);
 CREATE POLICY "Allow public insert access on dreams" ON dreams FOR INSERT WITH CHECK (true);
-CREATE POLICY "Allow public insert access on pajama_parties" ON pajama_parties FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public insert access on pyjama_parties" ON pyjama_parties FOR INSERT WITH CHECK (true);
 ```
 
 ### Step 3: Verify Schema

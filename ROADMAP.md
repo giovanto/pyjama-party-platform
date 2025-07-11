@@ -2,7 +2,7 @@
 
 ## Strategic Context
 
-The Pajama Party Platform serves as the **primary coordination tool** for the Back-on-Track Action Group's September 26th, 2025 European pajama party event. This roadmap aligns with the Action Group's strategic timeline and partnership objectives.
+The Pajama Party Platform serves as the **primary coordination tool** for the Back-on-Track Action Group's September 26th, 2025 European pyjama party event. This roadmap aligns with the Action Group's strategic timeline and partnership objectives.
 
 ### Key Stakeholders
 - **Giovanni Antoniazzi**: Co-chair, Platform Developer
@@ -30,7 +30,7 @@ The Pajama Party Platform serves as the **primary coordination tool** for the Ba
 
 ### Platform Validation
 - [x] **Local Development**: Full development environment setup
-- [x] **Production Build**: Successful deployment to https://pajama-party-platform.vercel.app
+- [x] **Production Build**: Successful deployment to https://pyjama-party-platform.vercel.app
 - [x] **Database Connectivity**: All API endpoints functional
 - [x] **Performance Testing**: Optimized loading and interactions
 
@@ -130,7 +130,7 @@ The Pajama Party Platform serves as the **primary coordination tool** for the Ba
 ## 🔮 Phase 5: Sustainability & Growth (Post-September 2025)
 
 ### Platform Evolution
-- [ ] **Event Replication Framework**: Tools for organizing future pajama parties
+- [ ] **Event Replication Framework**: Tools for organizing future pyjama parties
 - [ ] **Community Management**: Long-term engagement and advocacy tools
 - [ ] **Policy Integration**: Direct connection to Back-on-Track advocacy campaigns
 - [ ] **European Expansion**: Multi-country coordination capabilities

@@ -19,10 +19,10 @@ export default function Home() {
           </h1>
           <p className="hero__subtitle text-base sm:text-lg md:text-xl text-gray-700 mb-4 sm:mb-6 max-w-3xl mx-auto px-4">
             Join the Back-on-Track Action Group&apos;s mission to revolutionize European transport! Share your dream night train routes, 
-            connect with climate advocates, and organize pajama parties at stations to demand sustainable travel options.
+            connect with climate advocates, and organize pyjama parties at stations to demand sustainable travel options.
           </p>
           <p className="hero__entry-point text-base sm:text-lg text-bot-green mb-6 sm:mb-8 font-medium px-4">
-            ✨ New to climate activism? Perfect! This pajama party platform is your fun entry point to meaningful environmental action.
+            ✨ New to climate activism? Perfect! This pyjama party platform is your fun entry point to meaningful environmental action.
           </p>
           <div className="hero__badges flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-4">
             <span className="hero__badge bg-gradient-to-r from-bot-green to-bot-dark-green text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base font-bold shadow-xl border-2 border-bot-light-green/30 transform hover:scale-105 transition-all duration-200">
@@ -42,7 +42,7 @@ export default function Home() {
               <h2 className="text-xl sm:text-2xl font-bold mb-2">🎉 Europe-Wide Pajama Party</h2>
               <p className="text-lg font-semibold mb-2">September 26, 2025</p>
               <p className="text-sm sm:text-base mb-4 opacity-90">
-                Join thousands across Europe for synchronized pajama parties at train stations. 
+                Join thousands across Europe for synchronized pyjama parties at train stations. 
                 Your dream becomes part of a continental movement for night trains!
               </p>
               <Countdown 
@@ -84,7 +84,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold text-bot-dark mb-4">Our Growing Action Group</h2>
             <p className="text-gray-700 max-w-2xl mx-auto">
               Together we&apos;re building momentum for climate-friendly transport through fun, accessible activism. 
-              See how your pajama party contributions strengthen the Back-on-Track movement.
+              See how your pyjama party contributions strengthen the Back-on-Track movement.
             </p>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -101,7 +101,7 @@ export default function Home() {
                     and build compelling evidence for expanded night train services across Europe.
                   </p>
                   <p>
-                    Join our signature pajama parties at train stations — a fun, accessible way to demonstrate public demand 
+                    Join our signature pyjama parties at train stations — a fun, accessible way to demonstrate public demand 
                     for sustainable transport while building community around climate action.
                   </p>
                 </div>
@@ -139,7 +139,7 @@ export default function Home() {
               <div className="text-3xl mb-4">🎉</div>
               <h3 className="text-xl font-semibold text-bot-dark mb-3">Pajama Party Activism</h3>
               <p className="text-gray-700">
-                Building a grassroots movement through fun, inclusive pajama parties that welcome everyone 
+                Building a grassroots movement through fun, inclusive pyjama parties that welcome everyone 
                 to climate action — from seasoned activists to curious newcomers.
               </p>
             </div>
