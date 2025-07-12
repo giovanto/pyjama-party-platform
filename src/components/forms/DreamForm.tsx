@@ -380,7 +380,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20">
               <h4 className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h4>
               <p className="text-sm text-gray-700 mb-4">
-                Join the Back-on-Track Action Group coordination! We'll send you:
+                Join the Back-on-Track Action Group coordination! We&apos;ll send you:
               </p>
               <ul className="text-sm text-gray-700 mb-4 space-y-1">
                 <li>📧 Discord invite for September 26th coordination</li>
@@ -428,7 +428,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 resize-none ${
               errors.why ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
-            placeholder="Tell us about your connection to this route, why it's important for sustainability, or how it would impact your travel..."
+            placeholder="Tell us about your connection to this route, why it&apos;s important for sustainability, or how it would impact your travel..."
           />
           {errors.why && <p className="text-red-500 text-sm mt-1">{errors.why}</p>}
         </motion.div>
