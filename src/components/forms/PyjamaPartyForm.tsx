@@ -158,12 +158,12 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`pyjama-party-form bg-gradient-to-br from-bot-blue via-white to-bot-green rounded-2xl shadow-2xl p-8 sm:p-10 border-4 border-bot-blue ${className}`}
+      className={`pyjama-party-form bg-gradient-to-br from-bot-blue via-white to-bot-green rounded-2xl shadow-2xl p-6 sm:p-8 lg:p-10 border-4 border-bot-blue ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-bot-dark mb-4 sm:mb-6 text-center">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-bot-dark mb-6 sm:mb-8 text-center leading-tight">
         🎪 Organize a Pyjama Party at Your Station
       </h2>
       

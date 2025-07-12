@@ -170,12 +170,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`dream-form bg-gradient-to-br from-bot-green via-white to-bot-light-green rounded-2xl shadow-2xl p-8 sm:p-10 border-4 border-bot-green ${className}`}
+      className={`dream-form bg-gradient-to-br from-bot-green via-white to-bot-light-green rounded-2xl shadow-2xl p-6 sm:p-8 lg:p-10 border-4 border-bot-green ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-xl sm:text-2xl font-bold text-bot-dark mb-4 sm:mb-6 text-center">
+      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-bot-dark mb-6 sm:mb-8 text-center leading-tight">
         Where would you like to wake up tomorrow?
       </h2>
 
@@ -193,8 +193,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             id="dreamerName"
             value={formData.dreamerName}
             onChange={(e) => handleInputChange('dreamerName', e.target.value)}
-            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
-              errors.dreamerName ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            className={`w-full px-4 py-4 sm:py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 text-lg sm:text-base ${
+              errors.dreamerName ? 'border-red-500 ring-4 ring-red-500/20' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
             }`}
             placeholder="Maria, João, Emma, Lars..."
             required
@@ -436,7 +436,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
         <motion.button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-bot-green via-bot-light-green to-bot-green text-white py-5 sm:py-6 px-8 rounded-2xl hover:from-bot-dark-green hover:via-bot-green hover:to-bot-dark-green focus:outline-none focus:ring-6 focus:ring-bot-light-green/40 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed font-black text-xl sm:text-2xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl border-2 border-bot-green/30"
+          className="w-full bg-gradient-to-r from-bot-green via-bot-light-green to-bot-green text-white py-6 sm:py-5 lg:py-6 px-8 rounded-2xl hover:from-bot-dark-green hover:via-bot-green hover:to-bot-dark-green focus:outline-none focus:ring-6 focus:ring-bot-light-green/40 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg sm:text-xl lg:text-2xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl border-2 border-bot-green/30 min-h-[56px]"
           whileHover={{ scale: 1.08, y: -4 }}
           whileTap={{ scale: 0.95 }}
           initial={{ opacity: 0, y: 10 }}

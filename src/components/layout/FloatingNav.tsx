@@ -22,10 +22,10 @@ export function FloatingNav() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    // V1-style scroll detection: show after 300px scroll
+    // Improved scroll detection: show after 200px scroll (faster response)
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const isScrolledPast = scrollY > 300;
+      const isScrolledPast = scrollY > 200;
       
       setIsVisible(isScrolledPast);
       lastScrollY.current = scrollY;
@@ -106,23 +106,24 @@ export function FloatingNav() {
   };
 
   return (
-    <nav className={`floating-nav fixed top-1/2 right-6 transform -translate-y-1/2 z-40 transition-all duration-300 ${
-      isVisible ? 'opacity-95 translate-x-0' : 'opacity-0 translate-x-24'
+    <nav className={`floating-nav fixed top-1/2 right-4 sm:right-6 transform -translate-y-1/2 z-40 transition-all duration-300 ${
+      isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-20'
     }`}>
-      <div className="floating-nav__container bg-gradient-to-b from-white via-bot-light-green to-bot-green rounded-2xl shadow-2xl border-2 border-bot-green p-3">
+      <div className="floating-nav__container bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border-2 border-bot-green/30 p-2 sm:p-3">
         <div className="flex flex-col gap-2">
           {navItems.map((item) => (
             <button
               key={item.href}
               onClick={() => handleNavClick(item.href)}
-              className={`floating-nav__item flex items-center justify-center w-14 h-14 rounded-xl text-lg font-medium transition-all duration-200 hover:scale-110 hover:shadow-xl border-2 ${
+              className={`floating-nav__item flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl text-base sm:text-lg font-medium transition-all duration-200 hover:scale-110 hover:shadow-xl border-2 focus:outline-none focus:ring-4 focus:ring-bot-green/40 ${
                 activeSection === item.href.substring(1)
                   ? 'bg-gradient-to-br from-bot-green to-bot-dark-green text-white shadow-xl transform scale-105 border-bot-light-green'
-                  : 'text-bot-dark hover:bg-gradient-to-br hover:from-bot-green hover:to-bot-light-green hover:text-white border-bot-green hover:border-bot-green bg-white'
+                  : 'text-bot-dark hover:bg-gradient-to-br hover:from-bot-green hover:to-bot-light-green hover:text-white border-bot-green/30 hover:border-bot-green bg-white'
               }`}
               title={item.title}
+              aria-label={`Navigate to ${item.title}`}
             >
-              <span className="floating-nav__icon">{item.icon}</span>
+              <span className="floating-nav__icon" aria-hidden="true">{item.icon}</span>
             </button>
           ))}
         </div>
