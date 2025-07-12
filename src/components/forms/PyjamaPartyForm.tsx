@@ -42,7 +42,7 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
   const [stationSuggestions, setStationSuggestions] = useState<StationSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<Partial<PyjamaPartyFormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof PyjamaPartyFormData, string>>>({});
   const [showSuccess, setShowSuccess] = useState(false);
 
   const searchStations = async (query: string): Promise<StationSuggestion[]> => {
@@ -81,15 +81,14 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<PyjamaPartyFormData> = {};
+    const newErrors: Partial<Record<keyof PyjamaPartyFormData, string>> = {};
 
     if (!formData.stationName.trim()) newErrors.stationName = 'Station name is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
     if (!formData.country.trim()) newErrors.country = 'Country is required';
     if (!formData.organizerName.trim()) newErrors.organizerName = 'Organizer name is required';
-    if (!formData.organizerEmail.trim()) {
-      newErrors.organizerEmail = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.organizerEmail)) {
+    // Email is optional, but if provided, must be valid
+    if (formData.organizerEmail.trim() && !/\S+@\S+\.\S+/.test(formData.organizerEmail)) {
       newErrors.organizerEmail = 'Please enter a valid email';
     }
     if (!formData.description.trim()) newErrors.description = 'Description is required';
@@ -102,7 +101,9 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -123,6 +124,14 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
 
       // Show success message
       setShowSuccess(true);
+      
+      // Refresh map to show new submission
+      if (typeof window !== 'undefined') {
+        const windowWithRefresh = window as Window & { refreshDreamMap?: () => void };
+        if (windowWithRefresh.refreshDreamMap) {
+          windowWithRefresh.refreshDreamMap();
+        }
+      }
       
       // Reset form
       setFormData({
@@ -282,7 +291,7 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           <label htmlFor="organizerEmail" className="block text-sm font-medium text-bot-dark mb-1">
-            Email for coordination <span className="text-red-500">*</span>
+            Email for coordination (optional)
           </label>
           <input
             type="email"
@@ -292,11 +301,10 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
             className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-blue/50 focus:border-bot-blue bg-white transition-all duration-200 ${
               errors.organizerEmail ? 'border-red-500' : 'border-bot-blue hover:border-bot-dark-blue shadow-lg hover:shadow-xl'
             }`}
-            placeholder="your.email@example.com"
-            required
+            placeholder="your.email@example.com (optional)"
           />
           <p className="text-xs text-bot-blue mt-1">
-            You'll receive Discord invite, Party Kit, and coordination updates
+            Optional: You&apos;ll receive Discord invite, Party Kit, and coordination updates if provided
           </p>
           {errors.organizerEmail && <p className="text-red-500 text-sm mt-1">{errors.organizerEmail}</p>}
         </motion.div>
@@ -384,7 +392,7 @@ export default function PyjamaPartyForm({ onSubmit, className = '' }: PyjamaPart
           <div className="text-center">
             <h3 className="font-bold text-lg mb-2">Pyjama party created! 🎉</h3>
             <p className="text-sm">
-              Your pyjama party is now registered for September 26th. You'll receive coordination 
+              Your pyjama party is now registered for September 26th. You&apos;ll receive coordination 
               materials and Discord invite soon!
             </p>
           </div>

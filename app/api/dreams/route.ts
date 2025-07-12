@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         from_station: from.trim(),
         to_station: to.trim(),
         dreamer_name: dreamerName.trim(),
-        dreamer_email: email ? email.trim().toLowerCase() : null,
+        dreamer_email: email ? email.trim().toLowerCase() : '',
         why_important: why.trim(),
         from_latitude: fromStation?.latitude || null,
         from_longitude: fromStation?.longitude || null,

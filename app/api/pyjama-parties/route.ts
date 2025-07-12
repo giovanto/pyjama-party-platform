@@ -29,15 +29,15 @@ export async function POST(request: NextRequest) {
     } = body;
     
     // Validation
-    if (!stationName || !city || !country || !organizerName || !organizerEmail || !partyDate) {
+    if (!stationName || !city || !country || !organizerName || !partyDate) {
       return NextResponse.json(
-        { error: 'Required fields missing: stationName, city, country, organizerName, organizerEmail, partyDate' },
+        { error: 'Required fields missing: stationName, city, country, organizerName, partyDate' },
         { status: 400 }
       );
     }
     
-    // Email validation
-    if (!/\S+@\S+\.\S+/.test(organizerEmail)) {
+    // Email validation (optional field)
+    if (organizerEmail && !/\S+@\S+\.\S+/.test(organizerEmail)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         city: city.trim(),
         country: country.trim(),
         organizer_name: organizerName.trim(),
-        organizer_email: organizerEmail.trim().toLowerCase(),
+        organizer_email: organizerEmail ? organizerEmail.trim().toLowerCase() : '',
         party_date: parsedDate.toISOString(),
         description: description?.trim() || null,
         attendees_count: expectedAttendees || 1,

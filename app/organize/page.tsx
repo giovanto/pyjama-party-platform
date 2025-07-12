@@ -36,7 +36,7 @@ export default function OrganizePage() {
           <div className="max-w-4xl mx-auto px-4">
             <div className="text-center mb-8 sm:mb-12">
               <h2 className="text-2xl sm:text-3xl font-bold text-bot-dark mb-4">
-                What You'll Get as an Organizer
+                What You&apos;ll Get as an Organizer
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div className="bg-white rounded-lg p-4 shadow-lg border border-bot-green/20">
