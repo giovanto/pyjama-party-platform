@@ -8,13 +8,18 @@ Object.defineProperty(global, 'window', {
   value: {
     refreshDreamMap: mockRefreshDreamMap
   },
-  writable: true
+  writable: true,
+  configurable: true
 })
 
 describe('Map Refresh Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mockRefreshDreamMap.mockClear()
+    // Ensure window.refreshDreamMap is available in each test
+    if (typeof window !== 'undefined') {
+      (window as any).refreshDreamMap = mockRefreshDreamMap
+    }
   })
 
   afterEach(() => {
@@ -191,8 +196,14 @@ describe('Map Refresh Integration', () => {
       }
     }).not.toThrow()
 
-    // Restore window
-    global.window = originalWindow
+    // Restore window with refreshDreamMap
+    Object.defineProperty(global, 'window', {
+      value: {
+        refreshDreamMap: mockRefreshDreamMap
+      },
+      writable: true,
+      configurable: true
+    })
 
     // Test with defined window
     expect(() => {

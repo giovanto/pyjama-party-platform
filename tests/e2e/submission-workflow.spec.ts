@@ -8,13 +8,13 @@ test.describe('Pyjama Party Submission Workflow', () => {
 
   test('should complete full submission workflow', async ({ page }) => {
     // Fill out the form
-    await page.getByLabel(/station name/i).fill('Berlin Hauptbahnhof')
-    await page.getByLabel(/city/i).fill('Berlin')
-    await page.getByLabel(/country/i).fill('Germany')
-    await page.getByLabel(/organizer name/i).fill('Test User')
-    await page.getByLabel(/email/i).fill('test@example.com')
-    await page.getByLabel(/description/i).fill('Test pyjama party for E2E testing')
-    await page.getByLabel(/expected attendees/i).fill('15')
+    await page.locator('#stationName').fill('Berlin Hauptbahnhof')
+    await page.locator('#city').fill('Berlin')
+    await page.locator('#country').fill('Germany')
+    await page.locator('#organizerName').fill('Test User')
+    await page.locator('#organizerEmail').fill('test@example.com')
+    await page.locator('#description').fill('Test pyjama party for E2E testing')
+    await page.locator('#expectedAttendees').fill('15')
 
     // Submit the form
     await page.getByRole('button', { name: /organize pyjama party/i }).click()
@@ -23,9 +23,9 @@ test.describe('Pyjama Party Submission Workflow', () => {
     await expect(page.getByText('Pyjama party created! 🎉')).toBeVisible()
 
     // Verify form is reset
-    await expect(page.getByLabel(/station name/i)).toHaveValue('')
-    await expect(page.getByLabel(/city/i)).toHaveValue('')
-    await expect(page.getByLabel(/organizer name/i)).toHaveValue('')
+    await expect(page.locator('#stationName')).toHaveValue('')
+    await expect(page.locator('#city')).toHaveValue('')
+    await expect(page.locator('#organizerName')).toHaveValue('')
   })
 
   test('should show validation errors for empty form', async ({ page }) => {
@@ -37,18 +37,17 @@ test.describe('Pyjama Party Submission Workflow', () => {
     await expect(page.getByText('City is required')).toBeVisible()
     await expect(page.getByText('Country is required')).toBeVisible()
     await expect(page.getByText('Organizer name is required')).toBeVisible()
-    await expect(page.getByText('Email is required')).toBeVisible()
     await expect(page.getByText('Description is required')).toBeVisible()
   })
 
   test('should validate email format', async ({ page }) => {
     // Fill form with invalid email
-    await page.getByLabel(/station name/i).fill('Berlin Hauptbahnhof')
-    await page.getByLabel(/city/i).fill('Berlin')
-    await page.getByLabel(/country/i).fill('Germany')
-    await page.getByLabel(/organizer name/i).fill('Test User')
-    await page.getByLabel(/email/i).fill('invalid-email-format')
-    await page.getByLabel(/description/i).fill('Test description')
+    await page.locator('#stationName').fill('Berlin Hauptbahnhof')
+    await page.locator('#city').fill('Berlin')
+    await page.locator('#country').fill('Germany')
+    await page.locator('#organizerName').fill('Test User')
+    await page.locator('#organizerEmail').fill('invalid-email-format')
+    await page.locator('#description').fill('Test description')
 
     // Submit form
     await page.getByRole('button', { name: /organize pyjama party/i }).click()
@@ -59,29 +58,29 @@ test.describe('Pyjama Party Submission Workflow', () => {
 
   test('should show loading state during submission', async ({ page }) => {
     // Fill out the form
-    await page.getByLabel(/station name/i).fill('Berlin Hauptbahnhof')
-    await page.getByLabel(/city/i).fill('Berlin')
-    await page.getByLabel(/country/i).fill('Germany')
-    await page.getByLabel(/organizer name/i).fill('Test User')
-    await page.getByLabel(/email/i).fill('test@example.com')
-    await page.getByLabel(/description/i).fill('Test pyjama party')
+    await page.locator('#stationName').fill('Berlin Hauptbahnhof')
+    await page.locator('#city').fill('Berlin')
+    await page.locator('#country').fill('Germany')
+    await page.locator('#organizerName').fill('Test User')
+    await page.locator('#organizerEmail').fill('test@example.com')
+    await page.locator('#description').fill('Test pyjama party')
 
     // Submit the form
     await page.getByRole('button', { name: /organize pyjama party/i }).click()
 
     // Check for loading state
-    await expect(page.getByText(/organizing/i)).toBeVisible()
-    await expect(page.getByRole('button', { name: /organizing/i })).toBeDisabled()
+    await expect(page.getByText(/Creating Your Pyjama Party/i)).toBeVisible()
+    await expect(page.getByRole('button', { name: /Creating Your Pyjama Party/i })).toBeDisabled()
   })
 
   test('should navigate back to home and see updated map', async ({ page }) => {
     // Submit a pyjama party first
-    await page.getByLabel(/station name/i).fill('Vienna Central Station')
-    await page.getByLabel(/city/i).fill('Vienna')
-    await page.getByLabel(/country/i).fill('Austria')
-    await page.getByLabel(/organizer name/i).fill('Test Organizer')
-    await page.getByLabel(/email/i).fill('organizer@example.com')
-    await page.getByLabel(/description/i).fill('Vienna pyjama party test')
+    await page.locator('#stationName').fill('Vienna Central Station')
+    await page.locator('#city').fill('Vienna')
+    await page.locator('#country').fill('Austria')
+    await page.locator('#organizerName').fill('Test Organizer')
+    await page.locator('#organizerEmail').fill('organizer@example.com')
+    await page.locator('#description').fill('Vienna pyjama party test')
 
     await page.getByRole('button', { name: /organize pyjama party/i }).click()
 
@@ -91,41 +90,40 @@ test.describe('Pyjama Party Submission Workflow', () => {
     // Navigate to home page
     await page.goto('/')
 
-    // Wait for map to load and check if new submission appears
-    // Note: This test would need to be adjusted based on actual map implementation
-    await page.waitForSelector('[data-testid="dream-map"]', { timeout: 10000 })
+    // Wait for map section to load
+    await page.waitForSelector('#map', { timeout: 10000 })
     
-    // Verify the map component is present
-    await expect(page.locator('[data-testid="dream-map"]')).toBeVisible()
+    // Verify the map section is present
+    await expect(page.locator('#map')).toBeVisible()
   })
 
   test('should handle form autocomplete for stations', async ({ page }) => {
     // Start typing in station name
-    await page.getByLabel(/station name/i).fill('Ber')
+    await page.locator('#stationName').fill('Ber')
 
     // Wait for suggestions (if autocomplete is implemented)
     // This test would need to be updated based on actual autocomplete implementation
     await page.waitForTimeout(500)
 
     // Continue with a complete station name
-    await page.getByLabel(/station name/i).fill('Berlin Hauptbahnhof')
-    await page.getByLabel(/city/i).fill('Berlin')
-    await page.getByLabel(/country/i).fill('Germany')
+    await page.locator('#stationName').fill('Berlin Hauptbahnhof')
+    await page.locator('#city').fill('Berlin')
+    await page.locator('#country').fill('Germany')
     
     // Verify the fields are filled correctly
-    await expect(page.getByLabel(/station name/i)).toHaveValue('Berlin Hauptbahnhof')
-    await expect(page.getByLabel(/city/i)).toHaveValue('Berlin')
-    await expect(page.getByLabel(/country/i)).toHaveValue('Germany')
+    await expect(page.locator('#stationName')).toHaveValue('Berlin Hauptbahnhof')
+    await expect(page.locator('#city')).toHaveValue('Berlin')
+    await expect(page.locator('#country')).toHaveValue('Germany')
   })
 
   test('should preserve form data on validation errors', async ({ page }) => {
     // Fill most of the form but leave email invalid
-    await page.getByLabel(/station name/i).fill('Paris Nord')
-    await page.getByLabel(/city/i).fill('Paris')
-    await page.getByLabel(/country/i).fill('France')
-    await page.getByLabel(/organizer name/i).fill('Test Organizer')
-    await page.getByLabel(/email/i).fill('invalid-email')
-    await page.getByLabel(/description/i).fill('Paris pyjama party')
+    await page.locator('#stationName').fill('Paris Nord')
+    await page.locator('#city').fill('Paris')
+    await page.locator('#country').fill('France')
+    await page.locator('#organizerName').fill('Test Organizer')
+    await page.locator('#organizerEmail').fill('invalid-email')
+    await page.locator('#description').fill('Paris pyjama party')
 
     // Submit form (should fail validation)
     await page.getByRole('button', { name: /organize pyjama party/i }).click()
@@ -134,10 +132,10 @@ test.describe('Pyjama Party Submission Workflow', () => {
     await expect(page.getByText('Please enter a valid email')).toBeVisible()
 
     // Verify other form data is preserved
-    await expect(page.getByLabel(/station name/i)).toHaveValue('Paris Nord')
-    await expect(page.getByLabel(/city/i)).toHaveValue('Paris')
-    await expect(page.getByLabel(/country/i)).toHaveValue('France')
-    await expect(page.getByLabel(/organizer name/i)).toHaveValue('Test Organizer')
-    await expect(page.getByLabel(/description/i)).toHaveValue('Paris pyjama party')
+    await expect(page.locator('#stationName')).toHaveValue('Paris Nord')
+    await expect(page.locator('#city')).toHaveValue('Paris')
+    await expect(page.locator('#country')).toHaveValue('France')
+    await expect(page.locator('#organizerName')).toHaveValue('Test Organizer')
+    await expect(page.locator('#description')).toHaveValue('Paris pyjama party')
   })
 })

@@ -32,12 +32,12 @@ export function Countdown({ targetDate, className = '' }: CountdownProps) {
 
   return (
     <div className={`countdown-container ${className}`}>
-      <div className="inline-block bg-white bg-opacity-20 rounded-lg px-4 py-2">
-        <span className="countdown-item">
-          <span className="countdown-number text-lg font-bold mr-1">
+      <div className="inline-block bg-white/90 backdrop-blur-sm rounded-2xl px-6 py-4 shadow-lg border border-white/50">
+        <span className="countdown-item flex flex-col items-center">
+          <span className="countdown-number text-3xl font-bold text-bot-green mb-1">
             {formattedDays}
           </span>
-          <span className="countdown-label text-sm font-medium">
+          <span className="countdown-label text-sm font-semibold text-gray-700 uppercase tracking-wide">
             days to go
           </span>
         </span>

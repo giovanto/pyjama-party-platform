@@ -170,22 +170,28 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   return (
     <motion.form
       onSubmit={handleSubmit}
-      className={`dream-form bg-gradient-to-br from-bot-green via-white to-bot-light-green rounded-2xl shadow-2xl p-6 sm:p-8 lg:p-10 border-4 border-bot-green ${className}`}
+      className={`dream-form bg-gradient-to-br from-white via-bot-green/5 to-bot-blue/5 rounded-3xl shadow-2xl p-8 sm:p-10 lg:p-12 border border-bot-green/20 backdrop-blur-sm ${className}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-bot-dark mb-6 sm:mb-8 text-center leading-tight">
-        Where would you like to wake up tomorrow?
-      </h2>
+      <div className="text-center mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-bot-green to-bot-blue bg-clip-text text-transparent mb-4 leading-tight">
+          Where would you like to wake up tomorrow?
+        </h2>
+        <p className="text-gray-600 text-lg font-medium">
+          Share your dream night train route and help build the movement for sustainable European travel
+        </p>
+        <div className="w-24 h-1 bg-gradient-to-r from-bot-green to-bot-blue rounded-full mx-auto mt-4"></div>
+      </div>
 
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-6">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
         >
-          <label htmlFor="dreamerName" className="block text-sm font-medium text-bot-dark mb-1">
+          <label htmlFor="dreamerName" className="block text-sm font-semibold text-gray-800 mb-2">
             What&apos;s your name? (First name is enough)
           </label>
           <input
@@ -193,13 +199,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             id="dreamerName"
             value={formData.dreamerName}
             onChange={(e) => handleInputChange('dreamerName', e.target.value)}
-            className={`w-full px-4 py-4 sm:py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 text-lg sm:text-base ${
-              errors.dreamerName ? 'border-red-500 ring-4 ring-red-500/20' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            className={`w-full px-6 py-4 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-bot-green/30 focus:border-bot-green bg-white/80 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl font-medium ${
+              errors.dreamerName ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Maria, João, Emma, Lars..."
             required
           />
-          <p className="text-xs text-bot-blue mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
           {errors.dreamerName && <p className="text-red-500 text-sm mt-1">{errors.dreamerName}</p>}
         </motion.div>
 
@@ -209,7 +215,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.15, duration: 0.5 }}
         >
-          <label htmlFor="from" className="block text-sm font-medium text-bot-dark mb-1">
+          <label htmlFor="from" className="block text-sm font-semibold text-gray-800 mb-2">
             Which station represents you?
           </label>
           <input
@@ -219,12 +225,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             onChange={(e) => handleInputChange('from', e.target.value)}
             onFocus={() => setShowFromSuggestions(formData.from.length > 0)}
             onBlur={() => setTimeout(() => setShowFromSuggestions(false), 200)}
-            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
-              errors.from ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            className={`w-full px-6 py-4 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-bot-green/30 focus:border-bot-green bg-white/80 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl font-medium ${
+              errors.from ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
           />
-          <p className="text-xs text-bot-blue mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
           {errors.from && <p className="text-red-500 text-sm mt-1">{errors.from}</p>}
           
           {showFromSuggestions && fromSuggestions.length > 0 && (
@@ -250,7 +256,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <label htmlFor="to" className="block text-sm font-medium text-bot-dark mb-1">
+          <label htmlFor="to" className="block text-sm font-semibold text-gray-800 mb-2">
             Where would you like to wake up?
           </label>
           <input
@@ -260,8 +266,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             onChange={(e) => handleInputChange('to', e.target.value)}
             onFocus={() => setShowToSuggestions(formData.to.length > 0)}
             onBlur={() => setTimeout(() => setShowToSuggestions(false), 200)}
-            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 ${
-              errors.to ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            className={`w-full px-6 py-4 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-bot-green/30 focus:border-bot-green bg-white/80 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl font-medium ${
+              errors.to ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Barcelona beach sunrise, Prague castle view, Stockholm archipelago..."
           />
@@ -290,14 +296,15 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
         >
-          <div className="bg-gradient-to-r from-bot-green/10 to-bot-blue/10 rounded-xl p-6 border-2 border-bot-green/20">
-            <h3 className="text-lg font-bold text-bot-dark mb-4">🎉 Join the September 26th Pyjama Party?</h3>
-            <p className="text-sm text-gray-700 mb-4">
-              After sharing your dream route, you can join thousands across Europe for synchronized pyjama parties at train stations!
+          <div className="bg-gradient-to-br from-bot-green/8 to-bot-blue/8 rounded-3xl p-8 border-2 border-bot-green/30 shadow-xl backdrop-blur-sm">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">🌙 Join the Great European Pajama Party</h3>
+            <p className="text-gray-700 mb-6 text-base leading-relaxed">
+              September 26th, 2025: Thousands of climate advocates will gather in their pajamas at train stations across Europe, 
+              creating the most epic demonstration for night trains ever seen. How do you want to participate?
             </p>
             
-            <div className="space-y-3">
-              <label className="flex items-center space-x-3 cursor-pointer">
+            <div className="space-y-4">
+              <label className="flex items-start space-x-4 p-5 rounded-2xl border-2 border-white/50 bg-white/40 hover:border-bot-green/50 hover:bg-white/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm">
                 <input
                   type="radio"
                   name="participationLevel"
@@ -312,15 +319,15 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                     }));
                     setShowTierTwo(false);
                   }}
-                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />
-                <div>
-                  <span className="font-medium text-bot-dark">🗺️ Just share my dream route</span>
-                  <p className="text-xs text-gray-600">Add to the map, no email required</p>
+                <div className="flex-1">
+                  <span className="font-semibold text-gray-900 text-lg block">🗺️ Dream Route Supporter</span>
+                  <p className="text-gray-600 text-sm mt-1">Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.</p>
                 </div>
               </label>
               
-              <label className="flex items-center space-x-3 cursor-pointer">
+              <label className="flex items-start space-x-4 p-5 rounded-2xl border-2 border-white/50 bg-white/40 hover:border-bot-green/50 hover:bg-white/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm">
                 <input
                   type="radio"
                   name="participationLevel"
@@ -335,15 +342,15 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                     }));
                     setShowTierTwo(true);
                   }}
-                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />
-                <div>
-                  <span className="font-medium text-bot-dark">🎉 Join a pyjama party at my station</span>
-                  <p className="text-xs text-gray-600">Get Discord invite + Party Kit access</p>
+                <div className="flex-1">
+                  <span className="font-semibold text-gray-900 text-lg block">🌙 Pajama Party Participant</span>
+                  <p className="text-gray-600 text-sm mt-1">Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.</p>
                 </div>
               </label>
               
-              <label className="flex items-center space-x-3 cursor-pointer">
+              <label className="flex items-start space-x-4 p-5 rounded-2xl border-2 border-white/50 bg-white/40 hover:border-bot-green/50 hover:bg-white/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm">
                 <input
                   type="radio"
                   name="participationLevel"
@@ -358,11 +365,11 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                     }));
                     setShowTierTwo(true);
                   }}
-                  className="w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />
-                <div>
-                  <span className="font-medium text-bot-dark">🎪 Organize a pyjama party at my station</span>
-                  <p className="text-xs text-gray-600">Lead the event + get organizer resources</p>
+                <div className="flex-1">
+                  <span className="font-semibold text-gray-900 text-lg block">🎪 Station Host & Organizer</span>
+                  <p className="text-gray-600 text-sm mt-1">Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.</p>
                 </div>
               </label>
             </div>
@@ -389,7 +396,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                 <li>📢 Updates on station permissions and event details</li>
               </ul>
               
-              <label htmlFor="email" className="block text-sm font-medium text-bot-dark mb-1">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-800 mb-2">
                 Email for pyjama party coordination <span className="text-red-500">*</span>
               </label>
               <input
@@ -397,8 +404,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                 id="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-blue/50 focus:border-bot-blue bg-white transition-all duration-200 ${
-                  errors.email ? 'border-red-500' : 'border-bot-blue hover:border-bot-dark-blue shadow-lg hover:shadow-xl'
+                className={`w-full px-6 py-4 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-bot-green/30 focus:border-bot-green bg-white/80 backdrop-blur-sm transition-all duration-300 shadow-lg hover:shadow-xl font-medium ${
+                  errors.email ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
                 }`}
                 placeholder="your.email@example.com"
                 required={formData.pyjamaPartyInterest}
@@ -417,7 +424,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <label htmlFor="why" className="block text-sm font-medium text-bot-dark mb-1">
+          <label htmlFor="why" className="block text-sm font-semibold text-gray-800 mb-2">
             Why does this route matter to you?
           </label>
           <textarea
@@ -425,8 +432,8 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             value={formData.why}
             onChange={(e) => handleInputChange('why', e.target.value)}
             rows={3}
-            className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none focus:ring-4 focus:ring-bot-green/50 focus:border-bot-green bg-white transition-all duration-200 resize-none ${
-              errors.why ? 'border-red-500' : 'border-bot-green hover:border-bot-dark-green shadow-lg hover:shadow-xl'
+            className={`w-full px-6 py-4 border-2 rounded-2xl focus:outline-none focus:ring-4 focus:ring-bot-green/30 focus:border-bot-green bg-white/80 backdrop-blur-sm transition-all duration-300 resize-none shadow-lg hover:shadow-xl font-medium ${
+              errors.why ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Tell us about your connection to this route, why it&apos;s important for sustainability, or how it would impact your travel..."
           />
@@ -436,9 +443,9 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
         <motion.button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-bot-green via-bot-light-green to-bot-green text-white py-6 sm:py-5 lg:py-6 px-8 rounded-2xl hover:from-bot-dark-green hover:via-bot-green hover:to-bot-dark-green focus:outline-none focus:ring-6 focus:ring-bot-light-green/40 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg sm:text-xl lg:text-2xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl border-2 border-bot-green/30 min-h-[56px]"
-          whileHover={{ scale: 1.08, y: -4 }}
-          whileTap={{ scale: 0.95 }}
+          className="w-full bg-gradient-to-r from-bot-green via-bot-dark-green to-bot-blue text-white py-6 sm:py-7 lg:py-8 px-8 rounded-3xl hover:from-bot-dark-green hover:via-bot-blue hover:to-bot-green focus:outline-none focus:ring-6 focus:ring-bot-light-green/50 focus:ring-offset-4 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg sm:text-xl lg:text-2xl shadow-2xl transition-all duration-300 transform hover:shadow-3xl border-2 border-bot-green/40 min-h-[64px] backdrop-blur-sm"
+          whileHover={{ scale: 1.05, y: -3 }}
+          whileTap={{ scale: 0.98 }}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
