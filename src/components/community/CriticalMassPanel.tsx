@@ -9,6 +9,7 @@ interface CriticalMassStation {
   country: string;
   attendees: number;
   status: string;
+  station_count?: number; // Number of grouped stations
 }
 
 interface CriticalMassPanelProps {
@@ -107,9 +108,14 @@ export default function CriticalMassPanel({ className = '' }: CriticalMassPanelP
                   <h4 className="font-semibold text-bot-dark text-sm">
                     {station.stationName}
                   </h4>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-xs text-gray-600 mb-1">
                     {station.city}, {station.country}
                   </p>
+                  {station.station_count && station.station_count > 1 && (
+                    <p className="text-xs text-bot-blue font-medium">
+                      📍 {station.station_count} nearby stations grouped
+                    </p>
+                  )}
                 </div>
                 <div className="text-right">
                   <div className="flex items-center gap-1">
@@ -126,6 +132,11 @@ export default function CriticalMassPanel({ className = '' }: CriticalMassPanelP
                       {station.status}
                     </span>
                   </div>
+                  {station.attendees >= 10 && (
+                    <div className="text-xs text-orange-600 font-semibold mt-1">
+                      🔥 Mega Party!
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

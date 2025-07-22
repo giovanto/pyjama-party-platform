@@ -230,11 +230,39 @@ export default function DreamMap({
       }
     });
 
+    // Add clustering for stations
     map.current.addSource('dream-stations', {
       type: 'geojson',
       data: {
         type: 'FeatureCollection',
         features: []
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
+    });
+
+    // Enhanced route lines with gradient effect
+    map.current.addLayer({
+      id: 'dream-routes-shadow',
+      type: 'line',
+      source: 'dream-routes',
+      layout: {
+        'line-join': 'round',
+        'line-cap': 'round'
+      },
+      paint: {
+        'line-color': '#000000',
+        'line-width': [
+          'interpolate',
+          ['linear'],
+          ['get', 'count'],
+          1, 4,
+          5, 6,
+          10, 8
+        ],
+        'line-opacity': 0.1,
+        'line-blur': 2
       }
     });
 
@@ -259,27 +287,76 @@ export default function DreamMap({
           'interpolate',
           ['linear'],
           ['get', 'count'],
-          1, 2,
-          5, 4,
-          10, 6
+          1, 3,
+          5, 5,
+          10, 7
         ],
-        'line-opacity': 0.8
+        'line-opacity': 0.9
       }
     });
 
+    // Cluster circles for grouped stations
+    map.current.addLayer({
+      id: 'dream-stations-clusters',
+      type: 'circle',
+      source: 'dream-stations',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bfda',
+          10,
+          '#4264fb',
+          30,
+          '#f563c0'
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          15,
+          10,
+          20,
+          30,
+          25
+        ],
+        'circle-opacity': 0.8,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff'
+      }
+    });
+
+    // Cluster count labels
+    map.current.addLayer({
+      id: 'dream-stations-cluster-count',
+      type: 'symbol',
+      source: 'dream-stations',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      },
+      paint: {
+        'text-color': '#ffffff'
+      }
+    });
+
+    // Individual station circles
     map.current.addLayer({
       id: 'dream-stations-circle',
       type: 'circle',
       source: 'dream-stations',
+      filter: ['!', ['has', 'point_count']],
       paint: {
         'circle-radius': [
           'interpolate',
           ['linear'],
           ['get', 'dreamCount'],
-          1, 4,
-          5, 6,
-          10, 8,
-          20, 10
+          1, 6,
+          5, 8,
+          10, 10,
+          20, 12
         ],
         'circle-color': [
           'interpolate',
@@ -292,10 +369,52 @@ export default function DreamMap({
         ],
         'circle-stroke-width': 2,
         'circle-stroke-color': '#ffffff',
-        'circle-opacity': 0.8
+        'circle-opacity': 0.9
       }
     });
 
+    // Station labels for important stations
+    map.current.addLayer({
+      id: 'dream-stations-labels',
+      type: 'symbol',
+      source: 'dream-stations',
+      filter: ['!', ['has', 'point_count']],
+      layout: {
+        'text-field': [
+          'case',
+          ['>=', ['get', 'dreamCount'], 3],
+          ['get', 'city'],
+          ''
+        ],
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 10,
+        'text-offset': [0, 1.5],
+        'text-anchor': 'top'
+      },
+      paint: {
+        'text-color': '#374151',
+        'text-halo-color': '#ffffff',
+        'text-halo-width': 1
+      }
+    });
+
+    // Click handler for clusters - zoom in
+    map.current.on('click', 'dream-stations-clusters', (e) => {
+      const features = map.current!.queryRenderedFeatures(e.point, {
+        layers: ['dream-stations-clusters']
+      });
+      const clusterId = features[0].properties!.cluster_id;
+      const source = map.current!.getSource('dream-stations') as mapboxgl.GeoJSONSource;
+      source.getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) return;
+        map.current!.easeTo({
+          center: features[0].geometry.type === 'Point' ? features[0].geometry.coordinates as [number, number] : [0, 0],
+          zoom: zoom
+        });
+      });
+    });
+
+    // Click handler for individual stations
     map.current.on('click', 'dream-stations-circle', (e) => {
       if (!e.features || e.features.length === 0) return;
       
@@ -304,18 +423,22 @@ export default function DreamMap({
       
       if (!properties) return;
 
-      new mapboxgl.Popup()
+      new mapboxgl.Popup({ className: 'dream-popup' })
         .setLngLat([properties.longitude, properties.latitude])
         .setHTML(`
-          <div class="p-2">
-            <h3 class="font-bold text-sm">${properties.name}</h3>
-            <p class="text-xs text-gray-600">${properties.city}, ${properties.country}</p>
-            <p class="text-xs mt-1">${properties.dreamCount} dream routes</p>
+          <div class="p-3">
+            <h3 class="font-bold text-sm text-bot-green">${properties.name}</h3>
+            <p class="text-xs text-gray-600 mb-2">${properties.city}, ${properties.country}</p>
+            <div class="flex items-center text-xs">
+              <span class="w-2 h-2 bg-bot-green rounded-full mr-2"></span>
+              <span class="font-medium">${properties.dreamCount} dream route${properties.dreamCount !== 1 ? 's' : ''}</span>
+            </div>
           </div>
         `)
         .addTo(map.current!);
     });
 
+    // Enhanced route click handler
     map.current.on('click', 'dream-routes-line', (e) => {
       if (!e.features || e.features.length === 0) return;
       
@@ -324,15 +447,32 @@ export default function DreamMap({
       
       if (!properties) return;
 
-      new mapboxgl.Popup()
+      new mapboxgl.Popup({ className: 'dream-popup' })
         .setLngLat(e.lngLat)
         .setHTML(`
-          <div class="p-2">
-            <h3 class="font-bold text-sm">${properties.fromName} → ${properties.toName}</h3>
-            <p class="text-xs text-gray-600">${properties.count} dreamers want this route</p>
+          <div class="p-3">
+            <h3 class="font-bold text-sm text-bot-blue mb-2">${properties.fromName} → ${properties.toName}</h3>
+            <div class="flex items-center text-xs">
+              <span class="w-2 h-0.5 bg-bot-green mr-2"></span>
+              <span class="font-medium">${properties.count} dreamer${properties.count !== 1 ? 's' : ''} want this route</span>
+            </div>
+            <p class="text-xs text-gray-600 mt-2 italic">Click route to see all dreamers' stories</p>
           </div>
         `)
         .addTo(map.current!);
+    });
+
+    // Mouse cursor changes for interactivity
+    map.current.on('mouseenter', 'dream-stations-clusters', () => {
+      if (map.current) {
+        map.current.getCanvas().style.cursor = 'pointer';
+      }
+    });
+
+    map.current.on('mouseleave', 'dream-stations-clusters', () => {
+      if (map.current) {
+        map.current.getCanvas().style.cursor = '';
+      }
     });
 
     map.current.on('mouseenter', 'dream-stations-circle', () => {
@@ -386,14 +526,30 @@ export default function DreamMap({
         </div>
       )}
 
-      <div className="absolute bottom-4 left-4 bg-white bg-opacity-90 rounded-lg p-3 text-xs">
-        <div className="flex items-center gap-2 mb-1">
-          <div className="w-3 h-0.5 bg-green-500"></div>
-          <span>Dream routes</span>
+      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs shadow-lg border border-white/20">
+        <h4 className="font-bold text-gray-800 mb-3">Dream Routes Map</h4>
+        
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-0.5 bg-bot-green rounded"></div>
+            <span>Night train routes</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 bg-bot-green rounded-full"></div>
+            <span>Train stations</span>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-bot-blue rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
+            <span>Station clusters</span>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-          <span>Stations</span>
+        
+        <div className="mt-3 pt-3 border-t border-gray-200">
+          <p className="text-gray-600 text-xs">
+            💡 Click clusters to zoom • Click stations/routes for details
+          </p>
         </div>
       </div>
     </div>

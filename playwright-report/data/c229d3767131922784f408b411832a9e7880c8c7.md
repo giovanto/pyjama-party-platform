@@ -1,0 +1,117 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img "Back-on-Track"
+  - navigation:
+    - link "About":
+      - /url: "#about"
+    - link "Community":
+      - /url: "#community"
+    - link "Back-on-Track":
+      - /url: https://back-on-track.eu
+- text: 🎉 European Train Adventure Challenge 065 days left
+- navigation:
+  - button "Navigate to Dream Form"
+  - button "Navigate to Map"
+  - button "Navigate to Community"
+  - button "Navigate to About"
+- main:
+  - heading "🎪 Organize a Pyjama Party" [level=1]
+  - paragraph: Lead the climate movement at your train station! Organize a pyjama party for September 26th and connect with thousands of activists across Europe advocating for sustainable night trains.
+  - text: 🎉 September 26th, 2025 🌍 Europe-wide Event 🚂 Climate Action
+  - heading "What You'll Get as an Organizer" [level=2]
+  - text: 📧
+  - heading "Discord Access" [level=3]
+  - paragraph: Join the coordination channels with other organizers
+  - text: 📋
+  - heading "Party Kit PDF" [level=3]
+  - paragraph: Complete organizer resources and coordination guide
+  - text: 🎵
+  - heading "Silent Disco" [level=3]
+  - paragraph: Synchronized music across European stations
+  - text: 📹
+  - heading "Video Connectivity" [level=3]
+  - paragraph: Eurovision-style connection with other stations
+  - heading "🎪 Organize a Pyjama Party at Your Station" [level=2]
+  - heading "September 26th, 2025 • 19:00-20:00 CEST" [level=3]
+  - paragraph: Join the synchronized European pyjama party movement! Organize your local station event and connect with thousands of climate activists across Europe.
+  - text: Which train station? *
+  - textbox "Which train station? *"
+  - text: City *
+  - textbox "City *"
+  - text: Country *
+  - textbox "Country *"
+  - text: Your name (as organizer) *
+  - textbox "Your name (as organizer) *"
+  - text: Email for coordination (optional)
+  - textbox "Email for coordination (optional)"
+  - paragraph: "Optional: You'll receive Discord invite, Party Kit, and coordination updates if provided"
+  - text: How many people do you expect?
+  - spinbutton "How many people do you expect?": "1"
+  - text: Describe your pyjama party plan *
+  - textbox "Describe your pyjama party plan *"
+  - button "🎉 Organize Pyjama Party"
+  - paragraph: September 26th coordination - join thousands across Europe for climate action
+  - heading "The Back-on-Track Movement" [level=2]
+  - text: 🌱
+  - heading "Climate Impact" [level=3]
+  - paragraph: Night trains reduce aviation emissions by up to 90% for medium-distance European travel, creating a sustainable alternative for climate-conscious travelers.
+  - text: 🚂
+  - heading "European Network" [level=3]
+  - paragraph: Building momentum for expanded night train services across Europe through coordinated grassroots action and evidence-based policy advocacy.
+  - text: 🎉
+  - heading "Community Action" [level=3]
+  - paragraph: Synchronized pyjama parties create visible public demand for night trains while building a lasting community of climate activists across Europe.
+- contentinfo:
+  - img "Back-on-Track"
+  - paragraph: Building the sustainable transport network Europe deserves
+  - heading "Platform" [level=4]
+  - list:
+    - listitem:
+      - link "Privacy Policy":
+        - /url: "#privacy"
+    - listitem:
+      - link "Terms of Use":
+        - /url: "#terms"
+    - listitem:
+      - link "Contact":
+        - /url: "#contact"
+  - heading "🚂 Back-on-Track" [level=4]
+  - list:
+    - listitem:
+      - link "🏠 Main Website":
+        - /url: https://back-on-track.eu
+    - listitem:
+      - link "👥 Become a Member":
+        - /url: https://back-on-track.eu/membership
+    - listitem:
+      - link "📧 Newsletter":
+        - /url: https://back-on-track.eu/newsletter
+    - listitem:
+      - link "📄 Policy Paper":
+        - /url: https://back-on-track.eu/position-paper
+  - heading "🎪 Action Group" [level=4]
+  - list:
+    - listitem:
+      - link "✉️ Join Action Group":
+        - /url: mailto:action-wg@back-on-track.eu
+    - listitem:
+      - link "💬 Discord":
+        - /url: https://discord.gg/back-on-track
+    - listitem:
+      - link "🏛️ Berlin Conference":
+        - /url: https://back-on-track.eu/night-train-conference-2025
+    - listitem:
+      - link "📦 Pajama Party Kit":
+        - /url: "#"
+  - paragraph: © 2025 Back-on-Track AISBL. Made with ❤️ for sustainable European travel.
+- navigation:
+  - button "Navigate to Dream Form"
+  - button "Navigate to Map"
+  - button "Navigate to Community"
+  - button "Navigate to About"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```

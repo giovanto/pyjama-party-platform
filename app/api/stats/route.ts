@@ -99,12 +99,32 @@ export async function GET() {
       .from('pyjama_parties')
       .select('*', { count: 'exact', head: true });
 
-    // Get critical mass stations (2+ participants)
-    const { data: partiesData } = await supabase
+    // Enhanced critical mass detection with better grouping
+    const { data: allPartiesData } = await supabase
       .from('pyjama_parties')
-      .select('station_name, city, country, attendees_count, status')
-      .gte('attendees_count', 2)
+      .select('station_name, city, country, attendees_count, status, latitude, longitude')
       .eq('status', 'planned');
+
+    // Group nearby stations (within 50km) to avoid splitting large cities
+    const stationGroups = groupNearbyStations(allPartiesData || []);
+    
+    // Calculate critical mass based on grouped stations
+    const partiesData = stationGroups
+      .map(group => ({
+        ...group.mainStation,
+        attendees_count: group.totalAttendees,
+        station_count: group.stations.length
+      }))
+      .filter(station => {
+        // Enhanced critical mass criteria:
+        // - 2+ people at single station, OR
+        // - 3+ people across nearby stations in same city, OR  
+        // - 5+ people across stations in same metropolitan area
+        return station.attendees_count >= 2 || 
+               (station.station_count >= 2 && station.attendees_count >= 3) ||
+               (station.station_count >= 3 && station.attendees_count >= 5);
+      })
+      .sort((a, b) => b.attendees_count - a.attendees_count); // Sort by most participants
 
     // Combine recent activity
     const recentActivity = [
@@ -175,4 +195,69 @@ function extractCountry(stationName: string): string | null {
 function extractCityFromStation(stationName: string): string {
   const parts = stationName.split(',');
   return parts.length >= 2 ? parts[1].trim() : stationName;
+}
+
+// Calculate distance between two coordinates using Haversine formula
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Group nearby stations for better critical mass detection
+function groupNearbyStations(parties: any[]): Array<{
+  mainStation: any;
+  stations: any[];
+  totalAttendees: number;
+}> {
+  const groups: Array<{
+    mainStation: any;
+    stations: any[];
+    totalAttendees: number;
+  }> = [];
+  
+  const processed = new Set<number>();
+  
+  parties.forEach((party, index) => {
+    if (processed.has(index) || !party.latitude || !party.longitude) return;
+    
+    const group = {
+      mainStation: party,
+      stations: [party],
+      totalAttendees: party.attendees_count || 0
+    };
+    
+    // Find nearby stations within 50km
+    parties.forEach((otherParty, otherIndex) => {
+      if (index === otherIndex || processed.has(otherIndex) || !otherParty.latitude || !otherParty.longitude) return;
+      
+      const distance = calculateDistance(
+        party.latitude, party.longitude,
+        otherParty.latitude, otherParty.longitude
+      );
+      
+      // Group stations within 50km of each other
+      if (distance <= 50) {
+        group.stations.push(otherParty);
+        group.totalAttendees += otherParty.attendees_count || 0;
+        processed.add(otherIndex);
+        
+        // Use the station with most attendees as the main station
+        if (otherParty.attendees_count > group.mainStation.attendees_count) {
+          group.mainStation = otherParty;
+        }
+      }
+    });
+    
+    processed.add(index);
+    groups.push(group);
+  });
+  
+  return groups;
 }

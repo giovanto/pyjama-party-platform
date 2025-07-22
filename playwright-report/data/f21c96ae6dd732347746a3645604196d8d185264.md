@@ -1,0 +1,170 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img "Back-on-Track"
+  - navigation:
+    - link "About":
+      - /url: "#about"
+    - link "Community":
+      - /url: "#community"
+    - link "Back-on-Track":
+      - /url: https://back-on-track.eu
+- text: 🎉 European Train Adventure Challenge 065 days left
+- navigation:
+  - button "Navigate to Dream Form"
+  - button "Navigate to Map"
+  - button "Navigate to Community"
+  - button "Navigate to About"
+- main:
+  - heading "Where would you like to wake up tomorrow?" [level=1]
+  - paragraph: Imagine waking up in Barcelona after falling asleep in Amsterdam. Rome after Paris. Stockholm after Berlin. Your dream route could become reality.
+  - paragraph: Join the Back-on-Track Action Group's movement to bring back night trains across Europe. Share your dream routes and help us organize the most epic pajama party for climate action the continent has ever seen.
+  - paragraph: New to climate activism? This platform is your accessible entry point to meaningful environmental action.
+  - text: 🚂 Back-on-Track Action 🌍 Climate Advocacy 🎉 Community Organizing
+  - heading "Europe-Wide Coordination Event" [level=2]
+  - paragraph: September 26, 2025
+  - paragraph: Join thousands across Europe for coordinated actions at train stations. Your participation becomes part of a continental movement for sustainable night train services.
+  - text: 066days to go
+  - heading "Where would you like to wake up tomorrow?" [level=2]
+  - paragraph: Share your dream night train route and help build the movement for sustainable European travel
+  - text: What's your name? (First name is enough)
+  - textbox "What's your name? (First name is enough)"
+  - paragraph: We'll use this to connect you with fellow travelers from your area
+  - text: Which station represents you?
+  - textbox "Which station represents you?"
+  - paragraph: We'll use this to connect you with fellow travelers from your area
+  - text: Where would you like to wake up?
+  - textbox "Where would you like to wake up?"
+  - heading "🌙 Join the Great European Pajama Party" [level=3]
+  - paragraph: "September 26th, 2025: Thousands of climate advocates will gather in their pajamas at train stations across Europe, creating the most epic demonstration for night trains ever seen. How do you want to participate?"
+  - radio "🗺️ Dream Route Supporter Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel." [checked]
+  - text: 🗺️ Dream Route Supporter
+  - paragraph: Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.
+  - radio "🌙 Pajama Party Participant Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates."
+  - text: 🌙 Pajama Party Participant
+  - paragraph: Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.
+  - radio "🎪 Station Host & Organizer Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution."
+  - text: 🎪 Station Host & Organizer
+  - paragraph: Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.
+  - text: Why does this route matter to you?
+  - textbox "Why does this route matter to you?"
+  - button "🗺️ Add my dream to the map"
+  - paragraph: Privacy-first - your data is automatically deleted after 30 days
+  - heading "Stations Ready for Action" [level=2]
+  - paragraph: These stations have reached critical mass with 2+ participants ready for the September 26th event. Will your station be next?
+  - text: 🎯
+  - heading "Critical Mass Stations" [level=3]
+  - paragraph: Stations with 2+ participants ready for September 26th pyjama parties
+  - heading "Berlin Hauptbahnhof" [level=4]
+  - paragraph: Berlin, Germany
+  - text: 👥 5 ✅ planned
+  - heading "Amsterdam Centraal" [level=4]
+  - paragraph: Amsterdam, Netherlands
+  - text: 👥 3 ✅ planned
+  - heading "Unique Test Station" [level=4]
+  - paragraph: Munich, Germany
+  - text: "👥 3 ✅ planned Ready stations: 3 Total participants: 11"
+  - link "🎪 Organize Your Station's Party":
+    - /url: /organize
+  - heading "Join Our Action Group" [level=2]
+  - paragraph: Connect with thousands of climate advocates across Europe. Get updates, coordinate with your local station, and be part of the movement for sustainable transport.
+  - text: 💬
+  - heading "Back-on-Track Discord" [level=3]
+  - paragraph: Join our vibrant community for event coordination, route discussions, and climate action planning.
+  - link "💬 Join Discord Community":
+    - /url: https://discord.gg/wyKQZCwP
+  - paragraph: Free to join • Pyjama party channels coming soon
+  - heading "Dream Routes Across Europe" [level=2]
+  - paragraph: Explore the most requested night train connections from our community. Each route represents collective advocacy for sustainable transport and climate action.
+  - region "Map"
+  - button "Zoom in"
+  - button "Zoom out"
+  - button "Reset bearing to north"
+  - button "Toggle attribution"
+  - link "Mapbox homepage":
+    - /url: https://www.mapbox.com/
+  - text: Dream routes Stations
+  - heading "Why Your Dream Route Matters" [level=2]
+  - paragraph: Night trains can reduce carbon emissions by up to 90% compared to flights. Your dream route helps us build the case for a comprehensive European night train network.
+  - heading "🎉 2024 Success Story" [level=3]
+  - paragraph:
+    - text: Last October, our Trans-Europe Pyjama Party took place in
+    - strong: 11 cities
+    - text: across Europe. From Barcelona to Berlin, activists gathered in pyjamas at train stations for silent disco parties that generated significant media coverage.
+  - paragraph: This creative, non-disruptive approach proved that climate activism can be both impactful and fun, reaching audiences across Spain, Germany, Denmark, France, and Portugal.
+  - link "Read about our 2024 impact →":
+    - /url: https://back-on-track.eu/projects-and-activities/trans-europe-pyjama-party-2024/
+  - text: 11 Cities participated 🌍 International media coverage
+  - heading "Our Growing Movement" [level=2]
+  - paragraph: See how our community is building momentum for sustainable European transport
+  - heading "Community Impact" [level=2]
+  - text: 23 Dream Routes 9 Active Dreamers
+  - heading "Campaign Progress" [level=3]
+  - text: Dream Routes 23 / 1000 Active Dreamers 9 / 500 Pajama Parties 8 / 50
+  - heading "Most Wanted Routes" [level=3]
+  - text: Berlin → Vienna 5 Paris → Madrid 3 Amsterdam → Rome 2
+  - heading "Recent Activity" [level=3]
+  - text: 💭 New dream route Paris Gare du Nord → Rome Termini just now 💭 New dream route London St Pancras → Amsterdam Centraal just now 💭 New dream route Copenhagen Central → Stockholm Central just now 🎉 Pajama party Test Station Berlin 1753192415362 19m ago 🎉 Pajama party Update Test Station 19m ago
+  - heading "About the Back-on-Track Action Group" [level=2]
+  - text: 🌱
+  - heading "Climate Action" [level=3]
+  - paragraph: Making climate activism accessible and impactful while advocating for sustainable transport solutions that reduce aviation emissions and support the European Green Deal.
+  - text: 🚂
+  - heading "Night Train Revival" [level=3]
+  - paragraph: Promoting the revival and expansion of night train networks across Europe through evidence-based advocacy and community-driven demand demonstration.
+  - text: 🎉
+  - heading "Community Organizing" [level=3]
+  - paragraph: Building a grassroots movement through coordinated community actions that welcome everyone to climate activism — from seasoned advocates to curious newcomers.
+- contentinfo:
+  - img "Back-on-Track"
+  - paragraph: Building the sustainable transport network Europe deserves
+  - heading "Platform" [level=4]
+  - list:
+    - listitem:
+      - link "Privacy Policy":
+        - /url: "#privacy"
+    - listitem:
+      - link "Terms of Use":
+        - /url: "#terms"
+    - listitem:
+      - link "Contact":
+        - /url: "#contact"
+  - heading "🚂 Back-on-Track" [level=4]
+  - list:
+    - listitem:
+      - link "🏠 Main Website":
+        - /url: https://back-on-track.eu
+    - listitem:
+      - link "👥 Become a Member":
+        - /url: https://back-on-track.eu/membership
+    - listitem:
+      - link "📧 Newsletter":
+        - /url: https://back-on-track.eu/newsletter
+    - listitem:
+      - link "📄 Policy Paper":
+        - /url: https://back-on-track.eu/position-paper
+  - heading "🎪 Action Group" [level=4]
+  - list:
+    - listitem:
+      - link "✉️ Join Action Group":
+        - /url: mailto:action-wg@back-on-track.eu
+    - listitem:
+      - link "💬 Discord":
+        - /url: https://discord.gg/back-on-track
+    - listitem:
+      - link "🏛️ Berlin Conference":
+        - /url: https://back-on-track.eu/night-train-conference-2025
+    - listitem:
+      - link "📦 Pajama Party Kit":
+        - /url: "#"
+  - paragraph: © 2025 Back-on-Track AISBL. Made with ❤️ for sustainable European travel.
+- navigation:
+  - button "Navigate to Dream Form"
+  - button "Navigate to Map"
+  - button "Navigate to Community"
+  - button "Navigate to About"
+- alert
+- button "Open Next.js Dev Tools":
+  - img
+```
