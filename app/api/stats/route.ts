@@ -106,25 +106,33 @@ export async function GET() {
       .eq('status', 'planned');
 
     // Group nearby stations (within 50km) to avoid splitting large cities
-    const stationGroups = groupNearbyStations(allPartiesData || []);
+    const mappedPartiesData: PartyData[] = (allPartiesData || []).map(party => ({
+      stationName: party.station_name,
+      city: party.city,
+      country: party.country,
+      attendeeCount: party.attendees_count,
+      latitude: party.latitude,
+      longitude: party.longitude
+    }));
+    const stationGroups = groupNearbyStations(mappedPartiesData);
     
     // Calculate critical mass based on grouped stations
     const partiesData = stationGroups
       .map(group => ({
         ...group.mainStation,
-        attendees_count: group.totalAttendees,
-        station_count: group.stations.length
+        attendeeCount: group.totalAttendees,
+        stationCount: group.stations.length
       }))
       .filter(station => {
         // Enhanced critical mass criteria:
         // - 2+ people at single station, OR
         // - 3+ people across nearby stations in same city, OR  
         // - 5+ people across stations in same metropolitan area
-        return station.attendees_count >= 2 || 
-               (station.station_count >= 2 && station.attendees_count >= 3) ||
-               (station.station_count >= 3 && station.attendees_count >= 5);
+        return station.attendeeCount >= 2 || 
+               (station.stationCount >= 2 && station.attendeeCount >= 3) ||
+               (station.stationCount >= 3 && station.attendeeCount >= 5);
       })
-      .sort((a, b) => b.attendees_count - a.attendees_count); // Sort by most participants
+      .sort((a, b) => b.attendeeCount - a.attendeeCount); // Sort by most participants
 
     // Combine recent activity
     const recentActivity = [
@@ -153,11 +161,11 @@ export async function GET() {
         currentParties: currentParties || 0
       },
       criticalMassStations: (partiesData || []).map(party => ({
-        stationName: party.station_name,
+        stationName: party.stationName,
         city: party.city,
         country: party.country,
-        attendees: party.attendees_count,
-        status: party.status
+        attendees: party.attendeeCount,
+        status: 'planned'
       }))
     };
 
@@ -210,17 +218,24 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   return R * c;
 }
 
-// Group nearby stations for better critical mass detection
-function groupNearbyStations(parties: any[]): Array<{
-  mainStation: any;
-  stations: any[];
+interface PartyData {
+  stationName: string;
+  city: string;
+  country: string;
+  attendeeCount: number;
+  latitude?: number;
+  longitude?: number;
+}
+
+interface StationGroup {
+  mainStation: PartyData;
+  stations: PartyData[];
   totalAttendees: number;
-}> {
-  const groups: Array<{
-    mainStation: any;
-    stations: any[];
-    totalAttendees: number;
-  }> = [];
+}
+
+// Group nearby stations for better critical mass detection
+function groupNearbyStations(parties: PartyData[]): StationGroup[] {
+  const groups: StationGroup[] = [];
   
   const processed = new Set<number>();
   
@@ -230,7 +245,7 @@ function groupNearbyStations(parties: any[]): Array<{
     const group = {
       mainStation: party,
       stations: [party],
-      totalAttendees: party.attendees_count || 0
+      totalAttendees: party.attendeeCount || 0
     };
     
     // Find nearby stations within 50km
@@ -238,18 +253,18 @@ function groupNearbyStations(parties: any[]): Array<{
       if (index === otherIndex || processed.has(otherIndex) || !otherParty.latitude || !otherParty.longitude) return;
       
       const distance = calculateDistance(
-        party.latitude, party.longitude,
-        otherParty.latitude, otherParty.longitude
+        party.latitude!, party.longitude!,
+        otherParty.latitude!, otherParty.longitude!
       );
       
       // Group stations within 50km of each other
       if (distance <= 50) {
         group.stations.push(otherParty);
-        group.totalAttendees += otherParty.attendees_count || 0;
+        group.totalAttendees += otherParty.attendeeCount || 0;
         processed.add(otherIndex);
         
         // Use the station with most attendees as the main station
-        if (otherParty.attendees_count > group.mainStation.attendees_count) {
+        if (otherParty.attendeeCount > group.mainStation.attendeeCount) {
           group.mainStation = otherParty;
         }
       }

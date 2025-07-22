@@ -409,7 +409,7 @@ export default function DreamMap({
         if (err) return;
         map.current!.easeTo({
           center: features[0].geometry.type === 'Point' ? features[0].geometry.coordinates as [number, number] : [0, 0],
-          zoom: zoom
+          zoom: zoom || 10
         });
       });
     });
@@ -526,30 +526,20 @@ export default function DreamMap({
         </div>
       )}
 
-      <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-xl p-4 text-xs shadow-lg border border-white/20">
-        <h4 className="font-bold text-gray-800 mb-3">Dream Routes Map</h4>
-        
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-0.5 bg-bot-green rounded"></div>
-            <span>Night train routes</span>
+      <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-2 text-xs shadow-md border border-white/30 max-w-xs">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-0.5 bg-bot-green rounded"></div>
+            <span className="text-gray-700">Routes</span>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 bg-bot-green rounded-full"></div>
-            <span>Train stations</span>
+          <div className="flex items-center gap-1">
+            <div className="w-2 h-2 bg-bot-green rounded-full"></div>
+            <span className="text-gray-700">Stations</span>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-bot-blue rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
-            <span>Station clusters</span>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 bg-bot-blue rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
+            <span className="text-gray-700">Clusters</span>
           </div>
-        </div>
-        
-        <div className="mt-3 pt-3 border-t border-gray-200">
-          <p className="text-gray-600 text-xs">
-            💡 Click clusters to zoom • Click stations/routes for details
-          </p>
         </div>
       </div>
     </div>

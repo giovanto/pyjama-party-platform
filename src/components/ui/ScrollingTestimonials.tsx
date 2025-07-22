@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Testimonial {
@@ -21,7 +21,7 @@ export default function ScrollingTestimonials({ className = '' }: ScrollingTesti
   const [loading, setLoading] = useState(true);
 
   // Sample testimonials (would be fetched from API in real implementation)
-  const sampleTestimonials: Testimonial[] = [
+  const sampleTestimonials: Testimonial[] = useMemo(() => [
     {
       id: '1',
       route: 'Amsterdam → Barcelona',
@@ -64,13 +64,13 @@ export default function ScrollingTestimonials({ className = '' }: ScrollingTesti
       name: 'João',
       city: 'Lisbon'
     }
-  ];
+  ], []);
 
   useEffect(() => {
     // In real implementation, fetch from API
     setTestimonials(sampleTestimonials);
     setLoading(false);
-  }, []);
+  }, [sampleTestimonials]);
 
   useEffect(() => {
     if (testimonials.length === 0) return;
@@ -120,7 +120,7 @@ export default function ScrollingTestimonials({ className = '' }: ScrollingTesti
                 {currentTestimonial.route}
               </div>
               <blockquote className="text-gray-700 italic leading-relaxed mb-4">
-                "{currentTestimonial.reason}"
+                &ldquo;{currentTestimonial.reason}&rdquo;
               </blockquote>
               <div className="text-bot-blue font-semibold">
                 — {currentTestimonial.name}

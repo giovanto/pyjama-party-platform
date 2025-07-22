@@ -111,11 +111,11 @@ export default function StatsPanel({ className = '' }: StatsPanelProps) {
         </motion.div>
         
         <motion.div 
-          className="text-center p-4 bg-bot-blue bg-opacity-20 rounded-lg"
+          className="text-center p-4 bg-bot-blue rounded-lg"
           whileHover={{ scale: 1.05 }}
         >
-          <div className="text-3xl font-bold text-bot-blue">{stats.totalDreamers}</div>
-          <div className="text-sm text-gray-600">Active Dreamers</div>
+          <div className="text-3xl font-bold text-white">{stats.totalDreamers}</div>
+          <div className="text-sm text-white/80">Active Dreamers</div>
         </motion.div>
       </div>
 
