@@ -53,8 +53,8 @@ CREATE INDEX IF NOT EXISTS idx_places_tags ON places USING GIN (tags);
 -- Full-text search index combining multiple languages
 CREATE INDEX IF NOT EXISTS idx_places_search ON places USING GIN (
   to_tsvector('english', 
-    COALESCE(content->'en'->>'name', '') || ' ' ||
-    COALESCE(content->'en'->>'brief_desc', '') || ' ' ||
+    COALESCE(content->>'en'->>'name', '') || ' ' ||
+    COALESCE(content->>'en'->>'brief_desc', '') || ' ' ||
     place_country
   )
 );
