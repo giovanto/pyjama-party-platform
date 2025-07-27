@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { MessageCircle, Users, MapPin, Calendar, ExternalLink, Award, TrendingUp, Heart, Share2, BookOpen, Headphones } from 'lucide-react';
+import { MessageCircle, Users, Calendar, ExternalLink, Award, TrendingUp, Heart, Share2, BookOpen, Headphones } from 'lucide-react';
 import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { DreamMap } from '@/components/map';
 
