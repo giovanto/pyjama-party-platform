@@ -1,36 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-
-interface DreamData {
-  from: string;
-  to: string;
-  dreamerName: string;
-  email: string;
-  why: string;
-}
+import { validateDreamSubmission, validatePaginationParams } from '@/lib/validation';
+import type { DreamSubmissionRequest, DreamRoute } from '@/types/api';
 
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
-    const body: DreamData = await request.json();
+    const body = await request.json();
     
-    const { from, to, dreamerName, email, why } = body;
+    // Validate request data using Zod schema
+    const validation = validateDreamSubmission(body);
     
-    // Validation
-    if (!from || !to || !dreamerName || !why) {
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Required fields missing' },
+        { 
+          error: 'Validation failed', 
+          details: validation.error 
+        },
         { status: 400 }
       );
     }
     
-    // Email is optional
-    if (email && !/\S+@\S+\.\S+/.test(email)) {
-      return NextResponse.json(
-        { error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    const { from, to, dreamerName, email, why, routeType, travelPurpose } = validation.data;
 
     // Look up station coordinates
     const { data: fromStation } = await supabase
@@ -47,19 +38,23 @@ export async function POST(request: NextRequest) {
       .limit(1)
       .single();
 
-    // Insert dream into database
+    // Insert dream into database with enhanced fields
     const { data, error } = await supabase
       .from('dreams')
       .insert({
-        from_station: from.trim(),
-        to_station: to.trim(),
-        dreamer_name: dreamerName.trim(),
-        dreamer_email: email ? email.trim().toLowerCase() : '',
-        why_important: why.trim(),
+        from_station: from,
+        to_station: to,
+        dreamer_name: dreamerName,
+        dreamer_email: email || '',
+        why_important: why,
         from_latitude: fromStation?.latitude || null,
         from_longitude: fromStation?.longitude || null,
         to_latitude: toStation?.latitude || null,
         to_longitude: toStation?.longitude || null,
+        route_type: routeType,
+        travel_purpose: travelPurpose || null,
+        estimated_demand: 1,
+        status: 'submitted'
       })
       .select()
       .single();
@@ -91,8 +86,13 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
+    
+    // Validate pagination parameters
+    const pagination = validatePaginationParams(
+      searchParams.get('limit'),
+      searchParams.get('offset')
+    );
+    const { limit, offset } = pagination;
 
     // Get dreams with pagination
     const { data: dreams, error, count } = await supabase
