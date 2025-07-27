@@ -1,51 +1,66 @@
-# 🚀 Next Session Implementation Guide
+# Next Session Development Guide
 
-> **Ready for Production Development**
->
-> The European Night Train Advocacy Platform is fully architected and organized. This guide provides everything needed to start implementation immediately.
+**Date**: January 27, 2025  
+**Current Branch**: `release/phase-4-production`  
+**Phase**: 4 - Production Readiness & Launch Preparation  
+**Status**: ✅ **Ready to Begin Phase 4**
 
-## 🎯 **Quick Start for Next Session**
+---
 
-### **1. Orient Yourself (5 minutes)**
+## 🎯 **Session Priority: CRITICAL Data Integration**
+
+### **Immediate Actions Required (This Session)**
+
+#### **1. Database Migration (CRITICAL - 30 minutes)**
 ```bash
-# Review current status
-cat docs/PROJECT_STATUS.md
-
-# Check the complete architecture  
-cat docs/SYSTEM_ARCHITECTURE.md
-
-# Review implementation plan
-cat IMPLEMENTATION_ROADMAP.md
+# MUST BE DONE FIRST - Foundation for everything else
+# Go to Supabase Dashboard → SQL Editor
+# Copy/paste content from: database-migrations/001-enhanced-multilingual-schema.sql
+# Click "Run" to execute migration
+# Verify tables created: places, routes, content
 ```
 
-### **2. Set Up Development (10 minutes)**
+#### **2. Environment Variables Setup (CRITICAL - 15 minutes)**
 ```bash
-# Install dependencies (if not done)
-npm install
+# Create .env.local file with:
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_access_token
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# Set up environment variables
-cp .env.example .env.local
-# Edit .env.local with your Mapbox token, Supabase credentials
-
-# Review development guide
-cat docs/DEVELOPMENT_GUIDE.md
+# Get these from:
+# - Supabase: Project Settings → API
+# - Mapbox: Account → Access Tokens
 ```
 
-### **3. Choose Implementation Phase (Current: Phase 1)**
-The platform is ready for **Phase 1: Foundation (Week 1-2)**:
+#### **3. TripHop Data Import (CRITICAL - 20 minutes)**
+```bash
+# Test import first
+node scripts/import-triphop-places.js --dry-run
 
-#### **Week 1 Tasks - Database & API Foundation**
-- [ ] Implement PostgreSQL schema from `data/places-setup.sql`
-- [ ] Create enhanced `/api/places/search` with language support
-- [ ] Add `/api/places/:placeId` for individual place details
-- [ ] Set up `POST /api/dreams` for route submissions
-- [ ] Add input validation with Zod and rate limiting
+# If successful, run full import
+node scripts/import-triphop-places.js
 
-#### **Week 2 Tasks - Multilingual Infrastructure**  
-- [ ] Configure Next.js i18n for EN/DE/FR
-- [ ] Implement JSONB content retrieval helpers
-- [ ] Set up Vitest and Playwright testing
-- [ ] Create test database and fixtures
+# Verify: Should import 726 TripHop destinations
+# Check in Supabase: Tables → places (should have ~726 rows)
+```
+
+#### **4. End-to-End Testing (HIGH PRIORITY - 30 minutes)**
+```bash
+# Start development server
+npm run dev
+
+# Test complete user journey:
+# 1. Homepage → Map (should show TripHop places)
+# 2. Click place → Dream destination page
+# 3. "Find Train Route" → Connection page  
+# 4. Search origin station → Route calculation
+# 5. "Join This Route Dream" → Participation form
+# 6. Submit form → Success page
+# 7. Visit Community page → Check readiness indicators
+
+# Verify all data flows correctly
+```
 
 ## 📋 **Implementation Checklist**
 
