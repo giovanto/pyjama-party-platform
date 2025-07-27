@@ -105,34 +105,6 @@ export default function MapPerformanceOptimizer({
 
   }, [map, enabled]);
 
-  // Frame rate monitoring and adaptive quality
-  const monitorPerformance = useCallback(() => {
-    if (!map || !enabled) return;
-
-    const now = performance.now();
-    const deltaTime = now - performanceMetrics.current.lastUpdateTime;
-    
-    if (deltaTime > 0) {
-      const currentFPS = 1000 / deltaTime;
-      performanceMetrics.current.frameRate = 
-        performanceMetrics.current.frameRate * 0.9 + currentFPS * 0.1; // Smoothed FPS
-    }
-    
-    performanceMetrics.current.lastUpdateTime = now;
-
-    // Adaptive quality based on performance
-    const fps = performanceMetrics.current.frameRate;
-    
-    if (fps < 30) {
-      // Performance is poor, reduce quality
-      reduceMapQuality();
-    } else if (fps > 50) {
-      // Performance is good, can increase quality
-      increaseMapQuality();
-    }
-
-  }, [map, enabled, increaseMapQuality, reduceMapQuality]);
-
   // Reduce map quality for better performance
   const reduceMapQuality = useCallback(() => {
     if (!map) return;
@@ -191,6 +163,34 @@ export default function MapPerformanceOptimizer({
     }
 
   }, [map]);
+
+  // Frame rate monitoring and adaptive quality
+  const monitorPerformance = useCallback(() => {
+    if (!map || !enabled) return;
+
+    const now = performance.now();
+    const deltaTime = now - performanceMetrics.current.lastUpdateTime;
+    
+    if (deltaTime > 0) {
+      const currentFPS = 1000 / deltaTime;
+      performanceMetrics.current.frameRate = 
+        performanceMetrics.current.frameRate * 0.9 + currentFPS * 0.1; // Smoothed FPS
+    }
+    
+    performanceMetrics.current.lastUpdateTime = now;
+
+    // Adaptive quality based on performance
+    const fps = performanceMetrics.current.frameRate;
+    
+    if (fps < 30) {
+      // Performance is poor, reduce quality
+      reduceMapQuality();
+    } else if (fps > 50) {
+      // Performance is good, can increase quality
+      increaseMapQuality();
+    }
+
+  }, [map, enabled, increaseMapQuality, reduceMapQuality]);
 
   // Batch data updates to avoid frequent re-renders
   const batchedDataUpdate = useCallback((
