@@ -1,203 +1,237 @@
-# 🚂 Pajama Party Platform - Back-on-Track Action Group
+# 🚂 European Night Train Advocacy Platform
 
-> **European climate activism coordination hub: Building grassroots power for sustainable night train networks through synchronized community action**
+> **Where would you like to wake up tomorrow?**
+>
+> A progressive disclosure platform that transforms destination inspiration into climate activism, organizing the September 26, 2025 Europe-wide Pajama Party for night trains.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pyjama-party-platform&project-name=pyjama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![Platform](https://img.shields.io/badge/Platform-Production_Ready-green)]()
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-Database-green)](https://supabase.com)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green)](https://supabase.com)
+[![Multilingual](https://img.shields.io/badge/Languages-EN_DE_FR-blue)]()
 
-## 🌟 **September 26th, 2025: European Pajama Party Event**
+## 🎯 **Platform Purpose**
 
-*"Where would you like to wake up tomorrow?"*
+The **Pajama Party Platform** serves the [Back-on-Track Action Group](https://back-on-track.eu) by converting European travel dreams into climate activism through a carefully designed progressive disclosure user journey:
 
-The Pajama Party Platform coordinates **synchronized pyjama parties across European train stations** on September 26th, 2025 (19:00-20:00 CEST). This grassroots activism tool serves the Back-on-Track Action Group's mission to advocate for sustainable night train networks through community engagement.
+1. **Inspiration**: Interactive map with 726 European destinations
+2. **Aspiration**: Beautiful destination showcases with climate benefits
+3. **Connection**: Train route planning with OpenRailMaps integration
+4. **Education**: Introduction to the night train revival movement
+5. **Participation**: September 26, 2025 pajama party registration
+6. **Community**: Post-conversion engagement and organizing
 
-### 🎯 **Two-Tier Engagement System**
+## 🌍 **September 26, 2025: European Pajama Party**
 
-**Tier 1: Dream Journey Mapping (Open to All)**
-- 🗺️ **Interactive Map** - Visualize dream night train routes across Europe
-- 🚂 **Station Search** - Autocomplete for European train stations
-- 👥 **Community Building** - Track interest levels by station
-- 📊 **Real-time Tracking** - Monitor participation and route popularity
+Synchronized pajama parties at train stations across Europe, featuring:
+- 🎧 **Silent Disco**: Synchronized music across all participating stations
+- 📺 **Live Streams**: Eurovision-style connectivity between cities
+- 🌱 **Climate Action**: Advocacy for sustainable European transport
+- 🎪 **Community Power**: Grassroots organizing for night train networks
 
-**Tier 2: Event Participation (Email Signup)**
-- 🎉 **Critical Mass Detection** - Automatic identification of stations with 2+ participants
-- 🎵 **Silent Disco Coordination** - Europe-wide synchronized music listening
-- 📹 **Cross-Station Video** - Eurovision-style connectivity between participating stations
-- 📋 **Resource Access** - 2025 Party Kit and coordination materials
+## 🏗️ **Architecture Overview**
 
-## 🚀 **Live Demo**
+### **Progressive Disclosure User Journey**
+```
+Map Inspiration → Dream Destination → Train Connection → Movement Info → Participation → Community
+```
 
-🔗 **[Join the movement →](https://pyjama-party-platform.vercel.app)**
+### **Technology Stack**
+- **Frontend**: Next.js 14 with TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Supabase (PostgreSQL + Auth + Storage)
+- **Maps**: Mapbox GL JS with TripHop places data (726 European destinations)
+- **Train Data**: OpenRailMaps API integration for station information
+- **Deployment**: Linux server at `pyjama-party.back-on-track.eu`
 
-![Pajama Party Platform Screenshot](https://via.placeholder.com/800x400/22c55e/ffffff?text=Night+Train+Map+%2B+Community+Features)
+### **Multilingual Support**
+- **Phase 1**: English, German, French
+- **Phase 2**: Spanish, Italian, Dutch  
+- **Phase 3**: Portuguese, Polish, Czech
+- **Implementation**: JSONB database storage + Next.js i18n
 
-## ✨ **Key Features**
+## 📁 **Project Structure**
 
-### 🗺️ **Interactive European Map**
-- Real-time visualization of dream routes
-- Station search with autocomplete
-- Mapbox integration with smooth animations
-- Coordinate-based route planning
-
-### 🚂 **Dream Route Submission**
-- Smart station autocomplete
-- Coordinate lookup and validation
-- Personal story collection
-- Email community building
-
-### 👥 **Community Features**
-- Real-time campaign statistics
-- Top requested routes tracking
-- Recent activity feed
-- Pajama party organization tools
-
-### 📱 **Modern User Experience**
-- Responsive design for all devices
-- Smooth animations with Framer Motion
-- Accessibility-first components
-- Progressive Web App capabilities
-
-## 🛠️ **Tech Stack**
-
-**Frontend & Framework**
-- [Next.js 15](https://nextjs.org/) - React framework with App Router
-- [React 19](https://reactjs.org/) - Latest React with modern features
-- [TypeScript](https://www.typescriptlang.org/) - Type-safe development
-- [Tailwind CSS](https://tailwindcss.com/) - Utility-first styling
-
-**Backend & Database**
-- [Supabase](https://supabase.com) - PostgreSQL database with real-time features
-- [Vercel](https://vercel.com) - Serverless deployment and API routes
-- Modern authentication and Row Level Security
-
-**Mapping & Visualization**
-- [Mapbox GL JS](https://mapbox.com) - Interactive maps and routing
-- Custom route visualization
-- European train station database
-
-**Animation & UX**
-- [Framer Motion](https://framer.com/motion) - Smooth animations
-- [Headless UI](https://headlessui.dev/) - Accessible components
-- Responsive design patterns
+```
+pajama-party-platform/
+├── 📋 Project Documentation
+│   ├── docs/SYSTEM_ARCHITECTURE.md     # Complete system design
+│   ├── docs/DEPLOYMENT_GUIDE.md        # Production deployment
+│   └── docs/DEVELOPMENT_GUIDE.md       # Development workflow
+│
+├── 🗄️ Database & Data
+│   ├── data/places-setup.sql           # TripHop places schema
+│   ├── data/triphop-places.json        # 726 European destinations
+│   └── setup-database.sql              # Current schema (legacy)
+│
+├── 🌐 Application
+│   ├── app/                            # Next.js 14 app router
+│   │   ├── page.tsx                    # Map-centric homepage
+│   │   ├── dream/[placeId]/page.tsx    # Destination showcase
+│   │   └── api/                        # RESTful API endpoints
+│   │
+│   ├── src/components/                 # React components
+│   │   ├── map/PlaceSelectionMap.tsx   # Interactive map
+│   │   ├── forms/DreamForm.tsx         # Participation forms
+│   │   └── layout/                     # Header, nav, footer
+│   │
+│   └── src/lib/                        # Utilities & config
+│
+├── 🧪 Testing
+│   ├── tests/e2e/                      # Playwright E2E tests
+│   ├── tests/api/                      # API integration tests
+│   └── tests/components/               # Component unit tests
+│
+└── 🛠️ Scripts & Config
+    ├── scripts/fetch-places.js         # TripHop data fetcher
+    └── [config files]                  # Next.js, Tailwind, etc.
+```
 
 ## 🚀 **Quick Start**
 
-### 1. **One-Click Deployment**
+### **Prerequisites**
+- Node.js 20+ 
+- PostgreSQL 15+
+- Mapbox account (for maps)
+- Supabase project (for database)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/giovanto/pyjama-party-platform&project-name=pyjama-party&env=NEXT_PUBLIC_MAPBOX_TOKEN,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY)
-
-### 2. **Local Development**
-
+### **Installation**
 ```bash
-# Clone the repository
-git clone https://github.com/giovanto/pyjama-party-platform.git
-cd pyjama-party-platform
-
-# Install dependencies
+# Clone and install
+git clone [repository-url]
+cd pajama-party-platform
 npm install
 
-# Set up environment variables
-cp .env.local.example .env.local
-# Edit .env.local with your API keys
+# Environment setup
+cp .env.example .env.local
+# Add your API keys (see docs/DEPLOYMENT_GUIDE.md)
 
-# Run database setup
-# See docs/SETUP.md for Supabase configuration
+# Database setup
+psql -d your_database < data/places-setup.sql
 
-# Start development server
+# Development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the platform.
-
-### 3. **Environment Variables**
-
+### **Environment Variables**
 ```bash
 # Required
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_token
+DATABASE_URL=postgresql://user:pass@localhost:5432/pyjama_party
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 # Optional
-NEXT_PUBLIC_APP_URL=https://your-domain.com
+OPENRAILMAPS_API_KEY=your_key
+SENTRY_DSN=your_sentry_dsn
 ```
 
-## 📖 **Documentation**
+## 📊 **Core Features**
 
-- 🚀 **[Deployment Guide](./DEPLOYMENT_READY.md)** - Production deployment
-- 🔧 **[Development Setup](./SUPABASE_SETUP.md)** - Local development
-- 🗄️ **[Database Schema](./setup-database.sql)** - Database structure
-- 🧪 **[Testing Guide](./tests/)** - Running tests
-- 📊 **[Monitoring](./PRODUCTION_MONITORING.md)** - Production monitoring
+### **🗺️ Interactive Destination Map**
+- 726 European places from TripHop data
+- Search functionality with autocomplete
+- Responsive design with touch optimization
+- Beautiful imagery and descriptions
 
-## 🧪 **Testing**
+### **🚂 Train Route Planning**
+- OpenRailMaps integration for station data
+- Route visualization and feasibility
+- Climate impact calculations
+- Sustainable travel advocacy
+
+### **🎉 Event Coordination**
+- Participation level selection (dream only, join party, organize)
+- Critical mass detection for stations
+- Discord community integration
+- Organizer resource distribution
+
+### **🌐 Multilingual Content**
+- Database-driven translations
+- Localized URLs and SEO
+- Cultural adaptation for different regions
+- Translation management interface
+
+## 🧪 **Testing Strategy**
 
 ```bash
-# Run all tests
-npm run test:all
-
-# Integration tests only
-npm run test:supabase
-
-# API tests only  
+# Unit tests (Vitest)
 npm run test
+
+# Integration tests
+npm run test:api
+
+# End-to-end tests (Playwright)
+npm run test:e2e
+
+# Performance testing
+npm run test:performance
 ```
 
-**Current Test Coverage:**
-- ✅ 6/6 integration tests passing
-- ✅ Database connectivity
-- ✅ API endpoints
-- ✅ Form submission workflow
-- ✅ Station search autocomplete
+## 📈 **Deployment**
 
-## 🌍 **Community Impact**
+The platform is designed for deployment at `pyjama-party.back-on-track.eu`:
 
-> *"Night trains can reduce aviation emissions by up to 90% for medium-distance European travel"*
+```bash
+# Production build
+npm run build
 
-### 📊 **Campaign Metrics** *(Example)*
-- **🚂 Dream Routes:** 247 submitted
-- **👥 Active Dreamers:** 189 community members  
-- **🎉 Pajama Parties:** 12 organized across Europe
-- **🌍 Countries:** 15+ European countries represented
+# Deploy to server
+npm run deploy
 
-### 🎯 **Goals**
-- **1,000 dream routes** to demonstrate demand
-- **500 active community members** advocating for night trains
-- **50 pyjama parties** at key European train stations
-- **Policy impact** through grassroots community action
+# See docs/DEPLOYMENT_GUIDE.md for complete instructions
+```
+
+## 📋 **Development Status**
+
+### **✅ Completed**
+- [x] System architecture design
+- [x] Database schema with multilingual support
+- [x] TripHop places data integration (726 destinations)
+- [x] Progressive disclosure user journey design
+- [x] Testing strategy framework
+
+### **🚧 In Progress**
+- [ ] Core page implementations
+- [ ] API endpoint development  
+- [ ] OpenRailMaps integration
+- [ ] Multilingual content system
+- [ ] Form validation and error handling
+
+### **📋 Planned**
+- [ ] Production deployment pipeline
+- [ ] Performance optimization
+- [ ] SEO and social sharing
+- [ ] Analytics and monitoring
+- [ ] Community features
+
+## 📚 **Documentation**
+
+- **[System Architecture](docs/SYSTEM_ARCHITECTURE.md)**: Complete technical design
+- **[Deployment Guide](docs/DEPLOYMENT_GUIDE.md)**: Production setup
+- **[Development Guide](docs/DEVELOPMENT_GUIDE.md)**: Local development
+- **[API Documentation](docs/API_REFERENCE.md)**: RESTful endpoints
+- **[User Journey](docs/USER_JOURNEY.md)**: Progressive disclosure flow
 
 ## 🤝 **Contributing**
 
-We welcome contributions from developers, designers, and climate activists!
+This platform serves the Back-on-Track Action Group's climate activism mission. See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
-### 🛠️ **Development**
-- 🐛 [Report bugs](https://github.com/giovanto/pyjama-party-platform/issues)
-- 💡 [Request features](https://github.com/giovanto/pyjama-party-platform/issues)
-- 🔧 [Submit pull requests](https://github.com/giovanto/pyjama-party-platform/pulls)
-
-### 🌱 **Activism**
-- 🚂 Submit your dream night train routes
-- 🎉 Organize pyjama parties in your city
-- 📢 Share the platform with your network
-- 🌍 Join the movement for sustainable transport
+### **Key Principles**
+- **Privacy First**: GDPR compliant, minimal data collection
+- **Accessibility**: WCAG 2.1 AA compliance
+- **Performance**: Core Web Vitals optimization
+- **Sustainability**: Efficient hosting and green practices
 
 ## 📄 **License**
 
-This project is open source and available under the [MIT License](LICENSE).
+[License details - to be determined by Back-on-Track Action Group]
 
-## 🙏 **Acknowledgments**
+## 🌍 **Community**
 
-- **[Back-on-Track](https://back-on-track.eu)** - European night train advocacy
-- **Climate activists** across Europe fighting for sustainable transport  
-- **Open source community** making tools like Next.js, Supabase, and Mapbox
-- **Night train dreamers** who believe in a better way to travel
+- **Discord**: [Back-on-Track Community](https://discord.gg/wyKQZCwP)
+- **Website**: [back-on-track.eu](https://back-on-track.eu)
+- **Event Info**: September 26, 2025 Pajama Party
 
 ---
 
-### 🚂 **Ready to dream about your next night train journey?**
-
-**[Join the Movement →](https://pyjama-party-platform.vercel.app)**
-
-*Built with ❤️ for the climate and 🚂 for sustainable travel*
+*Building the movement for sustainable European transport, one dream route at a time.*
