@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import MapLayerManager from './MapLayerManager';
+import MapPerformanceOptimizer from './MapPerformanceOptimizer';
 
 interface DreamRoute {
   id: string;
@@ -24,6 +26,8 @@ interface DreamMapProps {
   style?: string;
   center?: [number, number];
   zoom?: number;
+  showLayerManager?: boolean;
+  optimizePerformance?: boolean;
 }
 
 export default function DreamMap({ 
@@ -31,13 +35,16 @@ export default function DreamMap({
   routes,
   style = 'mapbox://styles/mapbox/light-v11',
   center = [13.4050, 52.5200],
-  zoom = 4
+  zoom = 4,
+  showLayerManager = true,
+  optimizePerformance = true
 }: DreamMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dreamRoutes, setDreamRoutes] = useState<DreamRoute[]>(routes || []);
+  const [activeLayer, setActiveLayer] = useState<string>('dream');
 
   // Fetch dreams from API
   const fetchDreams = useCallback(async () => {
@@ -526,20 +533,61 @@ export default function DreamMap({
         </div>
       )}
 
+      {/* Layer Manager */}
+      {showLayerManager && isLoaded && (
+        <MapLayerManager 
+          map={map.current} 
+          onLayerChange={setActiveLayer}
+        />
+      )}
+
+      {/* Performance Optimizer */}
+      {optimizePerformance && isLoaded && (
+        <MapPerformanceOptimizer 
+          map={map.current}
+          enabled={optimizePerformance}
+        />
+      )}
+
+      {/* Legend - Updated for dual-layer system */}
       <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-2 text-xs shadow-md border border-white/30 max-w-xs">
+        <div className="mb-2">
+          <div className="font-medium text-gray-800 text-xs">
+            {activeLayer === 'dream' ? '✨ Dream Layer' : '🚂 Reality Layer'}
+          </div>
+        </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-0.5 bg-bot-green rounded"></div>
-            <span className="text-gray-700">Routes</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-bot-green rounded-full"></div>
-            <span className="text-gray-700">Stations</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-bot-blue rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
-            <span className="text-gray-700">Clusters</span>
-          </div>
+          {activeLayer === 'dream' ? (
+            <>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-0.5 bg-bot-green rounded"></div>
+                <span className="text-gray-700">Dream Routes</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                <span className="text-gray-700">Places</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-3 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
+                <span className="text-gray-700">Clusters</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-0.5 bg-emerald-600 rounded"></div>
+                <span className="text-gray-700">Night Trains</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+                <span className="text-gray-700">Stations</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-3 h-0.5 bg-teal-600 rounded"></div>
+                <span className="text-gray-700">Day Trains</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
