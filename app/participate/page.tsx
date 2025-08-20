@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Users, MapPin, Heart, Mail, Calendar, CheckCircle, AlertCircle, Star, Shield } from 'lucide-react';
@@ -24,7 +24,7 @@ interface ParticipationLevel {
   color: string;
 }
 
-export default function ParticipatePage() {
+function ParticipatePageContent() {
   const searchParams = useSearchParams();
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [stationSearch, setStationSearch] = useState('');
@@ -511,5 +511,20 @@ export default function ParticipatePage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function ParticipatePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading participation form...</p>
+        </div>
+      </div>
+    }>
+      <ParticipatePageContent />
+    </Suspense>
   );
 }
