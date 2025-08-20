@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useAnalytics } from '@/components/layout/AnalyticsProvider';
 
 interface StationSuggestion {
   id: string;
@@ -29,6 +30,8 @@ interface DreamFormProps {
 }
 
 export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) {
+  const { trackEvent } = useAnalytics();
+  
   const [formData, setFormData] = useState<DreamFormData>({
     dreamerName: '',
     from: '',
@@ -82,6 +85,14 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     const stationName = `${station.name}, ${station.city}, ${station.country}`;
     setFormData(prev => ({ ...prev, [field]: stationName }));
     
+    // Track station selection
+    trackEvent('station_selected', {
+      field,
+      station: station.name,
+      city: station.city,
+      country: station.country
+    });
+    
     if (field === 'from') {
       setShowFromSuggestions(false);
       setFromSuggestions([]);
@@ -118,9 +129,24 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      // Track validation errors
+      trackEvent('form_validation_error', {
+        errors: Object.keys(errors).join(','),
+        participationLevel: formData.participationLevel
+      });
+      return;
+    }
 
     setIsSubmitting(true);
+    
+    // Track dream submission attempt
+    trackEvent('dream_submission_started', {
+      participationLevel: formData.participationLevel,
+      hasEmail: !!formData.email,
+      tier: formData.tier
+    });
+    
     try {
       if (onSubmit) {
         await onSubmit(formData);
@@ -135,6 +161,17 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           throw new Error('Failed to submit dream');
         }
       }
+
+      // Track successful submission
+      trackEvent('dream_submission_completed', {
+        participationLevel: formData.participationLevel,
+        hasEmail: !!formData.email,
+        tier: formData.tier,
+        fromCountry: formData.from.split(',').pop()?.trim() || 'unknown',
+        toCountry: formData.to.split(',').pop()?.trim() || 'unknown',
+        isOrganizer: formData.participationLevel === 'organize_party',
+        isParticipant: formData.participationLevel !== 'dream_only'
+      });
 
       // Show success message
       setShowSuccess(true);
@@ -162,6 +199,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
       setTimeout(() => setShowSuccess(false), 8000);
     } catch (error) {
       console.error('Error submitting dream:', error);
+      
+      // Track submission error
+      trackEvent('dream_submission_error', {
+        participationLevel: formData.participationLevel,
+        error: error instanceof Error ? error.message : 'unknown'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -311,13 +354,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="dream_only"
                   checked={formData.participationLevel === 'dream_only'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: false,
                       tier: 'dreamer'
                     }));
                     setShowTierTwo(false);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
                   className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />
@@ -334,13 +384,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="join_party"
                   checked={formData.participationLevel === 'join_party'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: true,
                       tier: 'participant'
                     }));
                     setShowTierTwo(true);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
                   className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />
@@ -357,13 +414,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="organize_party"
                   checked={formData.participationLevel === 'organize_party'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: true,
                       tier: 'participant'
                     }));
                     setShowTierTwo(true);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
                   className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
                 />

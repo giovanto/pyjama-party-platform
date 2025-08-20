@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header, Footer, FloatingNav, EventBanner } from "@/components/layout";
+import { Header, Footer, FloatingNav, EventBanner, AnalyticsProvider } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Where Would You Like to Wake Up Tomorrow? | Back-on-Track",
@@ -35,11 +35,13 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </head>
       <body className="font-mark antialiased">
-        <Header />
-        <EventBanner />
-        {children}
-        <Footer />
-        <FloatingNav />
+        <AnalyticsProvider>
+          <Header />
+          <EventBanner />
+          {children}
+          <Footer />
+          <FloatingNav />
+        </AnalyticsProvider>
       </body>
     </html>
   );

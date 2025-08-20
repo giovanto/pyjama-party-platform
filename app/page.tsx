@@ -3,6 +3,7 @@ import { DreamMap } from '@/components/map';
 import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { FloatingNav } from '@/components/layout';
 import { Countdown, ScrollingTestimonials } from '@/components/ui';
+import { DreamCounter } from '@/components/dashboard';
 
 export default function Home() {
   // Note: Map component should fetch real data from /api/dreams
@@ -11,7 +12,7 @@ export default function Home() {
     <>
       <FloatingNav />
       <main className="main">
-      {/* Hero Section */}
+      {/* Hero Section with Map */}
       <section className="hero py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-bot-green/20 via-bot-light-green/15 to-bot-blue/20 relative overflow-hidden" id="hero">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -60,23 +61,59 @@ export default function Home() {
                 New to climate activism? This platform is your accessible entry point to meaningful environmental action.
               </p>
             </div>
+          </div>
 
+          {/* Map Section with Dream Counter Overlay */}
+          <div className="mb-12 px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Dream Routes Across Europe</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Explore the most requested night train connections from our community. 
+                Each route represents collective advocacy for sustainable transport and climate action.
+              </p>
+            </div>
+            
+            <div className="relative bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
+              {/* Dream Counter Overlay */}
+              <div className="absolute top-4 left-4 z-20 w-full max-w-xs">
+                <DreamCounter className="shadow-lg" refreshInterval={60000} />
+              </div>
+              
+              {/* Map */}
+              <DreamMap 
+                className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg"
+                center={[10.0, 51.0]}
+                zoom={4}
+              />
+              
+              {/* CTA Overlay */}
+              <div className="absolute bottom-4 right-4 z-20">
+                <a 
+                  href="/impact" 
+                  className="inline-flex items-center bg-bot-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-bot-dark-green transition-all duration-300 shadow-lg transform hover:scale-105"
+                >
+                  <span className="mr-2">📊</span>
+                  View Full Impact Dashboard
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Form and Event Details Section */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start px-4 sm:px-6 lg:px-8">
             {/* Clear CTA pointing to form */}
-            <div className="mb-8">
+            <div className="lg:col-span-2 text-center mb-8">
               <p className="text-lg text-bot-green font-bold mb-4 animate-pulse">
                 👇 Share your dream route now! 👇
               </p>
             </div>
-          </div>
 
-          {/* Main Content: Form + Event Details Side by Side */}
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start px-4 sm:px-6 lg:px-8">
             {/* Left: Dream Form (Priority on mobile/tablet) */}
             <div className="lg:order-1 order-2">
               <DreamForm />
             </div>
 
-            {/* Right: Event Details (Moved from hero) */}
+            {/* Right: Event Details */}
             <div className="lg:order-2 order-1 lg:sticky lg:top-8">
               <div className="bg-gradient-to-r from-bot-green via-bot-dark-green to-bot-blue text-white rounded-3xl p-8 shadow-xl border-2 border-bot-green/30">
                 <div className="text-center mb-8">
@@ -151,25 +188,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Map Section - Immediately after form */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-bot-green/20 via-bot-light-green/10 to-bot-blue/15" id="map">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-14 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">Dream Routes Across Europe</h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Explore the most requested night train connections from our community. 
-              Each route represents collective advocacy for sustainable transport and climate action.
-            </p>
-          </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6 lg:p-8 shadow-sm">
-            <DreamMap 
-              className="h-80 sm:h-96 lg:h-[500px] xl:h-[600px] w-full rounded-lg"
-              center={[10.0, 51.0]}
-              zoom={4}
-            />
-          </div>
-        </div>
-      </section>
 
       {/* Dynamic Testimonials */}
       <section className="py-12 sm:py-16 bg-gradient-to-br from-bot-light-green/10 to-bot-green/10" id="testimonials">
