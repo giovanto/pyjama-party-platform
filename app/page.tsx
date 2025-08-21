@@ -1,5 +1,7 @@
+'use client';
+
 import { DreamForm } from '@/components/forms';
-import { DreamMap } from '@/components/map';
+import { DreamMap, ProminentLayerToggle } from '@/components/map';
 import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { FloatingNav } from '@/components/layout';
 import { Countdown, ScrollingTestimonials } from '@/components/ui';
@@ -67,27 +69,152 @@ export default function Home() {
           <div className="mb-12 px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Dream Routes Across Europe</h2>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6">
                 Explore the most requested night train connections from our community. 
                 Each route represents collective advocacy for sustainable transport and climate action.
               </p>
+              
+              {/* Heat Map Advocacy Section */}
+              <div 
+                className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6 max-w-4xl mx-auto mb-6"
+                onMouseEnter={() => {
+                  if (typeof window !== 'undefined' && (window as any).gtag) {
+                    (window as any).gtag('event', 'advocacy_content_viewed', {
+                      event_category: 'engagement',
+                      event_label: 'heat_map_explanation',
+                      value: 1
+                    });
+                  }
+                }}
+              >
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <span className="text-2xl">🔥</span>
+                  <h3 className="text-xl font-bold text-amber-800">Interactive Heat Map Analysis</h3>
+                  <span className="text-2xl">📊</span>
+                </div>
+                <p className="text-amber-700 leading-relaxed mb-4">
+                  Our advanced heat mapping reveals where European demand for night trains is strongest. 
+                  Red zones show critical mass demand - perfect data for policy advocacy!
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <span className="inline-flex items-center px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                    🟢 Emerging Demand
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+                    🟡 Growing Interest
+                  </span>
+                  <span className="inline-flex items-center px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                    🔴 Critical Mass
+                  </span>
+                </div>
+              </div>
+
+              {/* Layer Switching Explanation */}
+              <div 
+                className="bg-gradient-to-r from-blue-50 to-emerald-50 border border-blue-200 rounded-xl p-6 max-w-4xl mx-auto"
+                onMouseEnter={() => {
+                  if (typeof window !== 'undefined' && (window as any).gtag) {
+                    (window as any).gtag('event', 'advocacy_content_viewed', {
+                      event_category: 'engagement',
+                      event_label: 'layer_switching_explanation',
+                      value: 1
+                    });
+                  }
+                }}
+              >
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <span className="text-2xl">✨</span>
+                  <h3 className="text-xl font-bold text-blue-800">Dream vs Reality Layers</h3>
+                  <span className="text-2xl">🚂</span>
+                </div>
+                <p className="text-blue-700 leading-relaxed mb-4">
+                  Switch between layers to see the gap: Dreams show where people want to travel, 
+                  Reality shows current infrastructure. The difference reveals our advocacy targets!
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-4 h-4 bg-amber-400 rounded-full"></div>
+                    <span className="text-sm font-medium text-blue-700">Dream Layer: Community desires</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-4 h-4 bg-emerald-600 rounded-full"></div>
+                    <span className="text-sm font-medium text-blue-700">Reality Layer: Current services</span>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div className="relative bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
-              {/* Dream Counter Overlay */}
-              <div className="absolute top-4 left-4 z-20 w-full max-w-xs">
+              {/* Dream Counter Overlay - Mobile responsive */}
+              <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 w-full max-w-xs">
                 <DreamCounter className="shadow-lg" refreshInterval={60000} />
               </div>
               
-              {/* Map */}
+              {/* Prominent Layer Toggle - Mobile responsive */}
+              <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-30">
+                <ProminentLayerToggle />
+              </div>
+              
+              {/* Map with Advanced Features */}
               <DreamMap 
                 className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg"
                 center={[10.0, 51.0]}
                 zoom={4}
+                showLayerManager={true}
+                optimizePerformance={true}
+                enableHeatMap={true}
+                enableRealTimeUpdates={true}
+                enableAdvocacyPopups={true}
+                enableMapExport={true}
+                mobileOptimized={true}
               />
               
-              {/* CTA Overlay */}
-              <div className="absolute bottom-4 right-4 z-20">
+              {/* Enhanced CTA Overlay with Export & Social Sharing - Mobile responsive */}
+              <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20 flex flex-col gap-1 sm:gap-2 items-end">
+                {/* Export for Advocacy CTA - Responsive */}
+                <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 sm:p-3 shadow-lg border border-white/30">
+                  <div className="text-xs font-medium text-gray-700 mb-1 sm:mb-2 text-center">📸 Share</div>
+                  <div className="text-xs text-gray-600 mb-2 sm:mb-3 text-center max-w-32 sm:max-w-48 hidden sm:block">
+                    Export heat maps and layer data for social media advocacy!
+                  </div>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => {
+                        // Track analytics for homepage export CTA
+                        if (typeof window !== 'undefined' && (window as any).gtag) {
+                          (window as any).gtag('event', 'homepage_export_cta_clicked', {
+                            event_category: 'advocacy',
+                            event_label: 'heat_map_export_homepage',
+                            value: 1
+                          });
+                        }
+                        
+                        // Trigger heat map view for better export
+                        const mapElement = document.querySelector('.dream-map');
+                        if (mapElement) {
+                          const heatButton = mapElement.querySelector('[data-heat-toggle]') as HTMLButtonElement;
+                          if (heatButton && !heatButton.classList.contains('bg-red-100')) {
+                            heatButton.click();
+                          }
+                          
+                          // Trigger export tool
+                          const exportButton = mapElement.querySelector('[data-export-toggle]') as HTMLButtonElement;
+                          if (exportButton) {
+                            exportButton.click();
+                          }
+                        }
+                      }}
+                      className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 sm:px-3 py-2 rounded-lg text-xs font-medium hover:from-amber-600 hover:to-orange-600 transition-all duration-300 shadow-md"
+                    >
+                      🔥 <span className="hidden sm:inline">Export Heat Map</span><span className="sm:hidden">Export</span>
+                    </button>
+                  </div>
+                  <div className="mt-1 sm:mt-2 text-xs text-gray-500 text-center hidden sm:block">
+                    Perfect for Twitter, LinkedIn & Instagram
+                  </div>
+                </div>
+
+                {/* Main Impact Dashboard CTA */}
                 <a 
                   href="/impact" 
                   className="inline-flex items-center bg-bot-green text-white px-6 py-3 rounded-xl font-semibold hover:bg-bot-dark-green transition-all duration-300 shadow-lg transform hover:scale-105"

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import CriticalMassOverlay from './CriticalMassOverlay';
+import { useRealityLayerData, REALITY_STATIONS, REALITY_ROUTES } from './RealityLayerData';
 
 export interface MapLayer {
   id: string;
@@ -30,6 +31,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [layers, setLayers] = useState<MapLayer[]>([]);
   const [showCriticalMass, setShowCriticalMass] = useState(false);
+  const realityData = useRealityLayerData();
 
   // Initialize layer configurations
   const initializeLayers = useCallback(() => {
@@ -134,20 +136,60 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
           source: 'reality-stations',
           paint: {
             'circle-radius': [
-              'case',
-              ['get', 'has_night_train'], 8,
-              ['get', 'is_major_hub'], 6,
-              4
+              'interpolate',
+              ['linear'],
+              ['get', 'connectivity_score'],
+              0, 4,
+              50, 8,
+              100, 12
             ],
             'circle-color': [
               'case',
-              ['get', 'has_night_train'], '#059669', // emerald-600
-              ['get', 'is_major_hub'], '#0d9488',    // teal-600
-              '#6b7280'  // gray-500
+              ['get', 'has_night_train'], '#059669', // emerald-600 for night train stations
+              ['get', 'is_major_hub'], '#0d9488',    // teal-600 for major hubs
+              '#6b7280'  // gray-500 for regular stations
             ],
-            'circle-stroke-width': 2,
+            'circle-stroke-width': [
+              'case',
+              ['get', 'has_night_train'], 3,
+              2
+            ],
             'circle-stroke-color': '#ffffff',
             'circle-opacity': 0.9
+          }
+        },
+        {
+          id: 'existing-stations-labels',
+          type: 'symbol',
+          source: 'reality-stations',
+          filter: ['get', 'has_night_train'],
+          layout: {
+            'text-field': ['get', 'city'],
+            'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            'text-size': 10,
+            'text-offset': [0, 1.5],
+            'text-anchor': 'top'
+          },
+          paint: {
+            'text-color': '#065f46',
+            'text-halo-color': '#ffffff',
+            'text-halo-width': 1
+          }
+        },
+        {
+          id: 'existing-night-routes-shadow',
+          type: 'line',
+          source: 'reality-routes',
+          filter: ['==', ['get', 'service_type'], 'night_train'],
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round'
+          },
+          paint: {
+            'line-color': '#000000',
+            'line-width': 6,
+            'line-opacity': 0.1,
+            'line-blur': 2
           }
         },
         {
@@ -160,9 +202,28 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
             'line-cap': 'round'
           },
           paint: {
-            'line-color': '#059669',
-            'line-width': 4,
-            'line-opacity': 0.8
+            'line-color': [
+              'case',
+              ['==', ['get', 'frequency'], 'Daily'], '#059669',
+              ['==', ['get', 'frequency'], 'Suspended'], '#dc2626',
+              '#f59e0b'
+            ],
+            'line-width': [
+              'case',
+              ['==', ['get', 'frequency'], 'Daily'], 5,
+              ['==', ['get', 'frequency'], 'Suspended'], 3,
+              4
+            ],
+            'line-opacity': [
+              'case',
+              ['==', ['get', 'frequency'], 'Suspended'], 0.4,
+              0.8
+            ],
+            'line-dasharray': [
+              'case',
+              ['==', ['get', 'frequency'], 'Suspended'], [3, 3],
+              [1, 0]
+            ]
           }
         },
         {
@@ -177,7 +238,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
           paint: {
             'line-color': '#0d9488',
             'line-width': 2,
-            'line-opacity': 0.6
+            'line-opacity': 0.4
           }
         }
       ],
@@ -199,7 +260,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
     setIsTransitioning(true);
 
     const dreamLayers = ['dream-places-clusters', 'dream-places-individual', 'dream-routes', 'dream-routes-shadow', 'dream-stations-clusters', 'dream-stations-cluster-count', 'dream-stations-circle', 'dream-stations-labels'];
-    const realityLayers = ['existing-stations', 'existing-night-routes', 'existing-day-routes'];
+    const realityLayers = ['existing-stations', 'existing-stations-labels', 'existing-night-routes-shadow', 'existing-night-routes', 'existing-day-routes'];
 
     try {
       if (targetLayer === 'dream') {
@@ -240,6 +301,11 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
 
       setActiveLayer(targetLayer);
       onLayerChange?.(targetLayer);
+      
+      // Emit event for ProminentLayerToggle coordination
+      window.dispatchEvent(new CustomEvent('mapLayerChanged', { 
+        detail: { layer: targetLayer } 
+      }));
 
     } catch (error) {
       console.error('Error updating map layers:', error);
@@ -288,6 +354,117 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
               }
             });
           }
+        });
+      }
+      
+      // Add click handlers for reality layers
+      if (!map.getLayer('existing-stations-click-handler')) {
+        // Click handler for reality stations
+        map.on('click', 'existing-stations', (e) => {
+          if (!e.features || e.features.length === 0) return;
+          
+          const feature = e.features[0];
+          const properties = feature.properties;
+          
+          if (!properties) return;
+          
+          const operatorList = properties.operator ? 
+            (Array.isArray(properties.operator) ? properties.operator : [properties.operator]).join(', ') 
+            : 'None';
+          
+          new mapboxgl.Popup({ className: 'reality-popup' })
+            .setLngLat(e.lngLat)
+            .setHTML(`
+              <div class="p-3">
+                <h3 class="font-bold text-sm text-emerald-700">${properties.name}</h3>
+                <p class="text-xs text-gray-600 mb-2">${properties.city}, ${properties.country}</p>
+                
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Night trains:</span>
+                    <span class="font-medium ${properties.has_night_train ? 'text-emerald-600' : 'text-gray-400'}">
+                      ${properties.has_night_train ? 'Yes' : 'No'}
+                    </span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Operators:</span>
+                    <span class="font-medium text-gray-800">${operatorList}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Hub status:</span>
+                    <span class="font-medium ${properties.is_major_hub ? 'text-blue-600' : 'text-gray-600'}">
+                      ${properties.is_major_hub ? 'Major Hub' : 'Regional'}
+                    </span>
+                  </div>
+                </div>
+                
+                <div class="mt-2 p-2 bg-emerald-50 border border-emerald-200 rounded text-xs">
+                  <strong>Reality Layer:</strong> Current operational status
+                </div>
+              </div>
+            `)
+            .addTo(map);
+        });
+        
+        // Click handler for reality routes
+        map.on('click', 'existing-night-routes', (e) => {
+          if (!e.features || e.features.length === 0) return;
+          
+          const feature = e.features[0];
+          const properties = feature.properties;
+          
+          if (!properties) return;
+          
+          const statusColor = properties.frequency === 'Daily' ? 'emerald' :
+                           properties.frequency === 'Suspended' ? 'red' : 'amber';
+          
+          new mapboxgl.Popup({ className: 'reality-popup' })
+            .setLngLat(e.lngLat)
+            .setHTML(`
+              <div class="p-3">
+                <h3 class="font-bold text-sm text-${statusColor}-700">${properties.name}</h3>
+                <p class="text-xs text-gray-600 mb-2">${properties.route}</p>
+                
+                <div class="space-y-1 text-xs">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Operator:</span>
+                    <span class="font-medium text-gray-800">${properties.operator}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">Frequency:</span>
+                    <span class="font-medium text-${statusColor}-600">${properties.frequency}</span>
+                  </div>
+                  ${properties.duration ? `
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Duration:</span>
+                      <span class="font-medium text-gray-800">${properties.duration}</span>
+                    </div>
+                  ` : ''}
+                  ${properties.departure && properties.arrival ? `
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Schedule:</span>
+                      <span class="font-medium text-gray-800">${properties.departure} → ${properties.arrival}</span>
+                    </div>
+                  ` : ''}
+                </div>
+                
+                <div class="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+                  <strong>Active Route:</strong> ${properties.frequency === 'Suspended' ? 'Service suspended' : 'Currently operating'}
+                </div>
+              </div>
+            `)
+            .addTo(map);
+        });
+        
+        // Mouse cursor changes
+        ['existing-stations', 'existing-night-routes'].forEach(layerId => {
+          map.on('mouseenter', layerId, () => {
+            map.getCanvas().style.cursor = 'pointer';
+          });
+          
+          map.on('mouseleave', layerId, () => {
+            map.getCanvas().style.cursor = '';
+          });
         });
       }
 
@@ -367,63 +544,14 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
     }
   }, [map, layers]);
 
-  // Load reality infrastructure data
+  // Load reality infrastructure data from comprehensive dataset
   const loadRealityData = useCallback(async () => {
     if (!map) return;
 
     try {
-      // For now, create sample reality data
-      // In production, this would fetch from OpenRailMaps API or similar
-      const sampleStations = [
-        { id: '1', name: 'Berlin Hauptbahnhof', coordinates: [13.3777, 52.5251], has_night_train: true, is_major_hub: true },
-        { id: '2', name: 'Paris Gare de l\'Est', coordinates: [2.3590, 48.8768], has_night_train: true, is_major_hub: true },
-        { id: '3', name: 'Vienna Central', coordinates: [16.3738, 48.2082], has_night_train: true, is_major_hub: true },
-        { id: '4', name: 'Zurich HB', coordinates: [8.5417, 47.3769], has_night_train: true, is_major_hub: true },
-        { id: '5', name: 'Munich Hauptbahnhof', coordinates: [11.5581, 48.1351], has_night_train: false, is_major_hub: true }
-      ];
-
-      const stationFeatures = sampleStations.map(station => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: station.coordinates
-        },
-        properties: {
-          id: station.id,
-          name: station.name,
-          has_night_train: station.has_night_train,
-          is_major_hub: station.is_major_hub
-        }
-      }));
-
-      // Sample night train routes
-      const sampleRoutes = [
-        {
-          id: 'nightjet-berlin-paris',
-          name: 'Nightjet Berlin-Paris',
-          service_type: 'night_train',
-          coordinates: [[13.3777, 52.5251], [2.3590, 48.8768]]
-        },
-        {
-          id: 'nightjet-vienna-zurich',
-          name: 'Nightjet Vienna-Zurich',
-          service_type: 'night_train',
-          coordinates: [[16.3738, 48.2082], [8.5417, 47.3769]]
-        }
-      ];
-
-      const routeFeatures = sampleRoutes.map(route => ({
-        type: 'Feature',
-        geometry: {
-          type: 'LineString',
-          coordinates: route.coordinates
-        },
-        properties: {
-          id: route.id,
-          name: route.name,
-          service_type: route.service_type
-        }
-      }));
+      // Use comprehensive reality data from RealityLayerData
+      const stationFeatures = realityData.stations;
+      const routeFeatures = realityData.routes;
 
       // Update reality sources
       const stationsSource = map.getSource('reality-stations') as mapboxgl.GeoJSONSource;
@@ -443,10 +571,12 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
         });
       }
 
+      console.log(`Loaded ${stationFeatures.length} reality stations and ${routeFeatures.length} reality routes`);
+
     } catch (error) {
       console.error('Error loading reality data:', error);
     }
-  }, [map]);
+  }, [map, realityData]);
 
   // Handle layer switching
   const handleLayerSwitch = useCallback((layer: 'dream' | 'reality') => {
@@ -484,6 +614,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
             <button
               onClick={() => handleLayerSwitch('dream')}
               disabled={isTransitioning}
+              data-layer="dream"
               className={`
                 flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
                 ${activeLayer === 'dream' 
@@ -503,6 +634,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
             <button
               onClick={() => handleLayerSwitch('reality')}
               disabled={isTransitioning}
+              data-layer="reality"
               className={`
                 flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
                 ${activeLayer === 'reality' 
@@ -515,7 +647,9 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
               <span className="text-lg">🚂</span>
               <div className="text-left">
                 <div className="font-medium">Reality Layer</div>
-                <div className="text-xs opacity-75">Current Infrastructure</div>
+                <div className="text-xs opacity-75">
+                  {realityData.analysis.coverage.active_routes} active routes
+                </div>
               </div>
             </button>
           </div>

@@ -5,6 +5,11 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapLayerManager from './MapLayerManager';
 import MapPerformanceOptimizer from './MapPerformanceOptimizer';
+import HeatMapOverlay from './HeatMapOverlay';
+import RouteAdvocacyPopup from './RouteAdvocacyPopup';
+import MapExportTool from './MapExportTool';
+import { useRealityLayerData } from './RealityLayerData';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 interface DreamRoute {
   id: string;
@@ -28,6 +33,11 @@ interface DreamMapProps {
   zoom?: number;
   showLayerManager?: boolean;
   optimizePerformance?: boolean;
+  enableHeatMap?: boolean;
+  enableRealTimeUpdates?: boolean;
+  enableAdvocacyPopups?: boolean;
+  enableMapExport?: boolean;
+  mobileOptimized?: boolean;
 }
 
 export default function DreamMap({ 
@@ -37,7 +47,12 @@ export default function DreamMap({
   center = [13.4050, 52.5200],
   zoom = 4,
   showLayerManager = true,
-  optimizePerformance = true
+  optimizePerformance = true,
+  enableHeatMap = true,
+  enableRealTimeUpdates = true,
+  enableAdvocacyPopups = true,
+  enableMapExport = true,
+  mobileOptimized = true
 }: DreamMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -45,9 +60,23 @@ export default function DreamMap({
   const [error, setError] = useState<string | null>(null);
   const [dreamRoutes, setDreamRoutes] = useState<DreamRoute[]>(routes || []);
   const [activeLayer, setActiveLayer] = useState<string>('dream');
+  const [showHeatMap, setShowHeatMap] = useState(false);
+  const [showExportTool, setShowExportTool] = useState(false);
+  const [advocacyPopup, setAdvocacyPopup] = useState<{
+    visible: boolean;
+    routeId?: string;
+    stationId?: string;
+    coordinates: [number, number];
+  } | null>(null);
+  const [realTimeUpdateInterval, setRealTimeUpdateInterval] = useState<NodeJS.Timeout | null>(null);
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date());
+  const [newRouteAnimations, setNewRouteAnimations] = useState<string[]>([]);
+  
+  const { trackEvent } = useAnalytics();
+  const realityData = useRealityLayerData();
 
-  // Fetch dreams from API
-  const fetchDreams = useCallback(async () => {
+  // Fetch dreams from API with real-time update detection
+  const fetchDreams = useCallback(async (detectNewRoutes = false) => {
     try {
       const response = await fetch('/api/dreams');
       if (!response.ok) throw new Error('Failed to fetch dreams');
@@ -64,6 +93,7 @@ export default function DreamMap({
         from_latitude: number | null;
         to_longitude: number | null;
         to_latitude: number | null;
+        created_at?: string;
       }) => ({
         id: dream.id.toString(),
         from: {
@@ -75,14 +105,57 @@ export default function DreamMap({
           coordinates: [dream.to_longitude || 0, dream.to_latitude || 0] as [number, number]
         },
         dreamerName: dream.dreamer_name,
-        count: 1 // For now, each dream counts as 1
+        count: 1, // For now, each dream counts as 1
+        createdAt: dream.created_at
       }));
       
+      // Detect new routes for animation if requested
+      if (detectNewRoutes && dreamRoutes.length > 0) {
+        const newRoutes = transformedRoutes.filter(route => 
+          !dreamRoutes.some(existing => existing.id === route.id)
+        );
+        
+        if (newRoutes.length > 0) {
+          setNewRouteAnimations(newRoutes.map(r => r.id));
+          
+          // Track new route additions
+          trackEvent('new_route_detected', {
+            count: newRoutes.length,
+            routes: newRoutes.map(r => `${r.from.name}-${r.to.name}`)
+          });
+          
+          // Trigger heat map update for new routes if heat map is visible
+          if (showHeatMap) {
+            // Force heat map refresh by re-triggering visibility
+            setTimeout(() => {
+              setShowHeatMap(false);
+              setTimeout(() => setShowHeatMap(true), 100);
+            }, 500);
+          } else if (newRoutes.length >= 3 && enableHeatMap) {
+            // Auto-enable heat map for significant activity
+            setTimeout(() => {
+              setShowHeatMap(true);
+              trackEvent('heat_map_auto_enabled', {
+                trigger: 'multiple_new_routes',
+                route_count: newRoutes.length
+              });
+            }, 1000);
+          }
+          
+          // Clear animations after 3 seconds
+          setTimeout(() => {
+            setNewRouteAnimations([]);
+          }, 3000);
+        }
+      }
+      
       setDreamRoutes(transformedRoutes);
+      setLastUpdateTime(new Date());
+      
     } catch (error) {
       console.error('Error fetching dreams:', error);
     }
-  }, []);
+  }, [dreamRoutes, trackEvent]);
 
   // Initial load
   useEffect(() => {
@@ -91,11 +164,35 @@ export default function DreamMap({
 
   // Set up global refresh function for form submissions
   useEffect(() => {
-    (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap = fetchDreams;
+    (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap = () => fetchDreams(true);
     return () => {
       delete (window as unknown as { refreshDreamMap?: () => void }).refreshDreamMap;
     };
   }, [fetchDreams]);
+  
+  // Set up real-time updates
+  useEffect(() => {
+    if (!enableRealTimeUpdates) return;
+    
+    const interval = setInterval(() => {
+      fetchDreams(true); // Enable new route detection
+    }, 30000); // Update every 30 seconds
+    
+    setRealTimeUpdateInterval(interval);
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [enableRealTimeUpdates, fetchDreams]);
+  
+  // Cleanup real-time updates on unmount
+  useEffect(() => {
+    return () => {
+      if (realTimeUpdateInterval) {
+        clearInterval(realTimeUpdateInterval);
+      }
+    };
+  }, [realTimeUpdateInterval]);
 
   useEffect(() => {
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -115,7 +212,15 @@ export default function DreamMap({
         style: style,
         center: center,
         zoom: zoom,
-        attributionControl: false
+        attributionControl: false,
+        // Mobile optimizations
+        touchZoomRotate: mobileOptimized,
+        touchPitch: !mobileOptimized, // Disable pitch on mobile for better UX
+        dragRotate: !mobileOptimized, // Disable rotation on mobile
+        doubleClickZoom: true,
+        scrollZoom: true,
+        boxZoom: !mobileOptimized, // Disable box zoom on mobile
+        keyboard: !mobileOptimized // Disable keyboard on mobile
       });
 
       map.current.addControl(new mapboxgl.AttributionControl({
@@ -421,7 +526,7 @@ export default function DreamMap({
       });
     });
 
-    // Click handler for individual stations
+    // Click handler for individual stations with advocacy popup
     map.current.on('click', 'dream-stations-circle', (e) => {
       if (!e.features || e.features.length === 0) return;
       
@@ -430,22 +535,37 @@ export default function DreamMap({
       
       if (!properties) return;
 
-      new mapboxgl.Popup({ className: 'dream-popup' })
-        .setLngLat([properties.longitude, properties.latitude])
-        .setHTML(`
-          <div class="p-3">
-            <h3 class="font-bold text-sm text-bot-green">${properties.name}</h3>
-            <p class="text-xs text-gray-600 mb-2">${properties.city}, ${properties.country}</p>
-            <div class="flex items-center text-xs">
-              <span class="w-2 h-2 bg-bot-green rounded-full mr-2"></span>
-              <span class="font-medium">${properties.dreamCount} dream route${properties.dreamCount !== 1 ? 's' : ''}</span>
+      if (enableAdvocacyPopups) {
+        // Show advocacy popup for station
+        setAdvocacyPopup({
+          visible: true,
+          stationId: `station-${properties.longitude}-${properties.latitude}`,
+          coordinates: [properties.longitude, properties.latitude]
+        });
+        
+        trackEvent('station_clicked_advocacy', {
+          station_name: properties.name,
+          dream_count: properties.dreamCount
+        });
+      } else {
+        // Fallback to simple popup
+        new mapboxgl.Popup({ className: 'dream-popup' })
+          .setLngLat([properties.longitude, properties.latitude])
+          .setHTML(`
+            <div class="p-3">
+              <h3 class="font-bold text-sm text-bot-green">${properties.name}</h3>
+              <p class="text-xs text-gray-600 mb-2">${properties.city}, ${properties.country}</p>
+              <div class="flex items-center text-xs">
+                <span class="w-2 h-2 bg-bot-green rounded-full mr-2"></span>
+                <span class="font-medium">${properties.dreamCount} dream route${properties.dreamCount !== 1 ? 's' : ''}</span>
+              </div>
             </div>
-          </div>
-        `)
-        .addTo(map.current!);
+          `)
+          .addTo(map.current!);
+      }
     });
 
-    // Enhanced route click handler
+    // Enhanced route click handler with advocacy popup
     map.current.on('click', 'dream-routes-line', (e) => {
       if (!e.features || e.features.length === 0) return;
       
@@ -454,19 +574,35 @@ export default function DreamMap({
       
       if (!properties) return;
 
-      new mapboxgl.Popup({ className: 'dream-popup' })
-        .setLngLat(e.lngLat)
-        .setHTML(`
-          <div class="p-3">
-            <h3 class="font-bold text-sm text-bot-blue mb-2">${properties.fromName} → ${properties.toName}</h3>
-            <div class="flex items-center text-xs">
-              <span class="w-2 h-0.5 bg-bot-green mr-2"></span>
-              <span class="font-medium">${properties.count} dreamer${properties.count !== 1 ? 's' : ''} want this route</span>
+      if (enableAdvocacyPopups) {
+        // Show advocacy popup instead of simple popup
+        setAdvocacyPopup({
+          visible: true,
+          routeId: properties.id,
+          coordinates: [e.lngLat.lng, e.lngLat.lat]
+        });
+        
+        trackEvent('route_clicked_advocacy', {
+          route_id: properties.id,
+          from: properties.fromName,
+          to: properties.toName
+        });
+      } else {
+        // Fallback to simple popup
+        new mapboxgl.Popup({ className: 'dream-popup' })
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <div class="p-3">
+              <h3 class="font-bold text-sm text-bot-blue mb-2">${properties.fromName} → ${properties.toName}</h3>
+              <div class="flex items-center text-xs">
+                <span class="w-2 h-0.5 bg-bot-green mr-2"></span>
+                <span class="font-medium">${properties.count} dreamer${properties.count !== 1 ? 's' : ''} want this route</span>
+              </div>
+              <p class="text-xs text-gray-600 mt-2 italic">Enable advocacy mode for detailed statistics</p>
             </div>
-            <p class="text-xs text-gray-600 mt-2 italic">Click route to see all dreamers' stories</p>
-          </div>
-        `)
-        .addTo(map.current!);
+          `)
+          .addTo(map.current!);
+      }
     });
 
     // Mouse cursor changes for interactivity
@@ -540,6 +676,51 @@ export default function DreamMap({
           onLayerChange={setActiveLayer}
         />
       )}
+      
+      {/* Heat Map Overlay */}
+      {enableHeatMap && isLoaded && (
+        <HeatMapOverlay
+          map={map.current}
+          routes={dreamRoutes.map(route => ({
+            id: route.id,
+            from: route.from,
+            to: route.to,
+            demand_count: route.count,
+            popularity_score: route.count * Math.max(5, dreamRoutes.length / 10) // Dynamic scoring based on total activity
+          }))}
+          visible={showHeatMap}
+          onHeatUpdate={(heatData) => {
+            trackEvent('heat_map_updated', { points: heatData.length });
+          }}
+        />
+      )}
+      
+      {/* Map Export Tool */}
+      {enableMapExport && isLoaded && (
+        <MapExportTool
+          map={map.current}
+          visible={showExportTool}
+          onToggle={setShowExportTool}
+        />
+      )}
+      
+      {/* Advocacy Popup */}
+      {advocacyPopup?.visible && (
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-30 p-4">
+          <RouteAdvocacyPopup
+            routeId={advocacyPopup.routeId}
+            stationId={advocacyPopup.stationId}
+            coordinates={advocacyPopup.coordinates}
+            onClose={() => setAdvocacyPopup(null)}
+            onExport={(data) => {
+              console.log('Advocacy data exported:', data);
+              trackEvent('advocacy_data_exported', {
+                type: advocacyPopup.routeId ? 'route' : 'station'
+              });
+            }}
+          />
+        </div>
+      )}
 
       {/* Performance Optimizer */}
       {optimizePerformance && isLoaded && (
@@ -549,45 +730,109 @@ export default function DreamMap({
         />
       )}
 
-      {/* Legend - Updated for dual-layer system */}
-      <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-2 text-xs shadow-md border border-white/30 max-w-xs">
-        <div className="mb-2">
-          <div className="font-medium text-gray-800 text-xs">
-            {activeLayer === 'dream' ? '✨ Dream Layer' : '🚂 Reality Layer'}
+      {/* Advanced Control Panel */}
+      <div className="absolute bottom-4 left-4 space-y-2">
+        {/* Main Legend */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 text-xs shadow-md border border-white/30 max-w-xs">
+          <div className="flex items-center justify-between mb-2">
+            <div className="font-medium text-gray-800 text-xs">
+              {activeLayer === 'dream' ? '✨ Dream Layer' : '🚂 Reality Layer'}
+            </div>
+            <div className="text-xs text-gray-500">
+              {dreamRoutes.length} routes
+            </div>
           </div>
-        </div>
-        <div className="flex items-center gap-3">
-          {activeLayer === 'dream' ? (
-            <>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-0.5 bg-bot-green rounded"></div>
-                <span className="text-gray-700">Dream Routes</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
-                <span className="text-gray-700">Places</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-3 bg-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xs">5</div>
-                <span className="text-gray-700">Clusters</span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-0.5 bg-emerald-600 rounded"></div>
-                <span className="text-gray-700">Night Trains</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
-                <span className="text-gray-700">Stations</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <div className="w-3 h-0.5 bg-teal-600 rounded"></div>
-                <span className="text-gray-700">Day Trains</span>
-              </div>
-            </>
+          
+          <div className="space-y-1">
+            {activeLayer === 'dream' ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-0.5 bg-bot-green rounded"></div>
+                  <span className="text-gray-700">Dream Routes</span>
+                  {showHeatMap && (
+                    <div className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                      {enableRealTimeUpdates && (
+                        <span className="text-xs text-red-600 font-medium">LIVE</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                  <span className="text-gray-700">Demand Hubs</span>
+                </div>
+                {newRouteAnimations.length > 0 && (
+                  <div className="flex items-center gap-2 text-green-600">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                    <span className="font-medium">{newRouteAnimations.length} new route{newRouteAnimations.length > 1 ? 's' : ''}!</span>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-0.5 bg-emerald-600 rounded"></div>
+                  <span className="text-gray-700">Night Trains</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+                  <span className="text-gray-700">Active Stations</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-0.5 bg-teal-600 rounded"></div>
+                  <span className="text-gray-700">Day Trains</span>
+                </div>
+              </>
+            )}
+          </div>
+          
+          {enableRealTimeUpdates && (
+            <div className="mt-2 pt-2 border-t border-gray-200 flex items-center gap-2 text-xs text-gray-500">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span>Live updates</span>
+              <span className="ml-auto">{lastUpdateTime.toLocaleTimeString()}</span>
+            </div>
           )}
+        </div>
+        
+        {/* Feature Controls */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-md border border-white/30">
+          <div className="grid grid-cols-2 gap-1">
+            {enableHeatMap && (
+              <button
+                onClick={() => {
+                  setShowHeatMap(!showHeatMap);
+                  trackEvent('heat_map_toggled', { enabled: !showHeatMap });
+                }}
+                data-heat-toggle="true"
+                className={`p-2 rounded text-xs font-medium transition-colors ${
+                  showHeatMap
+                    ? 'bg-red-100 text-red-700 border border-red-200'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                🔥 Heat
+              </button>
+            )}
+            
+            {enableMapExport && (
+              <button
+                onClick={() => {
+                  setShowExportTool(!showExportTool);
+                  trackEvent('export_tool_toggled', { enabled: !showExportTool });
+                }}
+                data-export-toggle="true"
+                className={`p-2 rounded text-xs font-medium transition-colors ${
+                  showExportTool
+                    ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                📷 Export
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
