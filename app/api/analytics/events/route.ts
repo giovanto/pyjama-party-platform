@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { getDBPool } from '@/lib/db/connectionPool';
 
 interface AnalyticsEvent {
   event: string;
@@ -78,6 +78,8 @@ function sanitizeEventData(data: any): AnalyticsEvent | null {
 }
 
 export async function POST(request: NextRequest) {
+  const startTime = performance.now();
+  
   try {
     // Rate limiting
     const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
@@ -89,29 +91,46 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const eventData = sanitizeEventData(body);
     
-    if (!eventData) {
+    // Handle batched events
+    let events = [];
+    if (body.events && Array.isArray(body.events)) {
+      // Batched events
+      events = body.events.map(sanitizeEventData).filter(Boolean);
+    } else {
+      // Single event
+      const eventData = sanitizeEventData(body);
+      if (eventData) events.push(eventData);
+    }
+    
+    if (events.length === 0) {
       return NextResponse.json(
         { error: 'Invalid event data' },
         { status: 400 }
       );
     }
 
-    const supabase = await createClient();
+    // Use optimized connection pool
+    const dbPool = getDBPool();
     
-    // Store event in database for dashboard aggregation
-    // Note: This creates an analytics_events table for aggregated data
-    const { error } = await supabase
-      .from('analytics_events')
-      .insert({
-        event_name: eventData.event,
-        properties: eventData.properties,
-        event_timestamp: eventData.timestamp,
-        created_at: new Date().toISOString(),
-        // Add automatic expiry - events are deleted after 30 days
-        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-      });
+    // Batch insert for better performance
+    const { error } = await dbPool.query(
+      'analytics_events',
+      (client) => client
+        .from('analytics_events')
+        .insert(events.map(eventData => ({
+          event_name: eventData.event,
+          event_data: eventData.properties,
+          created_at: new Date().toISOString(),
+          // Add automatic expiry - events are deleted after 30 days
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        }))),
+      { 
+        cache: false, // Don't cache analytics inserts
+        retries: 1, // Quick retry for analytics
+        timeout: 2000 // 2 second timeout
+      }
+    );
 
     if (error) {
       console.error('Analytics storage error:', error);
@@ -119,9 +138,21 @@ export async function POST(request: NextRequest) {
       // This ensures the user experience isn't affected
     }
 
-    return NextResponse.json({ success: true });
+    const duration = performance.now() - startTime;
+    
+    // Track API performance
+    if (duration > 1000) {
+      console.warn(`Slow analytics API: ${duration.toFixed(2)}ms for ${events.length} events`);
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      processed: events.length,
+      duration: Math.round(duration)
+    });
   } catch (error) {
-    console.error('Analytics API error:', error);
+    const duration = performance.now() - startTime;
+    console.error('Analytics API error:', error, `Duration: ${duration.toFixed(2)}ms`);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

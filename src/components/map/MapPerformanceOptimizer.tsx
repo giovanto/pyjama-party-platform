@@ -105,18 +105,67 @@ export default function MapPerformanceOptimizer({
 
   }, [map, enabled]);
 
+  // GeoJSON data caching system
+  const geoJsonCache = useRef<Map<string, { data: any; timestamp: number; ttl: number }>>(new Map());
+  const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  // Cache GeoJSON data for better performance
+  const cacheGeoJSONData = useCallback((key: string, data: any, ttl: number = CACHE_TTL) => {
+    geoJsonCache.current.set(key, {
+      data: data,
+      timestamp: Date.now(),
+      ttl: ttl
+    });
+  }, [CACHE_TTL]);
+
+  // Get cached GeoJSON data
+  const getCachedGeoJSONData = useCallback((key: string) => {
+    const cached = geoJsonCache.current.get(key);
+    if (!cached) return null;
+
+    const now = Date.now();
+    if (now - cached.timestamp > cached.ttl) {
+      geoJsonCache.current.delete(key);
+      return null;
+    }
+
+    return cached.data;
+  }, []);
+
   // Reduce map quality for better performance
   const reduceMapQuality = useCallback(() => {
     if (!map) return;
 
-    // Increase clustering radius
+    // Dynamically adjust clustering based on data density
     const sources = ['dream-places', 'dream-stations'];
     sources.forEach(sourceId => {
-      // In a real implementation, you'd recreate sources with higher cluster radius
-      console.log(`Reducing quality for ${sourceId}: increasing cluster radius`);
+      const source = map.getSource(sourceId) as mapboxgl.GeoJSONSource;
+      if (source) {
+        // Get current data to assess density
+        const currentData = source._data;
+        if (currentData && currentData.features) {
+          const featureCount = currentData.features.length;
+          
+          // Recreate source with optimized clustering for high density
+          if (featureCount > 100) {
+            map.removeSource(sourceId);
+            map.addSource(sourceId, {
+              type: 'geojson',
+              data: currentData,
+              cluster: true,
+              clusterMaxZoom: 12, // Reduce max zoom for clustering
+              clusterRadius: Math.min(80, featureCount / 10), // Dynamic radius
+              clusterProperties: {
+                // Aggregate properties for better performance
+                'sum': ['+', ['get', 'count']]
+              }
+            });
+          }
+        }
+      }
     });
 
-    // Hide non-essential layers
+    // Hide non-essential layers based on performance metrics
     const nonEssentialLayers = ['dream-routes-shadow', 'pajama-party-rings'];
     nonEssentialLayers.forEach(layerId => {
       if (map.getLayer(layerId)) {
@@ -124,14 +173,23 @@ export default function MapPerformanceOptimizer({
       }
     });
 
-    // Reduce point counts in heatmaps
+    // Adaptive heatmap rendering
     if (map.getLayer('critical-mass-heatmap')) {
       map.setPaintProperty('critical-mass-heatmap', 'heatmap-radius', [
         'interpolate',
         ['linear'],
         ['zoom'],
         0, 1,
-        9, 10
+        9, 8 // Reduced for performance
+      ]);
+      
+      // Reduce heatmap intensity for better performance
+      map.setPaintProperty('critical-mass-heatmap', 'heatmap-intensity', [
+        'interpolate',
+        ['linear'],
+        ['zoom'],
+        0, 0.5,
+        9, 1
       ]);
     }
 

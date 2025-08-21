@@ -1,7 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { validateDreamSubmission, validatePaginationParams } from '@/lib/validation';
-// Types imported for validation but not used in this file
+
+// In-memory cache for hot data (production would use Redis)
+const cache = new Map<string, { data: any; timestamp: number; ttl: number }>();
+const CACHE_TTL = 60000; // 1 minute cache for GET requests
+const STATION_CACHE_TTL = 3600000; // 1 hour cache for station lookups
+
+function getCachedData(key: string): any | null {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < cached.ttl) {
+    return cached.data;
+  }
+  if (cached) {
+    cache.delete(key); // Clean expired entries
+  }
+  return null;
+}
+
+function setCachedData(key: string, data: any, ttl: number = CACHE_TTL): void {
+  cache.set(key, { data, timestamp: Date.now(), ttl });
+}
+
+// Station lookup cache to avoid repeated queries
+async function getStationCoordinates(supabase: any, stationName: string) {
+  const cacheKey = `station:${stationName.toLowerCase().trim()}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  const { data: station } = await supabase
+    .from('stations')
+    .select('latitude, longitude')
+    .ilike('name', `%${stationName.split(',')[0].trim()}%`)
+    .limit(1)
+    .single();
+
+  setCachedData(cacheKey, station, STATION_CACHE_TTL);
+  return station;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,20 +59,11 @@ export async function POST(request: NextRequest) {
     
     const { from, to, dreamerName, email, why, routeType, travelPurpose } = validation.data;
 
-    // Look up station coordinates
-    const { data: fromStation } = await supabase
-      .from('stations')
-      .select('latitude, longitude')
-      .ilike('name', `%${from.split(',')[0].trim()}%`)
-      .limit(1)
-      .single();
-
-    const { data: toStation } = await supabase
-      .from('stations')
-      .select('latitude, longitude')
-      .ilike('name', `%${to.split(',')[0].trim()}%`)
-      .limit(1)
-      .single();
+    // Look up station coordinates with caching
+    const [fromStation, toStation] = await Promise.all([
+      getStationCoordinates(supabase, from),
+      getStationCoordinates(supabase, to)
+    ]);
 
     // Insert dream into database with enhanced fields
     const { data, error } = await supabase
@@ -67,11 +94,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    // Invalidate relevant caches after successful insert
+    cache.delete('dreams:recent');
+    cache.delete('dreams:stats');
+
+    const response = NextResponse.json({
       success: true,
       message: 'Dream route submitted successfully!',
       id: data.id
     }, { status: 201 });
+
+    // Add performance headers
+    response.headers.set('Cache-Control', 'no-cache');
+    return response;
 
   } catch (error) {
     console.error('Error processing dream submission:', error);
@@ -84,7 +119,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     
     // Validate pagination parameters
@@ -94,10 +128,34 @@ export async function GET(request: NextRequest) {
     );
     const { limit, offset } = pagination;
 
-    // Get dreams with pagination
+    // Create cache key based on request parameters
+    const cacheKey = `dreams:${limit}:${offset}`;
+    
+    // Check cache first
+    const cachedResult = getCachedData(cacheKey);
+    if (cachedResult) {
+      const response = NextResponse.json(cachedResult);
+      response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+      response.headers.set('X-Cache', 'HIT');
+      return response;
+    }
+
+    const supabase = await createClient();
+
+    // Optimize query - only select needed fields for map display
     const { data: dreams, error, count } = await supabase
       .from('dreams')
-      .select('*', { count: 'exact' })
+      .select(`
+        id, 
+        from_station, 
+        to_station, 
+        dreamer_name, 
+        from_latitude, 
+        from_longitude, 
+        to_latitude, 
+        to_longitude,
+        created_at
+      `, { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1);
 
@@ -109,12 +167,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    const result = {
       dreams: dreams || [],
       total: count || 0,
       limit,
       offset
-    });
+    };
+
+    // Cache the result
+    setCachedData(cacheKey, result);
+
+    const response = NextResponse.json(result);
+    
+    // Add performance and caching headers
+    response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    response.headers.set('X-Cache', 'MISS');
+    response.headers.set('Vary', 'Accept-Encoding');
+    
+    return response;
 
   } catch (error) {
     console.error('Error fetching dreams:', error);

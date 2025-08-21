@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback, useState, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef, memo } from 'react';
 import mapboxgl from 'mapbox-gl';
 
 interface RouteData {
@@ -36,7 +36,7 @@ interface HeatMapOverlayProps {
  * - Station clustering based on demand levels
  * - Smooth transitions and performance optimization
  */
-export default function HeatMapOverlay({
+const HeatMapOverlay = memo(function HeatMapOverlay({
   map,
   routes,
   visible,
@@ -48,6 +48,8 @@ export default function HeatMapOverlay({
   const [isInitialized, setIsInitialized] = useState(false);
   const [heatData, setHeatData] = useState<any[]>([]);
   const animationRef = useRef<number>();
+  const cacheRef = useRef<Map<string, any>>(new Map());
+  const lastRoutesHashRef = useRef<string>('');
   
   // Calculate route demand intensity
   const calculateRouteIntensity = useCallback((route: RouteData) => {
@@ -283,20 +285,54 @@ export default function HeatMapOverlay({
     }
   }, [map, isInitialized, radius, maxZoom]);
 
-  // Update heat map data
+  // Update heat map data with caching
   const updateHeatData = useCallback(() => {
     if (!map || !isInitialized) return;
     
+    // Create a hash of route data for caching
+    const routesHash = JSON.stringify(routes.map(r => `${r.id}-${r.demand_count}-${r.popularity_score}`));
+    
+    // Check cache first
+    if (routesHash === lastRoutesHashRef.current && cacheRef.current.has(routesHash)) {
+      const cachedPoints = cacheRef.current.get(routesHash);
+      const source = map.getSource('route-heat') as mapboxgl.GeoJSONSource;
+      
+      if (source) {
+        requestAnimationFrame(() => {
+          source.setData({
+            type: 'FeatureCollection',
+            features: cachedPoints
+          });
+        });
+      }
+      return;
+    }
+    
+    // Generate new heat data
     const heatPoints = generateHeatData();
+    
+    // Cache the result
+    cacheRef.current.set(routesHash, heatPoints);
+    lastRoutesHashRef.current = routesHash;
+    
+    // Limit cache size to prevent memory leaks
+    if (cacheRef.current.size > 5) {
+      const firstKey = cacheRef.current.keys().next().value;
+      cacheRef.current.delete(firstKey);
+    }
+    
     const source = map.getSource('route-heat') as mapboxgl.GeoJSONSource;
     
     if (source) {
-      source.setData({
-        type: 'FeatureCollection',
-        features: heatPoints
+      // Use requestAnimationFrame for better performance
+      requestAnimationFrame(() => {
+        source.setData({
+          type: 'FeatureCollection',
+          features: heatPoints
+        });
       });
     }
-  }, [map, isInitialized, generateHeatData]);
+  }, [map, isInitialized, generateHeatData, routes]);
 
   // Animate pulsing effect for high-demand stations
   const animatePulse = useCallback(() => {
@@ -445,4 +481,6 @@ export default function HeatMapOverlay({
   }, [map, isInitialized]);
 
   return null; // This is a pure map overlay component
-}
+});
+
+export default HeatMapOverlay;

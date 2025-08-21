@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapLayerManager from './MapLayerManager';
@@ -10,6 +10,7 @@ import RouteAdvocacyPopup from './RouteAdvocacyPopup';
 import MapExportTool from './MapExportTool';
 import { useRealityLayerData } from './RealityLayerData';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useDreams } from '@/providers/DataProvider';
 
 interface DreamRoute {
   id: string;
@@ -40,7 +41,7 @@ interface DreamMapProps {
   mobileOptimized?: boolean;
 }
 
-export default function DreamMap({ 
+const DreamMap = memo(function DreamMap({ 
   className = '',
   routes,
   style = 'mapbox://styles/mapbox/light-v11',
@@ -58,7 +59,6 @@ export default function DreamMap({
   const map = useRef<mapboxgl.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dreamRoutes, setDreamRoutes] = useState<DreamRoute[]>(routes || []);
   const [activeLayer, setActiveLayer] = useState<string>('dream');
   const [showHeatMap, setShowHeatMap] = useState(false);
   const [showExportTool, setShowExportTool] = useState(false);
@@ -68,131 +68,75 @@ export default function DreamMap({
     stationId?: string;
     coordinates: [number, number];
   } | null>(null);
-  const [realTimeUpdateInterval, setRealTimeUpdateInterval] = useState<NodeJS.Timeout | null>(null);
-  const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date());
   const [newRouteAnimations, setNewRouteAnimations] = useState<string[]>([]);
   
   const { trackEvent } = useAnalytics();
   const realityData = useRealityLayerData();
+  
+  // Use global data provider instead of local API calls
+  const { dreams, total, lastUpdate, isLoading: dreamsLoading, error: dreamsError, refetch } = useDreams();
 
-  // Fetch dreams from API with real-time update detection
-  const fetchDreams = useCallback(async (detectNewRoutes = false) => {
-    try {
-      const response = await fetch('/api/dreams');
-      if (!response.ok) throw new Error('Failed to fetch dreams');
-      
-      const data = await response.json();
-      
-      // Transform API data to match DreamRoute interface
-      const transformedRoutes: DreamRoute[] = data.dreams.map((dream: {
-        id: number;
-        from_station: string;
-        to_station: string;
-        dreamer_name: string;
-        from_longitude: number | null;
-        from_latitude: number | null;
-        to_longitude: number | null;
-        to_latitude: number | null;
-        created_at?: string;
-      }) => ({
-        id: dream.id.toString(),
-        from: {
-          name: dream.from_station,
-          coordinates: [dream.from_longitude || 0, dream.from_latitude || 0] as [number, number]
-        },
-        to: {
-          name: dream.to_station,
-          coordinates: [dream.to_longitude || 0, dream.to_latitude || 0] as [number, number]
-        },
-        dreamerName: dream.dreamer_name,
-        count: 1, // For now, each dream counts as 1
-        createdAt: dream.created_at
-      }));
-      
-      // Detect new routes for animation if requested
-      if (detectNewRoutes && dreamRoutes.length > 0) {
-        const newRoutes = transformedRoutes.filter(route => 
-          !dreamRoutes.some(existing => existing.id === route.id)
-        );
-        
-        if (newRoutes.length > 0) {
-          setNewRouteAnimations(newRoutes.map(r => r.id));
-          
-          // Track new route additions
-          trackEvent('new_route_detected', {
-            count: newRoutes.length,
-            routes: newRoutes.map(r => `${r.from.name}-${r.to.name}`)
-          });
-          
-          // Trigger heat map update for new routes if heat map is visible
-          if (showHeatMap) {
-            // Force heat map refresh by re-triggering visibility
-            setTimeout(() => {
-              setShowHeatMap(false);
-              setTimeout(() => setShowHeatMap(true), 100);
-            }, 500);
-          } else if (newRoutes.length >= 3 && enableHeatMap) {
-            // Auto-enable heat map for significant activity
-            setTimeout(() => {
-              setShowHeatMap(true);
-              trackEvent('heat_map_auto_enabled', {
-                trigger: 'multiple_new_routes',
-                route_count: newRoutes.length
-              });
-            }, 1000);
+  // Memoized configuration for map optimization
+  const mapConfig = useMemo(() => ({
+    container: null,
+    style: style,
+    center: center,
+    zoom: zoom,
+    attributionControl: false,
+    touchZoomRotate: mobileOptimized,
+    touchPitch: !mobileOptimized,
+    dragRotate: !mobileOptimized,
+    doubleClickZoom: true,
+    scrollZoom: true,
+    boxZoom: !mobileOptimized,
+    keyboard: !mobileOptimized,
+    // Performance optimizations
+    renderWorldCopies: false,
+    antialias: false, // Disable for better performance on lower-end devices
+    failIfMajorPerformanceCaveat: false,
+    preserveDrawingBuffer: false,
+    trackResize: true,
+    transformRequest: (url: string, resourceType: string) => {
+      // Add CDN optimization for tiles
+      if (resourceType === 'Tile' && url.includes('mapbox.com')) {
+        return {
+          url: url,
+          headers: {
+            'Cache-Control': 'public, max-age=86400'
           }
-          
-          // Clear animations after 3 seconds
-          setTimeout(() => {
-            setNewRouteAnimations([]);
-          }, 3000);
-        }
+        };
       }
-      
-      setDreamRoutes(transformedRoutes);
-      setLastUpdateTime(new Date());
-      
-    } catch (error) {
-      console.error('Error fetching dreams:', error);
+      return { url };
     }
-  }, [dreamRoutes, trackEvent]);
+  }), [style, center, zoom, mobileOptimized]);
 
-  // Initial load
-  useEffect(() => {
-    fetchDreams();
-  }, [fetchDreams]);
+  // Transform dreams from global provider to DreamRoute format
+  const dreamRoutes = useMemo(() => {
+    if (!dreams) return routes || [];
+    
+    return dreams.map((dream: any) => ({
+      id: dream.id.toString(),
+      from: {
+        name: dream.from_station,
+        coordinates: [dream.from_longitude || 0, dream.from_latitude || 0] as [number, number]
+      },
+      to: {
+        name: dream.to_station,
+        coordinates: [dream.to_longitude || 0, dream.to_latitude || 0] as [number, number]
+      },
+      dreamerName: dream.dreamer_name,
+      count: 1, // For now, each dream counts as 1
+      createdAt: dream.created_at
+    }));
+  }, [dreams, routes]);
 
-  // Set up global refresh function for form submissions
+  // Set up global refresh function for form submissions  
   useEffect(() => {
-    (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap = () => fetchDreams(true);
+    (window as unknown as { refreshDreamMap: () => void }).refreshDreamMap = () => refetch();
     return () => {
       delete (window as unknown as { refreshDreamMap?: () => void }).refreshDreamMap;
     };
-  }, [fetchDreams]);
-  
-  // Set up real-time updates
-  useEffect(() => {
-    if (!enableRealTimeUpdates) return;
-    
-    const interval = setInterval(() => {
-      fetchDreams(true); // Enable new route detection
-    }, 30000); // Update every 30 seconds
-    
-    setRealTimeUpdateInterval(interval);
-    
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [enableRealTimeUpdates, fetchDreams]);
-  
-  // Cleanup real-time updates on unmount
-  useEffect(() => {
-    return () => {
-      if (realTimeUpdateInterval) {
-        clearInterval(realTimeUpdateInterval);
-      }
-    };
-  }, [realTimeUpdateInterval]);
+  }, [refetch]);
 
   useEffect(() => {
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
@@ -207,21 +151,11 @@ export default function DreamMap({
     mapboxgl.accessToken = mapboxToken;
 
     try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: style,
-        center: center,
-        zoom: zoom,
-        attributionControl: false,
-        // Mobile optimizations
-        touchZoomRotate: mobileOptimized,
-        touchPitch: !mobileOptimized, // Disable pitch on mobile for better UX
-        dragRotate: !mobileOptimized, // Disable rotation on mobile
-        doubleClickZoom: true,
-        scrollZoom: true,
-        boxZoom: !mobileOptimized, // Disable box zoom on mobile
-        keyboard: !mobileOptimized // Disable keyboard on mobile
-      });
+      const config = {
+        ...mapConfig,
+        container: mapContainer.current
+      };
+      map.current = new mapboxgl.Map(config);
 
       map.current.addControl(new mapboxgl.AttributionControl({
         compact: true
@@ -251,10 +185,9 @@ export default function DreamMap({
     };
   }, [style, center, zoom]);
 
-  const updateMapData = useCallback(() => {
-    if (!map.current || !isLoaded) return;
-
-    const routeFeatures = dreamRoutes.map(route => ({
+  // Memoized GeoJSON data processing for better performance
+  const { routeFeatures, stationFeatures } = useMemo(() => {
+    const routes = dreamRoutes.map(route => ({
       type: 'Feature' as const,
       geometry: {
         type: 'LineString' as const,
@@ -269,7 +202,13 @@ export default function DreamMap({
       }
     }));
 
-    const stationMap = new Map();
+    // Optimize station processing with Map for O(1) lookup
+    const stationMap = new Map<string, {
+      name: string;
+      coordinates: [number, number];
+      dreamCount: number;
+    }>();
+    
     dreamRoutes.forEach(route => {
       const fromKey = `${route.from.coordinates[0]},${route.from.coordinates[1]}`;
       const toKey = `${route.to.coordinates[0]},${route.to.coordinates[1]}`;
@@ -287,11 +226,11 @@ export default function DreamMap({
         });
       }
       
-      stationMap.get(fromKey).dreamCount += route.count;
-      stationMap.get(toKey).dreamCount += route.count;
+      stationMap.get(fromKey)!.dreamCount += route.count;
+      stationMap.get(toKey)!.dreamCount += route.count;
     });
 
-    const stationFeatures = Array.from(stationMap.values()).map(station => ({
+    const stations = Array.from(stationMap.values()).map(station => ({
       type: 'Feature' as const,
       geometry: {
         type: 'Point' as const,
@@ -307,23 +246,33 @@ export default function DreamMap({
       }
     }));
 
-    const routeSource = map.current.getSource('dream-routes') as mapboxgl.GeoJSONSource;
-    const stationSource = map.current.getSource('dream-stations') as mapboxgl.GeoJSONSource;
+    return { routeFeatures: routes, stationFeatures: stations };
+  }, [dreamRoutes]);
 
-    if (routeSource) {
-      routeSource.setData({
-        type: 'FeatureCollection',
-        features: routeFeatures
-      });
-    }
+  // Optimized map data update function
+  const updateMapData = useCallback(() => {
+    if (!map.current || !isLoaded) return;
 
-    if (stationSource) {
-      stationSource.setData({
-        type: 'FeatureCollection',
-        features: stationFeatures
-      });
-    }
-  }, [dreamRoutes, isLoaded]);
+    // Use requestAnimationFrame for better performance
+    requestAnimationFrame(() => {
+      const routeSource = map.current?.getSource('dream-routes') as mapboxgl.GeoJSONSource;
+      const stationSource = map.current?.getSource('dream-stations') as mapboxgl.GeoJSONSource;
+
+      if (routeSource) {
+        routeSource.setData({
+          type: 'FeatureCollection',
+          features: routeFeatures
+        });
+      }
+
+      if (stationSource) {
+        stationSource.setData({
+          type: 'FeatureCollection',
+          features: stationFeatures
+        });
+      }
+    });
+  }, [routeFeatures, stationFeatures, isLoaded]);
 
   useEffect(() => {
     if (isLoaded && map.current) {
@@ -787,11 +736,11 @@ export default function DreamMap({
             )}
           </div>
           
-          {enableRealTimeUpdates && (
+          {enableRealTimeUpdates && lastUpdate && (
             <div className="mt-2 pt-2 border-t border-gray-200 flex items-center gap-2 text-xs text-gray-500">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
               <span>Live updates</span>
-              <span className="ml-auto">{lastUpdateTime.toLocaleTimeString()}</span>
+              <span className="ml-auto">{lastUpdate.toLocaleTimeString()}</span>
             </div>
           )}
         </div>
@@ -837,4 +786,6 @@ export default function DreamMap({
       </div>
     </div>
   );
-}
+});
+
+export default DreamMap;

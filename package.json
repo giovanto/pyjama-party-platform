@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
+    "build:analyze": "ANALYZE=true npm run build",
+    "build:standalone": "next build && next export",
     "start": "next start",
+    "start:standalone": "node .next/standalone/server.js",
     "lint": "next lint",
     "test": "vitest",
     "test:watch": "vitest --watch",
@@ -17,18 +20,25 @@
     "test:e2e:ui": "playwright test --ui",
     "test:all": "npm run test && npm run test:api && npm run test:supabase && npm run test:e2e",
     "check-deployment": "node scripts/check-deployment.js",
-    "prebuild": "npm run check-deployment"
+    "prebuild": "npm run check-deployment",
+    "lighthouse": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json --chrome-flags='--headless'",
+    "perf:test": "npm run build && npm run lighthouse",
+    "perf:test-quota-safe": "node scripts/quota-safe-performance-test.js",
+    "perf:test-production": "node scripts/quota-safe-performance-test.js --production",
+    "perf:analyze": "npm run build:analyze && npm run perf:test-quota-safe"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.4",
     "@types/mapbox-gl": "^3.4.1",
+    "@types/qrcode": "^1.5.5",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.3",
     "lucide-react": "^0.526.0",
     "mapbox-gl": "^3.13.0",
     "next": "15.3.5",
+    "qrcode": "^1.5.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "recharts": "^3.1.2",
@@ -53,11 +63,14 @@
     "eslint-config-prettier": "^10.1.5",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
+    "lighthouse": "^12.2.1",
     "lint-staged": "^16.1.2",
     "pg": "^8.16.3",
     "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "web-vitals": "^5.1.0",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

@@ -1,11 +1,34 @@
 'use client';
 
+import { Suspense, lazy } from 'react';
+import dynamic from 'next/dynamic';
 import { DreamForm } from '@/components/forms';
-import { DreamMap, ProminentLayerToggle } from '@/components/map';
-import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { FloatingNav } from '@/components/layout';
-import { Countdown, ScrollingTestimonials } from '@/components/ui';
+import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
+
+// Lazy load heavy components for better initial page load
+const DreamMap = dynamic(() => import('@/components/map').then(mod => ({ default: mod.DreamMap })), {
+  ssr: false, // Map requires browser APIs
+  loading: () => (
+    <div className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg bg-gray-100 animate-pulse flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bot-green mx-auto mb-4"></div>
+        <p className="text-gray-600 font-medium">Loading interactive map...</p>
+      </div>
+    </div>
+  ),
+});
+
+const ProminentLayerToggle = dynamic(() => import('@/components/map').then(mod => ({ default: mod.ProminentLayerToggle })), {
+  ssr: false,
+  loading: () => <div className="w-24 h-10 bg-gray-200 rounded-lg animate-pulse"></div>,
+});
+
+// Lazy load below-the-fold components
+const StatsPanel = lazy(() => import('@/components/community').then(mod => ({ default: mod.StatsPanel })));
+const CriticalMassPanel = lazy(() => import('@/components/community').then(mod => ({ default: mod.CriticalMassPanel })));
+const ScrollingTestimonials = lazy(() => import('@/components/ui').then(mod => ({ default: mod.ScrollingTestimonials })));
 
 export default function Home() {
   // Note: Map component should fetch real data from /api/dreams
@@ -319,7 +342,13 @@ export default function Home() {
       {/* Dynamic Testimonials */}
       <section className="py-12 sm:py-16 bg-gradient-to-br from-bot-light-green/10 to-bot-green/10" id="testimonials">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollingTestimonials />
+          <Suspense fallback={
+            <div className="h-64 bg-gray-50 rounded-lg animate-pulse flex items-center justify-center">
+              <p className="text-gray-500">Loading testimonials...</p>
+            </div>
+          }>
+            <ScrollingTestimonials />
+          </Suspense>
         </div>
       </section>
 
@@ -334,7 +363,13 @@ export default function Home() {
             </p>
           </div>
           
-          <CriticalMassPanel className="mb-12" />
+          <Suspense fallback={
+            <div className="h-48 bg-gray-50 rounded-lg animate-pulse mb-12 flex items-center justify-center">
+              <p className="text-gray-500">Loading station data...</p>
+            </div>
+          }>
+            <CriticalMassPanel className="mb-12" />
+          </Suspense>
           
           <div className="text-center">
             <a 
@@ -413,7 +448,13 @@ export default function Home() {
           </div>
           
           <div className="mb-16">
-            <StatsPanel className="max-w-4xl mx-auto" />
+            <Suspense fallback={
+              <div className="max-w-4xl mx-auto h-32 bg-gray-50 rounded-lg animate-pulse flex items-center justify-center">
+                <p className="text-gray-500">Loading movement statistics...</p>
+              </div>
+            }>
+              <StatsPanel className="max-w-4xl mx-auto" />
+            </Suspense>
           </div>
         </div>
       </section>
