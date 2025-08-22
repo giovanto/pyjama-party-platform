@@ -30,9 +30,8 @@ CREATE INDEX IF NOT EXISTS idx_analytics_events_timestamp ON analytics_events (e
 CREATE INDEX IF NOT EXISTS idx_analytics_events_expires_at ON analytics_events (expires_at);
 CREATE INDEX IF NOT EXISTS idx_analytics_events_properties ON analytics_events USING GIN (properties);
 
--- Composite index for dashboard queries
-CREATE INDEX IF NOT EXISTS idx_analytics_events_dashboard ON analytics_events (event_name, event_timestamp DESC) 
-WHERE expires_at > NOW();
+-- Composite index for dashboard queries (removed WHERE clause due to NOW() immutability)
+CREATE INDEX IF NOT EXISTS idx_analytics_events_dashboard ON analytics_events (event_name, event_timestamp DESC, expires_at);
 
 -- Enable Row Level Security
 ALTER TABLE analytics_events ENABLE ROW LEVEL SECURITY;

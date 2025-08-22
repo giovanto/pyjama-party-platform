@@ -301,7 +301,7 @@ export default function AboutPage() {
             🌙 Share Your Dream Route
           </a>
           <a 
-            href="/pajama-party"
+            href="/pyjama-party"
             className="bg-bot-light-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-bot-green transition-colors duration-200"
           >
             🎉 Join September 26 Event

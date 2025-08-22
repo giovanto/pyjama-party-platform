@@ -139,10 +139,10 @@ const DreamMap = memo(function DreamMap({
   }, [refetch]);
 
   useEffect(() => {
-    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     
     if (!mapboxToken) {
-      setError('Mapbox token not configured. Please set NEXT_PUBLIC_MAPBOX_TOKEN environment variable.');
+      setError('Mapbox token not configured. Please set NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN environment variable.');
       return;
     }
 
@@ -328,7 +328,7 @@ const DreamMap = memo(function DreamMap({
     });
 
     map.current.addLayer({
-      id: 'dream-routes-line',
+      id: 'dream-routes',
       type: 'line',
       source: 'dream-routes',
       layout: {
@@ -515,7 +515,7 @@ const DreamMap = memo(function DreamMap({
     });
 
     // Enhanced route click handler with advocacy popup
-    map.current.on('click', 'dream-routes-line', (e) => {
+    map.current.on('click', 'dream-routes', (e) => {
       if (!e.features || e.features.length === 0) return;
       
       const feature = e.features[0];
@@ -579,13 +579,13 @@ const DreamMap = memo(function DreamMap({
       }
     });
 
-    map.current.on('mouseenter', 'dream-routes-line', () => {
+    map.current.on('mouseenter', 'dream-routes', () => {
       if (map.current) {
         map.current.getCanvas().style.cursor = 'pointer';
       }
     });
 
-    map.current.on('mouseleave', 'dream-routes-line', () => {
+    map.current.on('mouseleave', 'dream-routes', () => {
       if (map.current) {
         map.current.getCanvas().style.cursor = '';
       }

@@ -61,7 +61,7 @@ export default function PyjamaPartyPage() {
             {/* Countdown */}
             <div className="mb-12">
               <Countdown 
-                targetDate="2025-09-26T20:00:00.000Z"
+                targetDate={new Date('2025-09-26T20:00:00.000Z')}
                 className="justify-center"
               />
             </div>

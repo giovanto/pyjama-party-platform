@@ -220,7 +220,7 @@ export default async function ImpactDashboard() {
                     Share Your Dream Route
                   </a>
                   <a 
-                    href="/pajama-party#signup-form"
+                    href="/pyjama-party#signup-form"
                     className="inline-flex items-center bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-bot-dark-green transition-all duration-300"
                   >
                     <span className="mr-2">🎪</span>

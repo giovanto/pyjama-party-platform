@@ -61,7 +61,7 @@ export default function CommunityPage() {
                 Join Discord Server
               </Link>
               <Link
-                href="/pajama-party#signup-form"
+                href="/pyjama-party#signup-form"
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all font-semibold text-lg border border-white/30"
               >
                 <Calendar className="h-6 w-6 inline mr-2" />

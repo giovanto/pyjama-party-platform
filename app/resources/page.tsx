@@ -225,7 +225,7 @@ export default function ResourcesPage() {
                 Add your station to the official map and coordinate with nearby events.
               </p>
               <Link
-                href="/pajama-party#signup-form"
+                href="/pyjama-party#signup-form"
                 className="inline-flex items-center bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors"
               >
                 <MapPin className="h-4 w-4 mr-2" />

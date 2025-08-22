@@ -16,7 +16,7 @@ interface NavItem {
 const navigation: NavItem[] = [
   { label: 'Home', href: '/', icon: '🏠' },
   { label: 'Dream', href: '/dream', icon: '🌙' },
-  { label: 'Event', href: '/pajama-party', icon: '🎉' },
+  { label: 'Event', href: '/pyjama-party', icon: '🎉' },
   { label: 'Dashboard', href: '/dashboard', icon: '📊' },
   { label: 'Community', href: '/community', icon: '👥' },
   { label: 'About', href: '/about', icon: 'ℹ️' }
@@ -76,7 +76,7 @@ export function Navigation() {
             {/* CTA Button */}
             <div className="flex items-center space-x-4">
               <Link
-                href="/pajama-party"
+                href="/pyjama-party"
                 className="bg-gradient-to-r from-bot-green to-bot-dark-green text-white px-6 py-2 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
               >
                 Join Sept 26 Event
@@ -197,7 +197,7 @@ export function Navigation() {
                   {/* Mobile CTA */}
                   <div className="mt-8 pt-8 border-t border-gray-200">
                     <Link
-                      href="/pajama-party"
+                      href="/pyjama-party"
                       onClick={closeMobileMenu}
                       className="flex items-center justify-center space-x-2 w-full bg-gradient-to-r from-bot-green to-bot-dark-green text-white p-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-200"
                     >
