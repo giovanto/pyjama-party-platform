@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Users, MapPin, Music, Heart, TreePine, Train, Zap, Globe, Clock, Headphones, Video } from 'lucide-react';
 import { Countdown } from '@/components/ui';
+import PyjamaPartySignupForm from '@/components/forms/PyjamaPartySignupForm';
 
 export const metadata: Metadata = {
   title: 'European Pajama Party 2025 | Back-on-Track Movement',
@@ -68,7 +69,7 @@ export default function PyjamaPartyPage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/participate"
+                href="#signup-form"
                 className="px-8 py-4 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl hover:from-pink-600 hover:to-orange-600 transition-all transform hover:scale-105 font-semibold text-lg shadow-xl"
               >
                 <Users className="h-6 w-6 inline mr-2" />
@@ -387,7 +388,7 @@ export default function PyjamaPartyPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link
-              href="/participate"
+              href="#signup-form"
               className="px-8 py-4 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-xl hover:from-pink-600 hover:to-orange-600 transition-all transform hover:scale-105 font-semibold text-lg shadow-xl"
             >
               <Users className="h-6 w-6 inline mr-2" />
@@ -406,6 +407,22 @@ export default function PyjamaPartyPage() {
             The European Pajama Party is organized by the Back-on-Track movement in partnership with 
             climate organizations across Europe. This is a peaceful, family-friendly event.
           </p>
+        </div>
+      </section>
+
+      {/* Signup Form Section */}
+      <section id="signup-form" className="py-24 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Join Your Local Station
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Sign up to participate in the September 26 European Pajama Party at a train station near you.
+            </p>
+          </div>
+
+          <PyjamaPartySignupForm />
         </div>
       </section>
     </div>

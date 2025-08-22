@@ -105,12 +105,19 @@ function InterviewContent() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-bot-green/5 via-white to-bot-blue/5">
+      {/* Skip to content link */}
+      <a 
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-bot-green text-white px-4 py-2 rounded z-50"
+      >
+        Skip to main content
+      </a>
       {/* Mobile-optimized header */}
-      <div className="bg-white shadow-sm border-b-2 border-bot-green/20">
+      <header className="bg-white shadow-sm border-b-2 border-bot-green/20" role="banner">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{t.title}</h1>
+              <h1 id="page-title" className="text-xl sm:text-2xl font-bold text-gray-900">{t.title}</h1>
               <p className="text-sm text-gray-600">{t.subtitle}</p>
               {stationCode && (
                 <div className="mt-1 text-sm text-bot-green font-medium">

@@ -355,7 +355,7 @@ export default function TrainConnectionPage() {
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
-                    href={`/participate?from=${selectedOrigin.id}&to=${placeId}`}
+                    href="/pajama-party#signup-form"
                     className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all font-medium text-center"
                   >
                     <Users className="h-5 w-5 inline mr-2" />

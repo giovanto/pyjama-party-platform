@@ -606,28 +606,32 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
 
   return (
     <>
-      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/30 z-10">
+      <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm rounded-lg shadow-lg border border-white/30 z-10" role="region" aria-labelledby="map-controls-heading">
         <div className="p-3">
-          <div className="text-xs font-medium text-gray-700 mb-2">Map Layers</div>
+          <h3 id="map-controls-heading" className="text-xs font-medium text-gray-700 mb-2">Map Layers</h3>
           
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2" role="radiogroup" aria-labelledby="map-controls-heading">
             <button
               onClick={() => handleLayerSwitch('dream')}
               disabled={isTransitioning}
               data-layer="dream"
               className={`
-                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
+                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
                 ${activeLayer === 'dream' 
                   ? 'bg-amber-100 text-amber-800 border border-amber-200' 
                   : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
                 }
                 ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
+              role="radio"
+              aria-checked={activeLayer === 'dream'}
+              aria-describedby="dream-layer-desc"
+              aria-label="Switch to dream layer showing inspirational destinations"
             >
-              <span className="text-lg">✨</span>
+              <span className="text-lg" role="img" aria-label="sparkles">✨</span>
               <div className="text-left">
                 <div className="font-medium">Dream Layer</div>
-                <div className="text-xs opacity-75">Inspiration & Dreams</div>
+                <div id="dream-layer-desc" className="text-xs opacity-75">Inspiration & Dreams</div>
               </div>
             </button>
 
@@ -636,18 +640,22 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
               disabled={isTransitioning}
               data-layer="reality"
               className={`
-                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all
+                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
                 ${activeLayer === 'reality' 
                   ? 'bg-green-100 text-green-800 border border-green-200' 
                   : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
                 }
                 ${isTransitioning ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
+              role="radio"
+              aria-checked={activeLayer === 'reality'}
+              aria-describedby="reality-layer-desc"
+              aria-label="Switch to reality layer showing current rail infrastructure"
             >
-              <span className="text-lg">🚂</span>
+              <span className="text-lg" role="img" aria-label="train">🚂</span>
               <div className="text-left">
                 <div className="font-medium">Reality Layer</div>
-                <div className="text-xs opacity-75">
+                <div id="reality-layer-desc" className="text-xs opacity-75">
                   {realityData.analysis.coverage.active_routes} active routes
                 </div>
               </div>
@@ -656,29 +664,32 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
 
           {/* Critical Mass Toggle */}
           <div className="mt-3 pt-3 border-t border-gray-200">
-            <div className="text-xs font-medium text-gray-700 mb-2">Overlays</div>
+            <h4 className="text-xs font-medium text-gray-700 mb-2">Overlays</h4>
             <button
               onClick={() => setShowCriticalMass(!showCriticalMass)}
               className={`
-                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all w-full
+                flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-all w-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2
                 ${showCriticalMass 
                   ? 'bg-red-100 text-red-800 border border-red-200' 
                   : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
                 }
               `}
+              aria-pressed={showCriticalMass}
+              aria-describedby="critical-mass-desc"
+              aria-label={`${showCriticalMass ? 'Hide' : 'Show'} critical mass overlay for pajama party readiness`}
             >
-              <span className="text-lg">🎯</span>
+              <span className="text-lg" role="img" aria-label="target">🎯</span>
               <div className="text-left">
                 <div className="font-medium">Critical Mass</div>
-                <div className="text-xs opacity-75">Pajama Party Readiness</div>
+                <div id="critical-mass-desc" className="text-xs opacity-75">Pajama Party Readiness</div>
               </div>
             </button>
           </div>
 
           {isTransitioning && (
-            <div className="mt-2 flex items-center gap-2 text-xs text-gray-600">
-              <div className="w-3 h-3 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-              Switching layers...
+            <div className="mt-2 flex items-center gap-2 text-xs text-gray-600" role="status" aria-live="polite">
+              <div className="w-3 h-3 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" aria-hidden="true"></div>
+              <span>Switching layers...</span>
             </div>
           )}
         </div>

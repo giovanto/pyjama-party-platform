@@ -75,12 +75,19 @@ export default async function ImpactDashboard() {
   return (
     <>
       <FloatingNav />
-      <main className="min-h-screen bg-gradient-to-br from-bot-green/5 via-white to-bot-blue/5">
+      <main className="min-h-screen bg-gradient-to-br from-bot-green/5 via-white to-bot-blue/5" id="main-content">
+        {/* Skip to content link */}
+        <a 
+          href="#dashboard-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-bot-green text-white px-4 py-2 rounded z-50"
+        >
+          Skip to dashboard content
+        </a>
         {/* Hero Section */}
-        <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8" aria-labelledby="page-title">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 id="page-title" className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 European Night Train Movement
               </h1>
               <div className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
@@ -213,7 +220,7 @@ export default async function ImpactDashboard() {
                     Share Your Dream Route
                   </a>
                   <a 
-                    href="/participate"
+                    href="/pajama-party#signup-form"
                     className="inline-flex items-center bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-bot-dark-green transition-all duration-300"
                   >
                     <span className="mr-2">🎪</span>

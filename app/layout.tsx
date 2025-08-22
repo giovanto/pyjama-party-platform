@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
-import { Header, Footer, FloatingNav, EventBanner, AnalyticsProvider } from "@/components/layout";
+import { Navigation, Footer, EventBanner, AnalyticsProvider } from "@/components/layout";
 import ClientPerformanceWrapper from "@/components/performance/ClientPerformanceWrapper";
 import { DataProvider } from "@/providers/DataProvider";
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1.0,
+  viewportFit: 'cover',
+  colorScheme: 'light',
+  themeColor: '#22c55e',
+};
 
 export const metadata: Metadata = {
   title: "Where Would You Like to Wake Up Tomorrow? | Back-on-Track",
@@ -13,7 +21,6 @@ export const metadata: Metadata = {
   generator: "Next.js",
   applicationName: "Pajama Party Platform",
   referrer: "origin-when-cross-origin",
-  colorScheme: "light",
   creator: "Back-on-Track Action Group",
   publisher: "Back-on-Track Action Group",
   formatDetection: {
@@ -86,12 +93,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <meta name="theme-color" content="#22c55e" />
         <meta name="msapplication-TileColor" content="#22c55e" />
         
         {/* Performance hints */}
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </head>
       <body className="font-mark antialiased bg-white text-gray-900 overflow-x-hidden">
         {/* Skip to main content for accessibility */}
@@ -106,7 +111,7 @@ export default function RootLayout({
           <DataProvider>
             {/* Progressive loading with Suspense boundaries */}
             <Suspense fallback={<div className="h-16 bg-white" />}>
-              <Header />
+              <Navigation />
             </Suspense>
             
             <Suspense fallback={<div className="h-12 bg-gradient-to-r from-bot-green to-bot-blue" />}>
@@ -119,10 +124,6 @@ export default function RootLayout({
             
             <Suspense fallback={<div className="h-96 bg-gray-50" />}>
               <Footer />
-            </Suspense>
-            
-            <Suspense fallback={null}>
-              <FloatingNav />
             </Suspense>
             
             {/* Performance Monitoring */}

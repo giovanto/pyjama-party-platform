@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MessageCircle, Users, Calendar, ExternalLink, Award, TrendingUp, Heart, Share2, BookOpen, Headphones } from 'lucide-react';
 import { StatsPanel, CriticalMassPanel } from '@/components/community';
 import { DreamMap } from '@/components/map';
+import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
 export const metadata: Metadata = {
   title: 'Community Hub | European Night Train Platform',
@@ -28,12 +29,21 @@ export default function CommunityPage() {
               Active Community Members: 47,623
             </div>
 
-            <h1 className="text-3xl lg:text-6xl font-bold mb-6 leading-tight">
-              Welcome to the
-              <span className="block bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                Community Hub
-              </span>
-            </h1>
+            <UniversalMessage 
+              variant="hero"
+              customMessage="Join the growing movement"
+              showIcon={true}
+              animated={true}
+              className="mb-6"
+            />
+            
+            <div className="mb-8">
+              <PhaseNavigation 
+                currentPhase="community"
+                variant="breadcrumb"
+                className="justify-center"
+              />
+            </div>
 
             <p className="text-xl lg:text-2xl text-white/90 mb-8 max-w-4xl mx-auto leading-relaxed">
               Connect with climate activists across Europe, track station readiness, 
@@ -51,7 +61,7 @@ export default function CommunityPage() {
                 Join Discord Server
               </Link>
               <Link
-                href="/participate"
+                href="/pajama-party#signup-form"
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all font-semibold text-lg border border-white/30"
               >
                 <Calendar className="h-6 w-6 inline mr-2" />

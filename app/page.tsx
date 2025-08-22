@@ -3,7 +3,6 @@
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { DreamForm } from '@/components/forms';
-import { FloatingNav } from '@/components/layout';
 import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
 
@@ -27,15 +26,13 @@ const ProminentLayerToggle = dynamic(() => import('@/components/map').then(mod =
 
 export default function Home() {
   return (
-    <>
-      <FloatingNav />
-      <main className="main">
-        {/* Hero Section */}
-        <section className="hero py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-bot-green/10 via-bot-light-green/5 to-bot-blue/10 relative overflow-hidden">
-          <div className="hero__container max-w-7xl mx-auto relative z-10">
-            
-            {/* Hero Title */}
-            <div className="text-center mb-12">
+    <main className="main">
+      {/* Hero Section */}
+      <section className="hero py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-bot-green/10 via-bot-light-green/5 to-bot-blue/10 relative overflow-hidden">
+        <div className="hero__container max-w-7xl mx-auto relative z-10">
+          
+          {/* Hero Title */}
+          <div className="text-center mb-12">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 European Night Train Dreams
               </h1>
@@ -232,6 +229,5 @@ export default function Home() {
           </div>
         </section>
       </main>
-    </>
   );
 }

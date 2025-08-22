@@ -43,12 +43,14 @@ class DataManager {
     // Start update interval when first subscriber is added
     this.startUpdateInterval();
     
-    // Stop updates when page is hidden
-    document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+    // Stop updates when page is hidden (only on client)
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+    }
   }
 
   private handleVisibilityChange() {
-    if (document.visibilityState === 'visible') {
+    if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
       this.startUpdateInterval();
       // Fetch immediately if data is stale
       if (!this.data || Date.now() - this.data.lastUpdate.getTime() > 30000) {

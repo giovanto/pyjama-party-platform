@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Train, MapPin, Star, Heart, Users, Calendar } from 'lucide-react';
+import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
 interface DreamDestinationPageProps {
   params: {
@@ -145,10 +146,23 @@ export default async function DreamDestinationPage({ params }: DreamDestinationP
               )}
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg">
-              Dream of {place.name}
-            </h1>
+            {/* Universal Message */}
+            <UniversalMessage 
+              variant="hero"
+              customMessage={`Dream of waking up in ${place.name}`}
+              showIcon={true}
+              animated={true}
+              className="text-white drop-shadow-lg mb-6"
+            />
+            
+            {/* Phase Navigation */}
+            <div className="mb-8">
+              <PhaseNavigation 
+                currentPhase="dream"
+                variant="floating"
+                className="max-w-2xl mx-auto"
+              />
+            </div>
 
             {/* Brief Description */}
             <p className="text-xl lg:text-2xl text-white/90 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-md">

@@ -1,12 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Build optimizations
+  // Build optimizations - Enable strict checking for production quality
   typescript: {
-    ignoreBuildErrors: true,
+    // TypeScript errors will now be caught during build
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    // ESLint errors will now be caught during build
   },
   
   // Performance optimizations for high traffic

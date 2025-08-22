@@ -594,25 +594,28 @@ const DreamMap = memo(function DreamMap({
 
   if (error) {
     return (
-      <div className={`dream-map-error bg-gray-100 border border-gray-300 rounded-lg p-8 text-center ${className}`}>
-        <div className="text-red-600 mb-2">⚠️ Map Error</div>
+      <div className={`dream-map-error bg-gray-100 border border-gray-300 rounded-lg p-8 text-center ${className}`} role="alert" aria-live="assertive">
+        <div className="text-red-600 mb-2"><span role="img" aria-label="warning">⚠️</span> Map Error</div>
         <p className="text-gray-600 text-sm">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className={`dream-map relative ${className}`}>
+    <div className={`dream-map relative ${className}`} role="application" aria-label="Interactive dream route map">
       <div 
         ref={mapContainer} 
         className="w-full h-full rounded-lg overflow-hidden"
         style={{ minHeight: '400px' }}
+        role="img"
+        aria-label="Interactive map showing dream train routes across Europe"
+        tabIndex={0}
       />
       
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center rounded-lg">
+        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center rounded-lg" role="status" aria-live="polite">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-bot-green mx-auto mb-2"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-bot-green mx-auto mb-2" aria-hidden="true"></div>
             <p className="text-gray-600 text-sm">Loading dream map...</p>
           </div>
         </div>
@@ -655,7 +658,7 @@ const DreamMap = memo(function DreamMap({
       
       {/* Advocacy Popup */}
       {advocacyPopup?.visible && (
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-30 p-4">
+        <div className="absolute inset-0 bg-black/20 flex items-center justify-center z-30 p-4" role="dialog" aria-modal="true" aria-labelledby="advocacy-popup-title">
           <RouteAdvocacyPopup
             routeId={advocacyPopup.routeId}
             stationId={advocacyPopup.stationId}
@@ -682,11 +685,11 @@ const DreamMap = memo(function DreamMap({
       {/* Advanced Control Panel */}
       <div className="absolute bottom-4 left-4 space-y-2">
         {/* Main Legend */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 text-xs shadow-md border border-white/30 max-w-xs">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-3 text-xs shadow-md border border-white/30 max-w-xs" role="complementary" aria-labelledby="map-legend-heading">
           <div className="flex items-center justify-between mb-2">
-            <div className="font-medium text-gray-800 text-xs">
-              {activeLayer === 'dream' ? '✨ Dream Layer' : '🚂 Reality Layer'}
-            </div>
+            <h3 id="map-legend-heading" className="font-medium text-gray-800 text-xs">
+              {activeLayer === 'dream' ? <><span role="img" aria-label="sparkles">✨</span> Dream Layer</> : <><span role="img" aria-label="train">🚂</span> Reality Layer</>}
+            </h3>
             <div className="text-xs text-gray-500">
               {dreamRoutes.length} routes
             </div>
@@ -696,24 +699,24 @@ const DreamMap = memo(function DreamMap({
             {activeLayer === 'dream' ? (
               <>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-0.5 bg-bot-green rounded"></div>
+                  <div className="w-3 h-0.5 bg-bot-green rounded" aria-hidden="true"></div>
                   <span className="text-gray-700">Dream Routes</span>
                   {showHeatMap && (
                     <div className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" aria-hidden="true"></div>
                       {enableRealTimeUpdates && (
-                        <span className="text-xs text-red-600 font-medium">LIVE</span>
+                        <span className="text-xs text-red-600 font-medium" role="status" aria-label="Live updates enabled">LIVE</span>
                       )}
                     </div>
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-amber-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-amber-400 rounded-full" aria-hidden="true"></div>
                   <span className="text-gray-700">Demand Hubs</span>
                 </div>
                 {newRouteAnimations.length > 0 && (
-                  <div className="flex items-center gap-2 text-green-600">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                  <div className="flex items-center gap-2 text-green-600" role="status" aria-live="polite">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-ping" aria-hidden="true"></div>
                     <span className="font-medium">{newRouteAnimations.length} new route{newRouteAnimations.length > 1 ? 's' : ''}!</span>
                   </div>
                 )}
@@ -721,15 +724,15 @@ const DreamMap = memo(function DreamMap({
             ) : (
               <>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-0.5 bg-emerald-600 rounded"></div>
+                  <div className="w-3 h-0.5 bg-emerald-600 rounded" aria-hidden="true"></div>
                   <span className="text-gray-700">Night Trains</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-600 rounded-full"></div>
+                  <div className="w-2 h-2 bg-emerald-600 rounded-full" aria-hidden="true"></div>
                   <span className="text-gray-700">Active Stations</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-0.5 bg-teal-600 rounded"></div>
+                  <div className="w-3 h-0.5 bg-teal-600 rounded" aria-hidden="true"></div>
                   <span className="text-gray-700">Day Trains</span>
                 </div>
               </>
@@ -737,16 +740,16 @@ const DreamMap = memo(function DreamMap({
           </div>
           
           {enableRealTimeUpdates && lastUpdate && (
-            <div className="mt-2 pt-2 border-t border-gray-200 flex items-center gap-2 text-xs text-gray-500">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <div className="mt-2 pt-2 border-t border-gray-200 flex items-center gap-2 text-xs text-gray-500" role="status" aria-live="polite">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" aria-hidden="true"></div>
               <span>Live updates</span>
-              <span className="ml-auto">{lastUpdate.toLocaleTimeString()}</span>
+              <time className="ml-auto" dateTime={lastUpdate.toISOString()}>{lastUpdate.toLocaleTimeString()}</time>
             </div>
           )}
         </div>
         
         {/* Feature Controls */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-md border border-white/30">
+        <div className="bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-md border border-white/30" role="toolbar" aria-label="Map feature controls">
           <div className="grid grid-cols-2 gap-1">
             {enableHeatMap && (
               <button
@@ -755,13 +758,15 @@ const DreamMap = memo(function DreamMap({
                   trackEvent('heat_map_toggled', { enabled: !showHeatMap });
                 }}
                 data-heat-toggle="true"
-                className={`p-2 rounded text-xs font-medium transition-colors ${
+                className={`p-2 rounded text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 ${
                   showHeatMap
                     ? 'bg-red-100 text-red-700 border border-red-200'
                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                 }`}
+                aria-pressed={showHeatMap}
+                aria-label={`${showHeatMap ? 'Hide' : 'Show'} heat map overlay`}
               >
-                🔥 Heat
+                <span role="img" aria-label="fire">🔥</span> Heat
               </button>
             )}
             
@@ -772,13 +777,15 @@ const DreamMap = memo(function DreamMap({
                   trackEvent('export_tool_toggled', { enabled: !showExportTool });
                 }}
                 data-export-toggle="true"
-                className={`p-2 rounded text-xs font-medium transition-colors ${
+                className={`p-2 rounded text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                   showExportTool
                     ? 'bg-blue-100 text-blue-700 border border-blue-200'
                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                 }`}
+                aria-pressed={showExportTool}
+                aria-label={`${showExportTool ? 'Hide' : 'Show'} export tool`}
               >
-                📷 Export
+                <span role="img" aria-label="camera">📷</span> Export
               </button>
             )}
           </div>

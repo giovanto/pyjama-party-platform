@@ -217,11 +217,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      aria-label="Share your dream night train route"
+      role="main"
     >
       <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-bot-green to-bot-blue bg-clip-text text-transparent mb-4 leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-bot-green to-bot-blue bg-clip-text text-transparent mb-4 leading-tight">
           Where would you like to wake up tomorrow?
-        </h2>
+        </h1>
         <p className="text-gray-600 text-lg font-medium">
           Share your dream night train route and help build the movement for sustainable European travel
         </p>
@@ -247,9 +249,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             }`}
             placeholder="Maria, João, Emma, Lars..."
             required
+            aria-required="true"
+            aria-describedby="dreamerName-help dreamerName-error"
+            aria-invalid={errors.dreamerName ? 'true' : 'false'}
           />
-          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
-          {errors.dreamerName && <p className="text-red-500 text-sm mt-1">{errors.dreamerName}</p>}
+          <p id="dreamerName-help" className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          {errors.dreamerName && <p id="dreamerName-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.dreamerName}</p>}
         </motion.div>
 
         <motion.div 
@@ -272,18 +277,35 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.from ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
+            required
+            aria-required="true"
+            aria-describedby="from-help from-error"
+            aria-invalid={errors.from ? 'true' : 'false'}
+            aria-expanded={showFromSuggestions}
+            aria-haspopup="listbox"
+            aria-controls={showFromSuggestions ? 'from-suggestions' : undefined}
+            role="combobox"
+            aria-autocomplete="list"
           />
-          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
-          {errors.from && <p className="text-red-500 text-sm mt-1">{errors.from}</p>}
+          <p id="from-help" className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          {errors.from && <p id="from-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.from}</p>}
           
           {showFromSuggestions && fromSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
-              {fromSuggestions.map((station) => (
+            <div 
+              id="from-suggestions"
+              className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Station suggestions"
+            >
+              {fromSuggestions.map((station, index) => (
                 <button
                   key={station.id}
                   type="button"
                   onClick={() => selectStation('from', station)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0 focus:bg-gray-100 focus:outline-none"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={index === 0 ? 0 : -1}
                 >
                   <div className="font-medium">{station.name}</div>
                   <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
@@ -313,17 +335,34 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.to ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Barcelona beach sunrise, Prague castle view, Stockholm archipelago..."
+            required
+            aria-required="true"
+            aria-describedby="to-error"
+            aria-invalid={errors.to ? 'true' : 'false'}
+            aria-expanded={showToSuggestions}
+            aria-haspopup="listbox"
+            aria-controls={showToSuggestions ? 'to-suggestions' : undefined}
+            role="combobox"
+            aria-autocomplete="list"
           />
-          {errors.to && <p className="text-red-500 text-sm mt-1">{errors.to}</p>}
+          {errors.to && <p id="to-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.to}</p>}
           
           {showToSuggestions && toSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
-              {toSuggestions.map((station) => (
+            <div 
+              id="to-suggestions"
+              className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Destination station suggestions"
+            >
+              {toSuggestions.map((station, index) => (
                 <button
                   key={station.id}
                   type="button"
                   onClick={() => selectStation('to', station)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0 focus:bg-gray-100 focus:outline-none"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={index === 0 ? 0 : -1}
                 >
                   <div className="font-medium">{station.name}</div>
                   <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
@@ -339,14 +378,14 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
         >
-          <div className="bg-gradient-to-br from-bot-green/8 to-bot-blue/8 rounded-3xl p-8 border-2 border-bot-green/30 shadow-xl backdrop-blur-sm">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">🌙 Join the Great European Pajama Party</h3>
+          <div className="bg-gradient-to-br from-bot-green/8 to-bot-blue/8 rounded-3xl p-8 border-2 border-bot-green/30 shadow-xl backdrop-blur-sm" role="group" aria-labelledby="participation-heading">
+            <h2 id="participation-heading" className="text-xl font-bold text-gray-900 mb-4">🌙 Join the Great European Pajama Party</h2>
             <p className="text-gray-700 mb-6 text-base leading-relaxed">
               September 26th, 2025: Thousands of climate advocates will gather in their pajamas at train stations across Europe, 
               creating the most epic demonstration for night trains ever seen. How do you want to participate?
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4" role="radiogroup" aria-labelledby="participation-heading" aria-required="true">
               <label className="flex items-start space-x-4 p-5 rounded-2xl border-2 border-white/50 bg-white/40 hover:border-bot-green/50 hover:bg-white/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm">
                 <input
                   type="radio"
@@ -369,11 +408,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                       previousLevel: formData.participationLevel
                     });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="dream-supporter-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🗺️ Dream Route Supporter</span>
-                  <p className="text-gray-600 text-sm mt-1">Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.</p>
+                  <p id="dream-supporter-desc" className="text-gray-600 text-sm mt-1">Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.</p>
                 </div>
               </label>
               
@@ -399,11 +439,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                       previousLevel: formData.participationLevel
                     });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="join-party-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🌙 Pajama Party Participant</span>
-                  <p className="text-gray-600 text-sm mt-1">Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.</p>
+                  <p id="join-party-desc" className="text-gray-600 text-sm mt-1">Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.</p>
                 </div>
               </label>
               
@@ -429,11 +470,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                       previousLevel: formData.participationLevel
                     });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="organize-party-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🎪 Station Host & Organizer</span>
-                  <p className="text-gray-600 text-sm mt-1">Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.</p>
+                  <p id="organize-party-desc" className="text-gray-600 text-sm mt-1">Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.</p>
                 </div>
               </label>
             </div>
@@ -447,9 +489,10 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
+            aria-live="polite"
           >
-            <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20">
-              <h4 className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h4>
+            <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20" role="region" aria-labelledby="email-section-heading">
+              <h3 id="email-section-heading" className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h3>
               <p className="text-sm text-gray-700 mb-4">
                 Join the Back-on-Track Action Group coordination! We&apos;ll send you:
               </p>
@@ -473,10 +516,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                 }`}
                 placeholder="your.email@example.com"
                 required={formData.pyjamaPartyInterest}
+                aria-required={formData.pyjamaPartyInterest ? 'true' : 'false'}
+                aria-describedby="email-error email-privacy"
+                aria-invalid={errors.email ? 'true' : 'false'}
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p id="email-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.email}</p>}
               
-              <p className="text-xs text-bot-blue mt-2">
+              <p id="email-privacy" className="text-xs text-bot-blue mt-2">
                 Privacy-first: Used only for September 26th coordination, never spam
               </p>
             </div>
@@ -500,8 +546,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.why ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Tell us about your connection to this route, why it&apos;s important for sustainability, or how it would impact your travel..."
+            required
+            aria-required="true"
+            aria-describedby="why-error"
+            aria-invalid={errors.why ? 'true' : 'false'}
           />
-          {errors.why && <p className="text-red-500 text-sm mt-1">{errors.why}</p>}
+          {errors.why && <p id="why-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.why}</p>}
         </motion.div>
 
         <motion.button
@@ -513,11 +563,14 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
+          aria-describedby={isSubmitting ? 'submit-status' : undefined}
         >
           {isSubmitting ? (
             <>
-              <span className="inline-block animate-spin mr-2">🌍</span>
-              {formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
+              <span className="inline-block animate-spin mr-2" aria-hidden="true">🌍</span>
+              <span id="submit-status" aria-live="polite">
+                {formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
+              </span>
             </>
           ) : (
             <>
@@ -540,9 +593,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           className="mt-6 bg-bot-green text-white p-4 rounded-lg shadow-lg"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
         >
           <div className="text-center">
-            <h3 className="font-bold text-lg mb-2">Your dream is on the map! 🌟</h3>
+            <h3 className="font-bold text-lg mb-2">Your dream is on the map! <span aria-hidden="true">🌟</span></h3>
             <p className="text-sm">{successMessage}</p>
             <div className="mt-3">
               <p className="text-xs opacity-90">
