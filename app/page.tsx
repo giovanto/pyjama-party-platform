@@ -3,14 +3,12 @@ import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
 import JourneyOverview from '@/components/journey/JourneyOverview';
 import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY, getCountdownTargetDate } from '@/lib/event';
-import { getMapboxToken } from '@/lib/env';
 import { t } from '@/i18n';
 import HomeMapSection from '@/components/home/HomeMapSection';
 
 // Map section is encapsulated in a client component
 
 export default function Home() {
-  const hasMapToken = Boolean(getMapboxToken());
   return (
     <main className="main">
       {/* Hero Section */}
