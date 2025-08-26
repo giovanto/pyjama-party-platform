@@ -22,7 +22,7 @@ export function UniversalMessage({
   showIcon = true,
   animated = true
 }: UniversalMessageProps) {
-  const pathname = usePathname();
+  const pathname = usePathname() || '/';
   const currentPhase = getCurrentPhaseFromPath(pathname);
   const message = customMessage || getContextualMessage(currentPhase);
 

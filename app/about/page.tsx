@@ -37,7 +37,7 @@ export default function AboutPage() {
               <p className="text-sm text-gray-700">
                 <strong>Legal Status:</strong> AISBL (International Non-Profit Association under Belgian Law)<br />
                 <strong>Founded:</strong> 2019<br />
-                <strong>Network:</strong> Active across 15+ European countries
+                <strong>Network:</strong> Active across many European countries
               </p>
             </div>
           </div>
@@ -89,9 +89,9 @@ export default function AboutPage() {
               </p>
               <div className="bg-bot-green/10 rounded-lg p-4">
                 <p className="text-sm text-bot-dark-green">
-                  <strong>Current Status:</strong> 5,000+ dream routes collected | 
-                  <strong>Top Route:</strong> London ↔ Berlin | 
-                  <strong>Impact:</strong> Data shared with EU transport ministers
+                  <strong>Current Status:</strong> A growing collection of dream routes | 
+                  <strong>Top Route:</strong> Frequently requested connections across Europe | 
+                  <strong>Impact:</strong> Data shared with EU transport stakeholders
                 </p>
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function AboutPage() {
               <div className="bg-green-50 rounded-lg p-4">
                 <p className="text-sm text-green-800">
                   <strong>Date:</strong> {EVENT_DATE_DISPLAY} ({EVENT_TIME_DISPLAY}) | 
-                  <strong>Stations:</strong> 50+ confirmed locations | 
+                  <strong>Stations:</strong> Many locations across Europe | 
                   <strong>Partnership:</strong> Stay Grounded climate coalition
                 </p>
               </div>
@@ -131,9 +131,9 @@ export default function AboutPage() {
               </p>
               <div className="bg-blue-50 rounded-lg p-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Network:</strong> 2,000+ active advocates | 
-                  <strong>Cities:</strong> 200+ with local coordinators | 
-                  <strong>Growth:</strong> +300 new advocates monthly
+                  <strong>Network:</strong> An active community of advocates | 
+                  <strong>Cities:</strong> Coordinators in multiple cities | 
+                  <strong>Growth:</strong> Consistent interest month over month
                 </p>
               </div>
             </div>
@@ -256,32 +256,28 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Key Achievements */}
+      {/* Key Achievements (soft copy) */}
       <div className="mb-16">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Key Achievements</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Since our founding, we&apos;ve made significant progress toward reviving European night trains.
+            Since our founding, we&apos;ve made steady progress toward reviving European night trains.
           </p>
         </div>
 
         <div className="bg-gray-50 rounded-2xl p-8">
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold text-bot-green mb-2">5,000+</div>
-              <p className="text-gray-600">Dream routes submitted from across Europe</p>
+              <p className="text-gray-600">Thousands of dream routes submitted from across Europe</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-bot-blue mb-2">50+</div>
-              <p className="text-gray-600">Cities confirmed for the {EVENT_DATE_DISPLAY} event</p>
+              <p className="text-gray-600">Dozens of cities preparing for {EVENT_DATE_DISPLAY}</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-bot-green mb-2">15</div>
-              <p className="text-gray-600">EU countries with active chapters</p>
+              <p className="text-gray-600">Active chapters across the European Union</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold text-bot-blue mb-2">100+</div>
-              <p className="text-gray-600">Media articles featuring our work</p>
+              <p className="text-gray-600">Regular media features and growing public awareness</p>
             </div>
           </div>
         </div>

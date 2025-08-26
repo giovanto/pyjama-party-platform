@@ -229,6 +229,7 @@ export default function PyjamaPartySignupForm() {
                     checked={formData.participation_level === level.id}
                     onChange={() => handleInputChange('participation_level', level.id)}
                     className="mr-3"
+                    aria-label={level.title.replace(/^[^\w]*/,'')} 
                     aria-describedby={errors.participation_level ? 'participation_level-error' : undefined}
                   />
                   <div className="font-medium">{level.title}</div>
@@ -249,10 +250,11 @@ export default function PyjamaPartySignupForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="party-name" className="block text-sm font-medium text-gray-700 mb-1">
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
+                id="party-name"
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
@@ -269,10 +271,11 @@ export default function PyjamaPartySignupForm() {
 
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="party-email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
+                id="party-email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
@@ -292,10 +295,11 @@ export default function PyjamaPartySignupForm() {
 
             {/* Preferred Station */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="party-station" className="block text-sm font-medium text-gray-700 mb-1">
                 Preferred Station <span className="text-red-500">*</span>
               </label>
               <input
+                id="party-station"
                 type="text"
                 value={formData.preferred_station}
                 onChange={(e) => handleInputChange('preferred_station', e.target.value)}
@@ -312,10 +316,11 @@ export default function PyjamaPartySignupForm() {
 
             {/* Message Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="party-message" className="block text-sm font-medium text-gray-700 mb-1">
                 Additional Message (Optional)
               </label>
               <textarea
+                id="party-message"
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
                 rows={3}

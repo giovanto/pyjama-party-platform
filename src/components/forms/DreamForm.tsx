@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAnalytics } from '@/components/layout/AnalyticsProvider';
+import { t } from '@/i18n';
 
 interface StationSuggestion {
   id: string;
@@ -237,7 +238,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.1, duration: 0.5 }}
         >
           <label htmlFor="dreamerName" className="block text-sm font-semibold text-gray-800 mb-2">
-            What&apos;s your name? (First name is enough)
+            {t('dreamForm.labels.name')}
           </label>
           <input
             type="text"
@@ -264,7 +265,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.15, duration: 0.5 }}
         >
           <label htmlFor="from" className="block text-sm font-semibold text-gray-800 mb-2">
-            Which station represents you?
+            {t('dreamForm.labels.from')}
           </label>
           <input
             type="text"
@@ -322,7 +323,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <label htmlFor="to" className="block text-sm font-semibold text-gray-800 mb-2">
-            Where would you like to wake up?
+            {t('dreamForm.labels.to')}
           </label>
           <input
             type="text"

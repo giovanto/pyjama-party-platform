@@ -34,7 +34,7 @@ export function PhaseNavigation({
   showAllPhases = false,
   showNextSteps = true
 }: PhaseNavigationProps) {
-  const pathname = usePathname();
+  const pathname = usePathname() || '/';
   
   // Auto-detect current phase if not provided
   const detectedPhase = getCurrentPhaseFromPath(pathname);

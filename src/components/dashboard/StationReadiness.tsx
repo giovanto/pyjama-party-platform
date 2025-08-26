@@ -81,9 +81,10 @@ export default function StationReadiness({
 
   if (error) {
     return (
-      <div className={`bg-red-50 border border-red-200 rounded-2xl p-8 text-center ${className}`}>
-        <div className="text-red-600 font-medium mb-2">Unable to load station readiness</div>
-        <div className="text-sm text-red-500">{error}</div>
+      <div className={`bg-red-50 border border-red-200 rounded-2xl p-8 text-center ${className}`} role="alert">
+        <div className="text-red-700 font-medium mb-1">Unable to load station readiness</div>
+        <div className="text-sm text-red-600 mb-1">{error}</div>
+        <div className="text-xs text-red-700">Check Supabase configuration.</div>
       </div>
     );
   }

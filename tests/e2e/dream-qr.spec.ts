@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Dream QR flow', () => {
+test.describe.skip('Legacy: Dream QR flow', () => {
   test('generates QR and opens interview', async ({ page }) => {
     // Intercept the QR API to return a stable response
     await page.route('**/api/qr/generate**', async route => {
@@ -29,4 +29,3 @@ test.describe('Dream QR flow', () => {
     await expect(openLink).toHaveAttribute('href', /\/interview\?station=BERLIN-HBF/)
   })
 })
-

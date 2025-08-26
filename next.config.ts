@@ -1,11 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Internationalization (initial locales; extend as content grows)
-  i18n: {
-    locales: ['en', 'de', 'fr'],
-    defaultLocale: 'en',
-  },
+  // Note: App Router uses route groups for i18n. Remove legacy i18n config to avoid warnings.
   // Build optimizations - Enable strict checking for production quality
   typescript: {
     // TypeScript errors will now be caught during build

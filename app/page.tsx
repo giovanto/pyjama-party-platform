@@ -7,6 +7,7 @@ import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
 import JourneyOverview from '@/components/journey/JourneyOverview';
 import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY, getCountdownTargetDate } from '@/lib/event';
+import { t } from '@/i18n';
 
 // Lazy load map for better performance
 const DreamMap = dynamic(() => import('@/components/map').then(mod => ({ default: mod.DreamMap })), {
@@ -36,10 +37,10 @@ export default function Home() {
           {/* Hero Title */}
           <div className="text-center mb-12">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Where Would You Like to Wake Up Tomorrow?
+                {t('home.hero.title')}
               </h1>
               <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
-                Share your dream night train route. Help us demonstrate demand for sustainable transport across Europe.
+                {t('home.hero.subtitle')}
               </p>
               
               {/* Back-on-Track Identity */}
@@ -56,45 +57,58 @@ export default function Home() {
             {/* Map Section */}
             <div className="mb-12" id="map">
               <div className="text-center mb-8">
-                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Dream Routes Across Europe</h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                  Explore community demand for night train connections. Each route represents advocacy for sustainable transport.
-                </p>
+                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{t('home.map.title')}</h2>
+                <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t('home.map.subtitle')}</p>
               </div>
-              
-              <div className="relative bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200">
-                {/* Dream Counter */}
-                <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 w-full max-w-xs">
-                  <DreamCounter className="shadow-lg" refreshInterval={60000} />
-                </div>
-                
-                {/* Layer Toggle */}
-                <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-30">
-                  <ProminentLayerToggle />
-                </div>
-                
-                {/* Map */}
-                <DreamMap 
-                  className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg"
-                  center={[10.0, 51.0]}
-                  zoom={4}
-                  showLayerManager={true}
-                  optimizePerformance={true}
-                  enableHeatMap={true}
-                  enableRealTimeUpdates={true}
-                  mobileOptimized={true}
-                />
-                
-                {/* Impact Dashboard CTA */}
-                <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20">
-                  <a 
-                    href="/impact" 
-                    className="inline-flex items-center bg-bot-green text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold hover:bg-bot-dark-green transition-all duration-300 shadow-lg text-sm sm:text-base"
-                  >
-                    📊 View Impact Dashboard
-                  </a>
-                </div>
-              </div>
+              {
+                !process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? (
+                  <div className="bg-white border border-amber-300 rounded-2xl p-6 sm:p-8 shadow-sm">
+                    <div className="text-center max-w-2xl mx-auto">
+                      <div className="text-2xl mb-2">⚠️ Map Unavailable</div>
+                      <p className="text-gray-700 mb-4">To view the interactive Europe map, set your Mapbox token.</p>
+                      <div className="text-left bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-900">
+                        <p className="font-semibold mb-2">Add to your .env.local:</p>
+                        <pre className="whitespace-pre-wrap">NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here</pre>
+                        <p className="mt-3">Then restart the dev server with <code>npm run dev</code>.</p>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200">
+                    {/* Dream Counter */}
+                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 w-full max-w-xs">
+                      <DreamCounter className="shadow-lg" refreshInterval={60000} />
+                    </div>
+                    
+                    {/* Layer Toggle */}
+                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-30">
+                      <ProminentLayerToggle />
+                    </div>
+                    
+                    {/* Map */}
+                    <DreamMap 
+                      className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg"
+                      center={[10.0, 51.0]}
+                      zoom={4}
+                      showLayerManager={true}
+                      optimizePerformance={true}
+                      enableHeatMap={true}
+                      enableRealTimeUpdates={true}
+                      mobileOptimized={true}
+                    />
+                    
+                    {/* Impact Dashboard CTA */}
+                    <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20">
+                      <a 
+                        href="/impact" 
+                        className="inline-flex items-center bg-bot-green text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold hover:bg-bot-dark-green transition-all duration-300 shadow-lg text-sm sm:text-base"
+                      >
+                        📊 View Impact Dashboard
+                      </a>
+                    </div>
+                  </div>
+                )
+              }
             </div>
 
             {/* Action Section */}
@@ -168,8 +182,8 @@ export default function Home() {
             {/* Community Teaser / Anchor */}
             <section id="community" className="py-12">
               <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Growing Action Group</h3>
-                <p className="text-gray-600 mb-4">Join climate activists across Europe coordinating station events and building momentum for night trains.</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('home.communityTeaser.title')}</h3>
+                <p className="text-gray-600 mb-4">{t('home.communityTeaser.subtitle')}</p>
                 <a href="/community" className="inline-flex items-center bg-bot-green text-white px-6 py-3 rounded-lg font-semibold hover:bg-bot-dark-green transition-colors">Go to Community</a>
               </div>
             </section>

@@ -41,10 +41,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "https://pyjama-party.back-on-track.eu/assets/og-image.jpg",
+        url: "/assets/brand/bot-logo.svg",
         width: 1200,
         height: 630,
-        alt: "Pajama Party Platform - European Night Train Advocacy",
+        alt: "Back-on-Track brand mark",
       },
     ],
   },
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Where Would You Like to Wake Up Tomorrow?",
     description: "Join the European night train revolution - share your dream routes!",
-    images: ["https://pyjama-party.back-on-track.eu/assets/og-image.jpg"],
+    images: ["/assets/brand/bot-logo.svg"],
   },
   robots: {
     index: true,

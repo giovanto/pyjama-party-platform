@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import DreamIndexPage from '@/app/dream/page'
+// Note: '@' alias maps to 'src', so app pages are outside of '@'.
+import DreamIndexPage from '@/../app/dream/page'
 
 describe('Dream page QR tool', () => {
   beforeEach(() => {
@@ -32,4 +33,3 @@ describe('Dream page QR tool', () => {
     })
   })
 })
-

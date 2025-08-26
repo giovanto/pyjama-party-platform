@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback, useMemo, memo } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo, memo, ReactNode } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapLayerManager from './MapLayerManager';
@@ -39,6 +39,8 @@ interface DreamMapProps {
   enableAdvocacyPopups?: boolean;
   enableMapExport?: boolean;
   mobileOptimized?: boolean;
+  // Optional: when testing or when map cannot load, render a fallback node instead of the default error
+  fallback?: ReactNode;
 }
 
 const DreamMap = memo(function DreamMap({ 
@@ -53,7 +55,8 @@ const DreamMap = memo(function DreamMap({
   enableRealTimeUpdates = true,
   enableAdvocacyPopups = true,
   enableMapExport = true,
-  mobileOptimized = true
+  mobileOptimized = true,
+  fallback
 }: DreamMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
@@ -593,10 +596,13 @@ const DreamMap = memo(function DreamMap({
   };
 
   if (error) {
+    if (fallback) {
+      return <>{fallback}</>;
+    }
     return (
-      <div className={`dream-map-error bg-gray-100 border border-gray-300 rounded-lg p-8 text-center ${className}`} role="alert" aria-live="assertive">
-        <div className="text-red-600 mb-2"><span role="img" aria-label="warning">⚠️</span> Map Error</div>
-        <p className="text-gray-600 text-sm">{error}</p>
+      <div className={`dream-map-error bg-white border border-amber-300 rounded-lg p-8 text-center ${className}`} role="alert" aria-live="assertive">
+        <div className="text-amber-700 font-semibold mb-2"><span role="img" aria-label="warning">⚠️</span> Map Unavailable</div>
+        <p className="text-gray-700 text-sm">{error}</p>
       </div>
     );
   }

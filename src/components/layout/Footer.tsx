@@ -10,8 +10,8 @@ export function Footer() {
         <div className="footer__content grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="footer__section">
             <Image 
-              src="/assets/bot-logo.svg" 
-              alt="Back-on-Track" 
+              src="/assets/brand/bot-logo.svg" 
+              alt="Back-on-Track logo" 
               width={120} 
               height={40}
               className="footer__logo h-8 w-auto mb-4"

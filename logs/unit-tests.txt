@@ -1,0 +1,15 @@
+
+ RUN  v3.2.4 /Users/giovi/Documents/Projects/pajama-party-platform
+
+
+⎯⎯⎯⎯ Unhandled Rejection ⎯⎯⎯⎯⎯
+Error: kill EPERM
+ ❯ ChildProcess.kill node:internal/child_process:511:26
+ ❯ ProcessWorker.terminate node_modules/tinypool/dist/index.js:124:16
+ ❯ WorkerInfo.destroy node_modules/tinypool/dist/index.js:428:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'kill' }
+
+
+

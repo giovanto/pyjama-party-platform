@@ -46,8 +46,8 @@ export function Navigation() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
               <Image 
-                src="/assets/bot-logo.svg" 
-                alt="Back-on-Track" 
+                src="/assets/brand/bot-logo.svg" 
+                alt="Back-on-Track logo" 
                 width={120} 
                 height={40}
                 className="h-8 w-auto"
@@ -95,8 +95,8 @@ export function Navigation() {
               {/* Logo */}
               <Link href="/" className="flex items-center" onClick={closeMobileMenu}>
                 <Image 
-                  src="/assets/bot-logo.svg" 
-                  alt="Back-on-Track" 
+                  src="/assets/brand/bot-logo.svg" 
+                  alt="Back-on-Track logo" 
                   width={100} 
                   height={32}
                   className="h-6 w-auto"

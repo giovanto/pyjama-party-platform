@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { DreamCounter, GrowthChart, PopularRoutes, StationReadiness, DataExport } from '@/components/dashboard';
-import { BarChart3, TrendingUp, MapPin, Database, Users, Target } from 'lucide-react';
+import { BarChart3, TrendingUp, MapPin, Database, Target } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Impact Dashboard | Back-on-Track Movement',
@@ -30,58 +30,27 @@ export default function DashboardPage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {/* Dreams Counter */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        {/* Key Metric */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-1">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Total Dreams</p>
+              <div className="w-full">
+                <p className="text-sm font-medium text-gray-600 mb-2 flex items-center gap-2">
+                  <Target className="h-4 w-4 text-bot-blue" /> Live Dreams
+                </p>
                 <DreamCounter />
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Target className="h-6 w-6 text-blue-600" />
-              </div>
             </div>
           </div>
-
-          {/* Station Readiness */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Stations Ready</p>
-                <StationReadiness compact />
-              </div>
-              <div className="p-3 bg-green-100 rounded-lg">
-                <MapPin className="h-6 w-6 text-green-600" />
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 lg:col-span-2">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-lg font-semibold text-gray-900">What’s inside</h2>
+              <div className="flex items-center space-x-2 text-sm text-gray-500">
+                <TrendingUp className="h-4 w-4" />
+                <span>Real-time, no placeholders</span>
               </div>
             </div>
-          </div>
-
-          {/* Growth Trend */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">7-Day Growth</p>
-                <div className="text-2xl font-bold text-gray-900">+12.5%</div>
-              </div>
-              <div className="p-3 bg-bot-green/20 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-bot-green" />
-              </div>
-            </div>
-          </div>
-
-          {/* Active Participants */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">Active Users</p>
-                <div className="text-2xl font-bold text-gray-900">2,847</div>
-              </div>
-              <div className="p-3 bg-orange-100 rounded-lg">
-                <Users className="h-6 w-6 text-orange-600" />
-              </div>
-            </div>
+            <p className="text-sm text-gray-600">Explore growth trends, most requested routes, and station readiness below.</p>
           </div>
         </div>
 

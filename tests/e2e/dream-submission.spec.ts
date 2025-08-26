@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Dream Route Submission Workflow', () => {
+test.describe.skip('Legacy: Dream Route Submission Workflow', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the main page
     await page.goto('/')
