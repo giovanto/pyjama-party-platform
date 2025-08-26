@@ -98,7 +98,7 @@ NODE_ENV=production
 DATABASE_URL=postgresql://pyjama_user:secure_password@localhost:5432/pyjama_party
 
 # Mapbox (required)
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_production_token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.your_production_token
 
 # Supabase (if using)
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co

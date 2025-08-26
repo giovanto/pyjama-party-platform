@@ -152,9 +152,9 @@ export default function AboutPage() {
               </p>
               <div className="bg-orange-50 rounded-lg p-4">
                 <p className="text-sm text-orange-800">
-                  <strong>Organizers:</strong> 150+ station leaders | 
-                  <strong>Training:</strong> Monthly workshops | 
-                  <strong>Resources:</strong> Complete organizer toolkit available
+                  <strong>Organizers:</strong> Local station leads across Europe | 
+                  <strong>Training:</strong> Regular workshops | 
+                  <strong>Resources:</strong> Organizer toolkit available
                 </p>
               </div>
             </div>
@@ -173,9 +173,9 @@ export default function AboutPage() {
               </p>
               <div className="bg-bot-blue/10 rounded-lg p-4">
                 <p className="text-sm text-bot-blue">
-                  <strong>Partners:</strong> 25+ climate organizations | 
-                  <strong>Reach:</strong> 50,000+ newsletter subscribers | 
-                  <strong>Impact:</strong> Featured in 100+ media articles
+                  <strong>Partners:</strong> Climate and transport organizations | 
+                  <strong>Reach:</strong> Growing newsletter and social channels | 
+                  <strong>Impact:</strong> Media features and public awareness
                 </p>
               </div>
             </div>
@@ -271,7 +271,7 @@ export default function AboutPage() {
               <p className="text-gray-600">Thousands of dream routes submitted from across Europe</p>
             </div>
             <div className="text-center">
-              <p className="text-gray-600">Dozens of cities preparing for {EVENT_DATE_DISPLAY}</p>
+              <p className="text-gray-600">Cities across Europe preparing for {EVENT_DATE_DISPLAY}</p>
             </div>
             <div className="text-center">
               <p className="text-gray-600">Active chapters across the European Union</p>

@@ -41,10 +41,10 @@ export const metadata: Metadata = {
     locale: "en_US",
     images: [
       {
-        url: "/assets/brand/bot-logo.svg",
+        url: "/assets/brand/og-default.jpg",
         width: 1200,
         height: 630,
-        alt: "Back-on-Track brand mark",
+        alt: "Back-on-Track night train movement — share your dream route",
       },
     ],
   },
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Where Would You Like to Wake Up Tomorrow?",
     description: "Join the European night train revolution - share your dream routes!",
-    images: ["/assets/brand/bot-logo.svg"],
+    images: ["/assets/brand/og-default.jpg"],
   },
   robots: {
     index: true,
@@ -99,6 +99,12 @@ export default function RootLayout({
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       </head>
       <body className="font-mark antialiased bg-white text-gray-900 overflow-x-hidden">
+        {/* Expose mapbox token presence to client code/tests */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__MAPBOX_TOKEN_PRESENT__ = ${Boolean(process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN)};`,
+          }}
+        />
         {/* Skip to main content for accessibility */}
         <a 
           href="#main-content" 
@@ -131,17 +137,20 @@ export default function RootLayout({
           </DataProvider>
         </AnalyticsProvider>
         
-        {/* Service Worker registration for offline functionality */}
+        {/* Service Worker registration (production only) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
+              (function(){
+                var isProd = ${process.env.NODE_ENV === 'production' ? 'true' : 'false'};
+                if (isProd && typeof navigator !== 'undefined' && 'serviceWorker' in navigator) {
+                  window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                      console.log('ServiceWorker registration failed: ', err);
+                    });
                   });
-                });
-              }
+                }
+              })();
             `,
           }}
         />

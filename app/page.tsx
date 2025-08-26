@@ -1,33 +1,16 @@
-'use client';
-
 import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-import { DreamForm } from '@/components/forms';
 import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
 import JourneyOverview from '@/components/journey/JourneyOverview';
 import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY, getCountdownTargetDate } from '@/lib/event';
+import { getMapboxToken } from '@/lib/env';
 import { t } from '@/i18n';
+import HomeMapSection from '@/components/home/HomeMapSection';
 
-// Lazy load map for better performance
-const DreamMap = dynamic(() => import('@/components/map').then(mod => ({ default: mod.DreamMap })), {
-  ssr: false,
-  loading: () => (
-    <div className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg bg-gray-100 animate-pulse flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bot-green mx-auto mb-4"></div>
-        <p className="text-gray-600 font-medium">Loading Europe map...</p>
-      </div>
-    </div>
-  ),
-});
-
-const ProminentLayerToggle = dynamic(() => import('@/components/map').then(mod => ({ default: mod.ProminentLayerToggle })), {
-  ssr: false,
-  loading: () => <div className="w-24 h-10 bg-gray-200 rounded-lg animate-pulse"></div>,
-});
+// Map section is encapsulated in a client component
 
 export default function Home() {
+  const hasMapToken = Boolean(getMapboxToken());
   return (
     <main className="main">
       {/* Hero Section */}
@@ -36,7 +19,7 @@ export default function Home() {
           
           {/* Hero Title */}
           <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 suppressHydrationWarning className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 {t('home.hero.title')}
               </h1>
               <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
@@ -60,114 +43,26 @@ export default function Home() {
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{t('home.map.title')}</h2>
                 <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t('home.map.subtitle')}</p>
               </div>
-              {
-                !process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN ? (
-                  <div className="bg-white border border-amber-300 rounded-2xl p-6 sm:p-8 shadow-sm">
-                    <div className="text-center max-w-2xl mx-auto">
-                      <div className="text-2xl mb-2">⚠️ Map Unavailable</div>
-                      <p className="text-gray-700 mb-4">To view the interactive Europe map, set your Mapbox token.</p>
-                      <div className="text-left bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-900">
-                        <p className="font-semibold mb-2">Add to your .env.local:</p>
-                        <pre className="whitespace-pre-wrap">NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token_here</pre>
-                        <p className="mt-3">Then restart the dev server with <code>npm run dev</code>.</p>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-200">
-                    {/* Dream Counter */}
-                    <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-20 w-full max-w-xs">
-                      <DreamCounter className="shadow-lg" refreshInterval={60000} />
-                    </div>
-                    
-                    {/* Layer Toggle */}
-                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 z-30">
-                      <ProminentLayerToggle />
-                    </div>
-                    
-                    {/* Map */}
-                    <DreamMap 
-                      className="h-96 sm:h-[500px] lg:h-[600px] w-full rounded-lg"
-                      center={[10.0, 51.0]}
-                      zoom={4}
-                      showLayerManager={true}
-                      optimizePerformance={true}
-                      enableHeatMap={true}
-                      enableRealTimeUpdates={true}
-                      mobileOptimized={true}
-                    />
-                    
-                    {/* Impact Dashboard CTA */}
-                    <div className="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 z-20">
-                      <a 
-                        href="/impact" 
-                        className="inline-flex items-center bg-bot-green text-white px-4 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold hover:bg-bot-dark-green transition-all duration-300 shadow-lg text-sm sm:text-base"
-                      >
-                        📊 View Impact Dashboard
-                      </a>
-                    </div>
-                  </div>
-                )
-              }
+              <HomeMapSection />
             </div>
 
-            {/* Action Section */}
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-              {/* Left: Dream Form */}
-              <div className="lg:order-1 order-2">
-                <div className="text-center mb-6 lg:text-left">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Share Your Dream Route</h3>
-                  <p className="text-gray-600">
-                    Where would you travel by night train? Your input helps build the advocacy case.
-                  </p>
-                </div>
-                <DreamForm />
-              </div>
-
-              {/* Right: September Event */}
-              <div className="lg:order-2 order-1 lg:sticky lg:top-8">
-                <div className="bg-gradient-to-r from-bot-green to-bot-blue text-white rounded-2xl p-8 shadow-lg">
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-bold mb-2">European Pajama Party</h3>
-                    <p className="text-xl font-semibold text-bot-light-green mb-4">{EVENT_DATE_DISPLAY}</p>
-                    <div className="mb-4">
-                      <Countdown targetDate={getCountdownTargetDate()} className="flex justify-center" />
-                    </div>
-                    <p className="text-white/90 text-sm">{EVENT_TIME_DISPLAY}</p>
-                  </div>
-                  
-                  <div className="space-y-4 mb-6">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                      <h4 className="font-bold mb-2 flex items-center">
-                        <span className="mr-2">🎧</span>
-                        Silent Disco at Stations
-                      </h4>
-                      <p className="text-white/90 text-sm">
-                        Synchronized music across European train stations
-                      </p>
-                    </div>
-                    
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                      <h4 className="font-bold mb-2 flex items-center">
-                        <span className="mr-2">📹</span>
-                        Live Stream Connection
-                      </h4>
-                      <p className="text-white/90 text-sm">
-                        Watch all participating cities simultaneously
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <a 
-                      href="/interview"
-                      className="inline-flex items-center bg-white text-bot-green px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                    >
-                      🎤 Interview Mode
-                    </a>
-                  </div>
-                </div>
-              </div>
+            {/* Action CTAs */}
+            <div className="grid md:grid-cols-3 gap-4">
+              <a href="/dream" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="text-3xl mb-2">✨</div>
+                <div className="font-bold text-lg">Add Your Dream</div>
+                <div className="text-gray-600 text-sm">Share your night train route</div>
+              </a>
+              <a href="/pyjama-party" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="text-3xl mb-2">🎉</div>
+                <div className="font-bold text-lg">Join the Pajama Party</div>
+                <div className="text-gray-600 text-sm">Participate or organize locally</div>
+              </a>
+              <a href="/dashboard" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+                <div className="text-3xl mb-2">📊</div>
+                <div className="font-bold text-lg">Impact Dashboard</div>
+                <div className="text-gray-600 text-sm">Live data and exports</div>
+              </a>
             </div>
           </div>
         </section>
@@ -236,7 +131,7 @@ export default function Home() {
                 </a>
                 
                 <a 
-                  href="/impact"
+                  href="/dashboard"
                   className="bg-bot-green/5 rounded-lg p-6 text-center hover:bg-bot-green/10 transition-colors border border-bot-green/20"
                 >
                   <div className="text-3xl mb-3">📈</div>

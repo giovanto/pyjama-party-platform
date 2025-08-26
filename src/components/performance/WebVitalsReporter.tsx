@@ -17,7 +17,8 @@ export default function WebVitalsReporter() {
 
     const reportWebVitals = async () => {
       try {
-        const { getCLS, getFID, getFCP, getLCP, getTTFB } = await import('web-vitals');
+        // web-vitals v5 API uses onCLS/onFID/... handlers
+        const { onCLS, onFID, onFCP, onLCP, onTTFB } = await import('web-vitals');
         
         const sendMetric = (metric: WebVitalsMetric) => {
           // Send to analytics
@@ -58,11 +59,11 @@ export default function WebVitalsReporter() {
         };
 
         // Track all Core Web Vitals
-        getCLS(sendMetric);
-        getFID(sendMetric);
-        getFCP(sendMetric);
-        getLCP(sendMetric);
-        getTTFB(sendMetric);
+        onCLS(sendMetric);
+        onFID(sendMetric);
+        onFCP(sendMetric);
+        onLCP(sendMetric);
+        onTTFB(sendMetric);
 
       } catch (error) {
         console.warn('Failed to load web-vitals:', error);

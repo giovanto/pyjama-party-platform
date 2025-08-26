@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 /**
  * RealityLayerData - Comprehensive European night train network data
@@ -359,49 +359,73 @@ export const NETWORK_GAPS = [
  * Custom hook to provide reality layer data with filtering and analysis
  */
 export function useRealityLayerData() {
-  const stationData = useMemo(() => {
-    return REALITY_STATIONS.map(station => ({
-      type: 'Feature' as const,
-      geometry: {
-        type: 'Point' as const,
-        coordinates: station.coordinates
-      },
-      properties: {
-        ...station,
-        // Add computed properties for visualization
-        service_quality: station.has_night_train ? 
-          (station.operator.length > 1 ? 'excellent' : 'good') : 'none',
-        connectivity_score: station.has_night_train ? 
-          Math.min(station.operator.length * 25, 100) : 0
-      }
-    }));
-  }, []);
+  const [stations, setStations] = useState<any[] | null>(null);
+  const [routes, setRoutes] = useState<any[] | null>(null);
 
-  const routeData = useMemo(() => {
-    return REALITY_ROUTES.map(route => ({
-      type: 'Feature' as const,
-      geometry: {
-        type: 'LineString' as const,
-        coordinates: route.coordinates
-      },
-      properties: {
-        ...route,
-        // Add computed properties
-        service_quality: route.frequency === 'Daily' ? 'excellent' :
-          route.frequency.includes('week') ? 'good' :
-          route.frequency === 'Seasonal' ? 'limited' : 'suspended',
-        route_importance: route.stations.length > 4 ? 'major' : 'regional'
+  // Fetch pre-generated static dataset first (instant load), then fall back
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        // Static file preferred for instant load
+        let res = await fetch('/reality-network.geojson', { cache: 'force-cache' });
+        if (!res.ok) {
+          // Fallback to dynamic API if static not present
+          res = await fetch('/api/reality/map', { cache: 'no-store' });
+        }
+        if (res.ok) {
+          const data = await res.json();
+          if (!cancelled) {
+            const stationsData = Array.isArray(data.stations)
+              ? data.stations
+              : (data.stations?.features || []);
+            const routesData = Array.isArray(data.routes)
+              ? data.routes
+              : (data.routes?.features || []);
+            setStations(stationsData);
+            setRoutes(routesData);
+          }
+          return;
+        }
+      } catch (e) {
+        console.warn('Falling back to static reality dataset:', e);
       }
-    }));
+      // Fallback to static arrays if API unavailable
+      const stationData = REALITY_STATIONS.map(station => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: station.coordinates },
+        properties: {
+          ...station,
+          service_quality: station.has_night_train ? (station.operator.length > 1 ? 'excellent' : 'good') : 'none',
+          connectivity_score: station.has_night_train ? Math.min(station.operator.length * 25, 100) : 0
+        }
+      }));
+      const routeData = REALITY_ROUTES.map(route => ({
+        type: 'Feature' as const,
+        geometry: { type: 'LineString' as const, coordinates: route.coordinates },
+        properties: {
+          ...route,
+          service_quality: route.frequency === 'Daily' ? 'excellent' :
+            route.frequency.includes('week') ? 'good' :
+            route.frequency === 'Seasonal' ? 'limited' : 'suspended',
+          route_importance: route.stations.length > 4 ? 'major' : 'regional'
+        }
+      }));
+      if (!cancelled) {
+        setStations(stationData);
+        setRoutes(routeData);
+      }
+    })();
+    return () => { cancelled = true; };
   }, []);
 
   // Analysis functions
   const getNetworkCoverage = useMemo(() => {
-    const totalStations = REALITY_STATIONS.length;
-    const nightTrainStations = REALITY_STATIONS.filter(s => s.has_night_train).length;
+    const totalStations = (stations?.length ?? REALITY_STATIONS.length);
+    const nightTrainStations = (stations?.length ?? 0); // API currently returns only night-train stations
     return {
       coverage_percentage: Math.round((nightTrainStations / totalStations) * 100),
-      active_routes: REALITY_ROUTES.filter(r => r.frequency !== 'Suspended').length,
+      active_routes: (routes?.length ?? REALITY_ROUTES.filter(r => r.frequency !== 'Suspended').length),
       major_operators: ['ÖBB Nightjet', 'SJ', 'SNCF', 'Snälltåget'],
       network_gaps: NETWORK_GAPS.length
     };
@@ -435,8 +459,8 @@ export function useRealityLayerData() {
   }, []);
 
   return {
-    stations: stationData,
-    routes: routeData,
+    stations: stations || [],
+    routes: routes || [],
     gaps: NETWORK_GAPS,
     analysis: {
       coverage: getNetworkCoverage,

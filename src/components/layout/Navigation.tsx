@@ -17,6 +17,7 @@ const navigation: NavItem[] = [
   { label: 'Home', href: '/', icon: '🏠' },
   { label: 'Dream', href: '/dream', icon: '🌙' },
   { label: 'Event', href: '/pyjama-party', icon: '🎉' },
+  { label: 'QR', href: '/interview/qr', icon: '🔗' },
   { label: 'Dashboard', href: '/dashboard', icon: '📊' },
   { label: 'Community', href: '/community', icon: '👥' },
   { label: 'About', href: '/about', icon: 'ℹ️' }

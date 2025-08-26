@@ -223,25 +223,25 @@ export default function PyjamaPartyPage() {
             </div>
           </div>
 
-          {/* Movement Stats */}
+          {/* Movement Highlights (soft copy) */}
           <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-xl">
-            <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">Movement Impact</h3>
+            <h3 className="text-2xl font-bold text-center text-gray-900 mb-8">Movement Highlights</h3>
             <div className="grid md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">150+</div>
-                <div className="text-gray-600">Partner Organizations</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">Coalitions</div>
+                <div className="text-gray-600">Working with climate partners</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-bot-green mb-2">500k+</div>
-                <div className="text-gray-600">Community Members</div>
+                <div className="text-3xl font-bold text-bot-green mb-2">Community</div>
+                <div className="text-gray-600">Growing support across Europe</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600 mb-2">25</div>
-                <div className="text-gray-600">Countries Participating</div>
+                <div className="text-3xl font-bold text-green-600 mb-2">Stations</div>
+                <div className="text-gray-600">Local organizers stepping up</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600 mb-2">2M+</div>
-                <div className="text-gray-600">Social Media Reach</div>
+                <div className="text-3xl font-bold text-orange-600 mb-2">Reach</div>
+                <div className="text-gray-600">Spreading the message together</div>
               </div>
             </div>
           </div>

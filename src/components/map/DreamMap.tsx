@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState, useCallback, useMemo, memo, ReactNode } from 'react';
 import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import MapLayerManager from './MapLayerManager';
 import MapPerformanceOptimizer from './MapPerformanceOptimizer';
 import HeatMapOverlay from './HeatMapOverlay';
@@ -11,6 +10,7 @@ import MapExportTool from './MapExportTool';
 import { useRealityLayerData } from './RealityLayerData';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useDreams } from '@/providers/DataProvider';
+import { getMapboxToken } from '@/lib/env';
 
 interface DreamRoute {
   id: string;
@@ -116,21 +116,27 @@ const DreamMap = memo(function DreamMap({
   // Transform dreams from global provider to DreamRoute format
   const dreamRoutes = useMemo(() => {
     if (!dreams) return routes || [];
-    
-    return dreams.map((dream: any) => ({
-      id: dream.id.toString(),
-      from: {
-        name: dream.from_station,
-        coordinates: [dream.from_longitude || 0, dream.from_latitude || 0] as [number, number]
-      },
-      to: {
-        name: dream.to_station,
-        coordinates: [dream.to_longitude || 0, dream.to_latitude || 0] as [number, number]
-      },
-      dreamerName: dream.dreamer_name,
-      count: 1, // For now, each dream counts as 1
-      createdAt: dream.created_at
-    }));
+    const transformed = dreams
+      .map((dream: any) => ({
+        id: dream.id?.toString(),
+        from: {
+          name: dream.from_station,
+          coordinates: [dream.from_longitude, dream.from_latitude] as [number | null, number | null]
+        },
+        to: {
+          name: dream.to_station,
+          coordinates: [dream.to_longitude, dream.to_latitude] as [number | null, number | null]
+        },
+        dreamerName: dream.dreamer_name,
+        count: 1,
+        createdAt: dream.created_at
+      }))
+      // Filter out routes with missing coordinates to avoid 0,0 artifacts
+      .filter(route => 
+        typeof route.from.coordinates[0] === 'number' && typeof route.from.coordinates[1] === 'number' &&
+        typeof route.to.coordinates[0] === 'number' && typeof route.to.coordinates[1] === 'number'
+      ) as any[];
+    return transformed;
   }, [dreams, routes]);
 
   // Set up global refresh function for form submissions  
@@ -142,7 +148,7 @@ const DreamMap = memo(function DreamMap({
   }, [refetch]);
 
   useEffect(() => {
-    const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+    const mapboxToken = getMapboxToken();
     
     if (!mapboxToken) {
       setError('Mapbox token not configured. Please set NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN environment variable.');

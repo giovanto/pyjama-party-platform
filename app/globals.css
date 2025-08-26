@@ -45,6 +45,7 @@
 
 @import "../src/styles/brand.css";
 @import "../src/styles/animations.css";
+@import 'mapbox-gl/dist/mapbox-gl.css';
 
 /* V1 brand styles ported to V3 */
 :root {

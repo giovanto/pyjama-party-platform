@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAnalytics } from '@/components/layout/AnalyticsProvider';
 import { t } from '@/i18n';
@@ -28,9 +28,10 @@ interface DreamFormData {
 interface DreamFormProps {
   onSubmit?: (data: DreamFormData) => Promise<void>;
   className?: string;
+  mode?: 'dream_only' | 'full';
 }
 
-export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) {
+export default function DreamForm({ onSubmit, className = '', mode = 'full' }: DreamFormProps) {
   const { trackEvent } = useAnalytics();
   
   const [formData, setFormData] = useState<DreamFormData>({
@@ -53,6 +54,19 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showTierTwo, setShowTierTwo] = useState(false);
+
+  useEffect(() => {
+    if (mode === 'dream_only') {
+      setFormData(prev => ({
+        ...prev,
+        tier: 'dreamer',
+        pyjamaPartyInterest: false,
+        participationLevel: 'dream_only',
+        email: ''
+      }));
+      setShowTierTwo(false);
+    }
+  }, [mode]);
 
   const searchStations = async (query: string): Promise<StationSuggestion[]> => {
     if (query.length < 2) return [];
@@ -111,7 +125,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     if (!formData.dreamerName.trim()) newErrors.dreamerName = 'Name is required';
     
     // Email validation based on tier
-    if (formData.tier === 'participant' || formData.pyjamaPartyInterest) {
+    if (mode !== 'dream_only' && (formData.tier === 'participant' || formData.pyjamaPartyInterest)) {
       if (!formData.email.trim()) {
         newErrors.email = 'Email is required for pyjama party participation';
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -374,6 +388,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
         </motion.div>
 
         {/* Two-Tier Engagement System */}
+        {mode !== 'dream_only' && (
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -482,9 +497,10 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             </div>
           </div>
         </motion.div>
+        )}
 
         {/* Tier 2: Email Collection */}
-        {showTierTwo && (
+        {mode !== 'dream_only' && showTierTwo && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
@@ -570,14 +586,14 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             <>
               <span className="inline-block animate-spin mr-2" aria-hidden="true">🌍</span>
               <span id="submit-status" aria-live="polite">
-                {formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
+                {mode === 'dream_only' || formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
               </span>
             </>
           ) : (
             <>
-              {formData.participationLevel === 'dream_only' && '🗺️ Add my dream to the map'}
-              {formData.participationLevel === 'join_party' && '🎉 Join pyjama party + add dream'}
-              {formData.participationLevel === 'organize_party' && '🎪 Organize pyjama party + add dream'}
+              {(mode === 'dream_only' || formData.participationLevel === 'dream_only') && '🗺️ Add my dream to the map'}
+              {mode !== 'dream_only' && formData.participationLevel === 'join_party' && '🎉 Join pyjama party + add dream'}
+              {mode !== 'dream_only' && formData.participationLevel === 'organize_party' && '🎪 Organize pyjama party + add dream'}
             </>
           )}
         </motion.button>

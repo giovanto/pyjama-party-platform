@@ -20,19 +20,25 @@ vi.mock('@/providers/DataProvider', () => ({
   }),
 }))
 
-import Home from '@/../app/page'
+// Defer importing Home until after env is set in tests
 
 describe('Homepage map token guard', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('shows instruction card when no Mapbox token present', () => {
+  it('shows instruction card when no Mapbox token present', async () => {
     const original = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
     // Ensure undefined for this test
     // @ts-ignore
     process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN = undefined
 
+    // Explicitly mark token absent for client code path
+    // @ts-ignore
+    global.window = global.window || ({} as any)
+    // @ts-ignore
+    global.window.__MAPBOX_TOKEN_PRESENT__ = false
+    const { default: Home } = await import('@/../app/page')
     render(React.createElement(Home))
     expect(screen.getByText(/Map Unavailable/i)).toBeInTheDocument()
     expect(screen.getByText(/Add to your .env.local/i)).toBeInTheDocument()

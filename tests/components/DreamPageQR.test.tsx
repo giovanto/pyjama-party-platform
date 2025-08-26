@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 // Note: '@' alias maps to 'src', so app pages are outside of '@'.
-import DreamIndexPage from '@/../app/dream/page'
+import InterviewQRPage from '@/../app/interview/qr/page'
 
 describe('Dream page QR tool', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('Dream page QR tool', () => {
       })
     })
 
-    render(<DreamIndexPage />)
+    render(<InterviewQRPage />)
 
     fireEvent.change(screen.getByLabelText(/Station Code/i), { target: { value: 'BERLIN-HBF' } })
     fireEvent.change(screen.getByLabelText(/Station Name/i), { target: { value: 'Berlin Hauptbahnhof' } })

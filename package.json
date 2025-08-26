@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build:reality": "node scripts/build-reality-geojson.js",
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
@@ -21,7 +22,7 @@
     "test:e2e:ui": "playwright test --ui",
     "test:all": "npm run test && npm run test:api && npm run test:supabase && npm run test:e2e",
     "check-deployment": "node scripts/check-deployment.js",
-    "prebuild": "npm run check-deployment",
+    "prebuild": "npm run build:reality && npm run check-deployment",
     "lighthouse": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json --chrome-flags='--headless'",
     "perf:test": "npm run build && npm run lighthouse",
     "perf:test-quota-safe": "node scripts/quota-safe-performance-test.js",

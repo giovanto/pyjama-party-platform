@@ -33,7 +33,7 @@ Ready to move from development to production deployment for the September 26, 20
   # Required for data import
   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-  NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+  NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token
   ```
 - [ ] **TripHop Data Import**
   ```bash

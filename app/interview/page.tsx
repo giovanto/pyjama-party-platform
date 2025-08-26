@@ -142,7 +142,7 @@ function InterviewContent() {
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Volunteer Dashboard (collapsible) */}

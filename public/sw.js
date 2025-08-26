@@ -22,16 +22,27 @@ const API_ENDPOINTS = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE).then(cache => {
-        return cache.addAll(STATIC_ASSETS);
-      }),
-      caches.open(API_CACHE)
-    ]).then(() => {
+  event.waitUntil((async () => {
+    try {
+      const staticCache = await caches.open(STATIC_CACHE);
+      // Add assets individually; skip any that 404 to avoid install failure
+      await Promise.all(
+        STATIC_ASSETS.map(async (url) => {
+          try {
+            const resp = await fetch(url, { cache: 'no-cache' });
+            if (resp && resp.ok) {
+              await staticCache.put(url, resp.clone());
+            }
+          } catch (e) {
+            // Ignore missing assets in development
+          }
+        })
+      );
+      await caches.open(API_CACHE);
+    } finally {
       self.skipWaiting();
-    })
-  );
+    }
+  })());
 });
 
 self.addEventListener('activate', (event) => {
