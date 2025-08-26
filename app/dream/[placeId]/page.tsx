@@ -211,7 +211,7 @@ export default async function DreamDestinationPage({ params }: DreamDestinationP
           )}
 
           {/* Movement Introduction */}
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-12">
+          <div className="bg-gradient-to-r from-blue-50 to-bot-blue/20 rounded-2xl p-8 mb-12">
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -261,9 +261,9 @@ export default async function DreamDestinationPage({ params }: DreamDestinationP
               </p>
             </div>
 
-            <div className="text-center p-6 bg-purple-50 rounded-xl">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Calendar className="h-6 w-6 text-purple-600" />
+            <div className="text-center p-6 bg-bot-green/10 rounded-xl">
+              <div className="w-12 h-12 bg-bot-green/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Calendar className="h-6 w-6 text-bot-green" />
               </div>
               <h4 className="font-semibold text-gray-900 mb-2">September 26, 2025</h4>
               <p className="text-gray-600 text-sm">

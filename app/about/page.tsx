@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY } from '@/lib/event';
 
 export const metadata: Metadata = {
   title: 'About Back-on-Track | European Night Train Advocacy',
@@ -77,7 +78,7 @@ export default function AboutPage() {
         <div className="space-y-8">
           {/* Phase 1: Dream */}
           <div className="flex items-start space-x-6 bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-300">
-            <div className="bg-purple-100 p-4 rounded-xl">
+            <div className="bg-bot-green/20 p-4 rounded-xl">
               <span className="text-3xl">🌙</span>
             </div>
             <div className="flex-1">
@@ -86,8 +87,8 @@ export default function AboutPage() {
                 <strong>Share your night train dreams.</strong> Every journey starts with a destination in mind. 
                 Tell us where you&apos;d like to wake up tomorrow, and help us map the routes Europeans really want.
               </p>
-              <div className="bg-purple-50 rounded-lg p-4">
-                <p className="text-sm text-purple-800">
+              <div className="bg-bot-green/10 rounded-lg p-4">
+                <p className="text-sm text-bot-dark-green">
                   <strong>Current Status:</strong> 5,000+ dream routes collected | 
                   <strong>Top Route:</strong> London ↔ Berlin | 
                   <strong>Impact:</strong> Data shared with EU transport ministers
@@ -104,12 +105,12 @@ export default function AboutPage() {
             <div className="flex-1">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Phase 2: Participate</h3>
               <p className="text-gray-600 mb-4">
-                <strong>Join the September 26 European Pajama Party.</strong> Put on your pajamas and gather 
+                <strong>Join the European Pajama Party on {EVENT_DATE_DISPLAY}.</strong> Put on your pajamas and gather 
                 at train stations across Europe. Show policymakers that citizens are ready for night trains.
               </p>
               <div className="bg-green-50 rounded-lg p-4">
                 <p className="text-sm text-green-800">
-                  <strong>Date:</strong> September 26, 2025 (19:00-20:00 CEST) | 
+                  <strong>Date:</strong> {EVENT_DATE_DISPLAY} ({EVENT_TIME_DISPLAY}) | 
                   <strong>Stations:</strong> 50+ confirmed locations | 
                   <strong>Partnership:</strong> Stay Grounded climate coalition
                 </p>
@@ -161,7 +162,7 @@ export default function AboutPage() {
 
           {/* Phase 5: Community */}
           <div className="flex items-start space-x-6 bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-300">
-            <div className="bg-indigo-100 p-4 rounded-xl">
+            <div className="bg-bot-blue/20 p-4 rounded-xl">
               <span className="text-3xl">👥</span>
             </div>
             <div className="flex-1">
@@ -170,8 +171,8 @@ export default function AboutPage() {
                 <strong>Build a lasting movement.</strong> Connect with transport advocates, climate activists, 
                 and policy experts to create a unified voice for sustainable European transport.
               </p>
-              <div className="bg-indigo-50 rounded-lg p-4">
-                <p className="text-sm text-indigo-800">
+              <div className="bg-bot-blue/10 rounded-lg p-4">
+                <p className="text-sm text-bot-blue">
                   <strong>Partners:</strong> 25+ climate organizations | 
                   <strong>Reach:</strong> 50,000+ newsletter subscribers | 
                   <strong>Impact:</strong> Featured in 100+ media articles
@@ -193,7 +194,7 @@ export default function AboutPage() {
               </p>
               <div className="bg-white/10 rounded-lg p-4">
                 <p className="text-sm text-white/80">
-                  <strong>Date:</strong> September 26, 2025 | 
+                  <strong>Date:</strong> {EVENT_DATE_DISPLAY} | 
                   <strong>Goal:</strong> 10,000 participants across Europe | 
                   <strong>Impact:</strong> Direct influence on EU transport policy
                 </p>
@@ -223,7 +224,7 @@ export default function AboutPage() {
             </div>
             <p className="text-gray-600 text-center">
               Grassroots advocacy and event coordination. Currently co-led by Giovanni and Ellie, 
-              organizing the September 26 European Pajama Party.
+              organizing the European Pajama Party on {EVENT_DATE_DISPLAY}.
             </p>
           </div>
 
@@ -242,7 +243,7 @@ export default function AboutPage() {
 
           <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
             <div className="text-center mb-4">
-              <div className="bg-purple-100 p-4 rounded-full inline-block mb-3">
+              <div className="bg-bot-green/20 p-4 rounded-full inline-block mb-3">
                 <span className="text-3xl">📢</span>
               </div>
               <h3 className="text-xl font-bold text-gray-900">Communications</h3>
@@ -272,7 +273,7 @@ export default function AboutPage() {
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-bot-blue mb-2">50+</div>
-              <p className="text-gray-600">Cities confirmed for September 26 event</p>
+              <p className="text-gray-600">Cities confirmed for the {EVENT_DATE_DISPLAY} event</p>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-bot-green mb-2">15</div>
@@ -291,7 +292,7 @@ export default function AboutPage() {
         <h2 className="text-3xl font-bold mb-4">Ready to Join the Movement?</h2>
         <p className="text-xl mb-8 text-white/90">
           Whether you want to share a dream route, organize in your city, or participate in the 
-          September 26 event, there&apos;s a place for you in the Back-on-Track community.
+          the {EVENT_DATE_DISPLAY} event, there&apos;s a place for you in the Back-on-Track community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a 
@@ -304,7 +305,7 @@ export default function AboutPage() {
             href="/pyjama-party"
             className="bg-bot-light-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-bot-green transition-colors duration-200"
           >
-            🎉 Join September 26 Event
+            🎉 Join {EVENT_DATE_DISPLAY} Event
           </a>
           <a 
             href="/community"

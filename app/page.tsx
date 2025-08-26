@@ -5,6 +5,8 @@ import dynamic from 'next/dynamic';
 import { DreamForm } from '@/components/forms';
 import { Countdown } from '@/components/ui';
 import { DreamCounter } from '@/components/dashboard';
+import JourneyOverview from '@/components/journey/JourneyOverview';
+import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY, getCountdownTargetDate } from '@/lib/event';
 
 // Lazy load map for better performance
 const DreamMap = dynamic(() => import('@/components/map').then(mod => ({ default: mod.DreamMap })), {
@@ -34,7 +36,7 @@ export default function Home() {
           {/* Hero Title */}
           <div className="text-center mb-12">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                European Night Train Dreams
+                Where Would You Like to Wake Up Tomorrow?
               </h1>
               <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-4xl mx-auto leading-relaxed">
                 Share your dream night train route. Help us demonstrate demand for sustainable transport across Europe.
@@ -52,7 +54,7 @@ export default function Home() {
             </div>
 
             {/* Map Section */}
-            <div className="mb-12">
+            <div className="mb-12" id="map">
               <div className="text-center mb-8">
                 <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Dream Routes Across Europe</h2>
                 <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -113,14 +115,11 @@ export default function Home() {
                 <div className="bg-gradient-to-r from-bot-green to-bot-blue text-white rounded-2xl p-8 shadow-lg">
                   <div className="text-center mb-6">
                     <h3 className="text-2xl font-bold mb-2">European Pajama Party</h3>
-                    <p className="text-xl font-semibold text-bot-light-green mb-4">September 26, 2025</p>
+                    <p className="text-xl font-semibold text-bot-light-green mb-4">{EVENT_DATE_DISPLAY}</p>
                     <div className="mb-4">
-                      <Countdown 
-                        targetDate={new Date('2025-09-26T19:00:00.000Z')}
-                        className="flex justify-center"
-                      />
+                      <Countdown targetDate={getCountdownTargetDate()} className="flex justify-center" />
                     </div>
-                    <p className="text-white/90 text-sm">19:00-20:00 CEST</p>
+                    <p className="text-white/90 text-sm">{EVENT_TIME_DISPLAY}</p>
                   </div>
                   
                   <div className="space-y-4 mb-6">
@@ -159,7 +158,23 @@ export default function Home() {
           </div>
         </section>
 
-        {/* About Section */}
+        {/* Journey Overview */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <JourneyOverview className="" />
+          </div>
+        </section>
+
+            {/* Community Teaser / Anchor */}
+            <section id="community" className="py-12">
+              <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Our Growing Action Group</h3>
+                <p className="text-gray-600 mb-4">Join climate activists across Europe coordinating station events and building momentum for night trains.</p>
+                <a href="/community" className="inline-flex items-center bg-bot-green text-white px-6 py-3 rounded-lg font-semibold hover:bg-bot-dark-green transition-colors">Go to Community</a>
+              </div>
+            </section>
+
+            {/* About Section */}
         <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">

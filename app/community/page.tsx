@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 
 export default function CommunityPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-bot-light-green/20 to-green-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-900 via-purple-900 to-indigo-900 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-r from-bot-blue via-bot-green to-bot-dark-green text-white overflow-hidden">
         <div className="absolute inset-0 bg-[url('/assets/community-pattern.svg')] opacity-10"></div>
         
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
@@ -96,7 +96,7 @@ export default function CommunityPage() {
 
                 <Link
                   href="/organize"
-                  className="flex items-center gap-3 p-4 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
+                  className="flex items-center gap-3 p-4 bg-bot-green text-white rounded-xl hover:bg-bot-dark-green transition-colors"
                 >
                   <Users className="h-6 w-6" />
                   <div>
@@ -179,16 +179,16 @@ export default function CommunityPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4 p-4 bg-purple-50 rounded-xl">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                    <Headphones className="h-5 w-5 text-purple-600" />
+                <div className="flex items-start gap-4 p-4 bg-bot-green/10 rounded-xl">
+                  <div className="w-10 h-10 bg-bot-green/20 rounded-full flex items-center justify-center">
+                    <Headphones className="h-5 w-5 text-bot-green" />
                   </div>
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900">Silent Disco Playlist Released</div>
                     <div className="text-gray-600 text-sm mb-2">
                       The official Europe-wide pajama party playlist is now available for organizers to preview.
                     </div>
-                    <div className="text-purple-600 text-xs">1 day ago</div>
+                    <div className="text-bot-green text-xs">1 day ago</div>
                   </div>
                 </div>
 
@@ -224,7 +224,7 @@ export default function CommunityPage() {
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Community Achievements</h2>
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl">
+                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-bot-light-green/30 rounded-xl">
                   <div className="text-4xl font-bold text-blue-600 mb-2">156</div>
                   <div className="text-gray-700 font-medium">Stations with Organizers</div>
                   <div className="text-sm text-gray-500">Across 25 European countries</div>
@@ -236,8 +236,8 @@ export default function CommunityPage() {
                   <div className="text-sm text-gray-500">And growing every day</div>
                 </div>
 
-                <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl">
-                  <div className="text-4xl font-bold text-purple-600 mb-2">2.3M</div>
+                <div className="text-center p-6 bg-gradient-to-br from-bot-green/20 to-bot-light-green/30 rounded-xl">
+                  <div className="text-4xl font-bold text-bot-green mb-2">2.3M</div>
                   <div className="text-gray-700 font-medium">Social Media Reach</div>
                   <div className="text-sm text-gray-500">Spreading climate awareness</div>
                 </div>
@@ -284,8 +284,8 @@ export default function CommunityPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <div className="w-8 h-8 bg-bot-green/20 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-bot-green rounded-full"></div>
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 text-sm">#media-sharing</div>
@@ -350,7 +350,7 @@ export default function CommunityPage() {
             </div>
 
             {/* Help & Support */}
-            <div className="bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-2xl p-6">
+            <div className="bg-gradient-to-br from-bot-green to-bot-dark-green text-white rounded-2xl p-6">
               <h3 className="text-xl font-semibold mb-4">Need Help?</h3>
               <p className="text-white/90 text-sm mb-4">
                 Our community support team is here to help you organize an amazing pajama party.

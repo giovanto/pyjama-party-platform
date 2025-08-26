@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Internationalization (initial locales; extend as content grows)
+  i18n: {
+    locales: ['en', 'de', 'fr'],
+    defaultLocale: 'en',
+  },
   // Build optimizations - Enable strict checking for production quality
   typescript: {
     // TypeScript errors will now be caught during build

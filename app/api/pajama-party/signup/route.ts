@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { headers } from 'next/headers';
+import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/rateLimit';
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -30,7 +31,7 @@ const signupSchema = z.object({
   source_page: z.string().url().max(500)
 });
 
-export async function POST(request: NextRequest) {
+async function postHandler(request: NextRequest) {
   try {
     // Parse request body
     const body = await request.json();
@@ -168,3 +169,5 @@ export async function GET() {
     timestamp: new Date().toISOString()
   });
 }
+
+export const POST = withRateLimit(postHandler as any, RATE_LIMIT_CONFIGS.parties);

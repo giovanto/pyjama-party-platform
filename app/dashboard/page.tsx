@@ -65,8 +65,8 @@ export default function DashboardPage() {
                 <p className="text-sm font-medium text-gray-600 mb-1">7-Day Growth</p>
                 <div className="text-2xl font-bold text-gray-900">+12.5%</div>
               </div>
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
+              <div className="p-3 bg-bot-green/20 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-bot-green" />
               </div>
             </div>
           </div>

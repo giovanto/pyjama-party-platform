@@ -184,7 +184,7 @@ export default function TrainConnectionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-bot-light-green/20 to-green-50">
       {/* Navigation */}
       <nav className="relative z-20 bg-white/80 backdrop-blur-sm border-b border-blue-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -299,8 +299,8 @@ export default function TrainConnectionPage() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Clock className="h-5 w-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-bot-green/20 rounded-lg flex items-center justify-center">
+                      <Clock className="h-5 w-5 text-bot-green" />
                     </div>
                     <div>
                       <div className="font-medium text-gray-900">{routeInfo.duration}</div>
@@ -356,7 +356,7 @@ export default function TrainConnectionPage() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     href="/pyjama-party#signup-form"
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all font-medium text-center"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-bot-blue to-bot-green text-white rounded-lg hover:from-bot-green hover:to-bot-dark-green transition-all font-medium text-center"
                   >
                     <Users className="h-5 w-5 inline mr-2" />
                     Join This Route Dream
@@ -411,7 +411,7 @@ export default function TrainConnectionPage() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Users className="h-5 w-5 text-purple-600 mt-0.5" />
+                  <Users className="h-5 w-5 text-bot-green mt-0.5" />
                   <div>
                     <div className="font-medium text-gray-900">Community Impact</div>
                     <div className="text-sm text-gray-600">Join the European night train renaissance</div>

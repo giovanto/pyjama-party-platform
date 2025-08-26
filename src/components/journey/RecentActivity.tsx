@@ -195,7 +195,7 @@ export function ParticipationCounters({
     { key: 'dreamsShared', label: 'Dreams Shared', icon: '✨', color: 'text-amber-600' },
     { key: 'totalParticipants', label: 'Participants', icon: '🎉', color: 'text-blue-600' },
     { key: 'stationsReady', label: 'Stations Ready', icon: '🚂', color: 'text-green-600' },
-    { key: 'routesPlanned', label: 'Routes Planned', icon: '🗺️', color: 'text-purple-600' },
+    { key: 'routesPlanned', label: 'Routes Planned', icon: '🗺️', color: 'text-bot-green' },
     { key: 'organizersActive', label: 'Organizers', icon: '👥', color: 'text-emerald-600' },
     { key: 'communityMembers', label: 'Community', icon: '🌍', color: 'text-pink-600' }
   ];

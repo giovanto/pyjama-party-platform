@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Download, FileText, Users, MapPin, Megaphone, Shield, Video, Calendar } from 'lucide-react';
+import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY } from '@/lib/event';
 
 export const metadata: Metadata = {
   title: 'Organizer Resources | European Pajama Party 2025',
@@ -16,26 +17,26 @@ export default function ResourcesPage() {
         {
           title: 'Station Organizer Handbook',
           description: 'Complete guide for coordinating your local station event',
-          type: 'PDF Guide',
-          size: '2.4 MB',
+          type: 'Guide',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/station-organizer-handbook.pdf'
+          downloadUrl: 'https://toolkit.backontrack.eu/party-guide'
         },
         {
           title: 'Timeline & Checklist',
           description: 'Week-by-week preparation timeline with actionable tasks',
-          type: 'PDF Checklist',
-          size: '890 KB',
+          type: 'Checklist',
+          size: '—',
           icon: Calendar,
-          downloadUrl: '/downloads/event-timeline-checklist.pdf'
+          downloadUrl: 'https://toolkit.backontrack.eu/checklist'
         },
         {
           title: 'Permit & Authorization Templates',
           description: 'Template letters for station authorities and local permits',
-          type: 'Word Documents',
-          size: '1.2 MB',
+          type: 'Templates',
+          size: '—',
           icon: Shield,
-          downloadUrl: '/downloads/permit-templates.zip'
+          downloadUrl: 'https://toolkit.backontrack.eu/legal'
         }
       ]
     },
@@ -45,26 +46,26 @@ export default function ResourcesPage() {
         {
           title: 'Social Media Toolkit',
           description: 'Ready-to-use posts, graphics, and hashtag guidelines',
-          type: 'Design Pack',
-          size: '15.3 MB',
+          type: 'Toolkit',
+          size: '—',
           icon: Megaphone,
-          downloadUrl: '/downloads/social-media-toolkit.zip'
+          downloadUrl: 'https://toolkit.backontrack.eu/media-kit'
         },
         {
           title: 'Press Release Template',
           description: 'Customizable press release for local media outreach',
-          type: 'Word Document',
-          size: '456 KB',
+          type: 'Template',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/press-release-template.docx'
+          downloadUrl: 'https://toolkit.backontrack.eu/press-template'
         },
         {
           title: 'Event Poster Templates',
           description: 'Print-ready posters in multiple languages and sizes',
           type: 'Design Files',
-          size: '8.7 MB',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/poster-templates.zip'
+          downloadUrl: 'https://back-on-track.eu/graphics/'
         }
       ]
     },
@@ -74,26 +75,26 @@ export default function ResourcesPage() {
         {
           title: 'Equipment & Setup Guide',
           description: 'Sound system setup, safety guidelines, and equipment list',
-          type: 'PDF Guide',
-          size: '1.8 MB',
+          type: 'Guide',
+          size: '—',
           icon: Users,
-          downloadUrl: '/downloads/equipment-setup-guide.pdf'
+          downloadUrl: 'https://toolkit.backontrack.eu/equipment'
         },
         {
           title: 'Volunteer Coordinator Manual',
           description: 'Managing volunteers, roles, and day-of coordination',
-          type: 'PDF Manual',
-          size: '2.1 MB',
+          type: 'Manual',
+          size: '—',
           icon: Users,
-          downloadUrl: '/downloads/volunteer-manual.pdf'
+          downloadUrl: 'https://toolkit.backontrack.eu/volunteers'
         },
         {
           title: 'Live Stream Setup Instructions',
           description: 'Technical setup for streaming your station to the network',
           type: 'Video Tutorial',
-          size: '125 MB',
+          size: '—',
           icon: Video,
-          downloadUrl: '/downloads/livestream-tutorial.mp4'
+          downloadUrl: 'https://toolkit.backontrack.eu/livestream'
         }
       ]
     },
@@ -103,26 +104,26 @@ export default function ResourcesPage() {
         {
           title: 'Back-on-Track Brand Guidelines',
           description: 'Logo usage, color codes, and brand consistency guide',
-          type: 'PDF Guide',
-          size: '3.2 MB',
+          type: 'Brand Guide',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/brand-guidelines.pdf'
+          downloadUrl: 'https://back-on-track.eu/graphics/'
         },
         {
           title: 'Printable Materials Pack',
           description: 'Banners, signs, name tags, and wristbands',
           type: 'Print Files',
-          size: '12.4 MB',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/printable-materials.zip'
+          downloadUrl: 'https://toolkit.backontrack.eu/printables'
         },
         {
           title: 'Digital Assets Collection',
           description: 'Logos, icons, backgrounds for digital use',
           type: 'Design Files',
-          size: '6.8 MB',
+          size: '—',
           icon: FileText,
-          downloadUrl: '/downloads/digital-assets.zip'
+          downloadUrl: 'https://back-on-track.eu/graphics/'
         }
       ]
     }
@@ -153,7 +154,7 @@ export default function ResourcesPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-bot-light-green/20">
       {/* Hero Section */}
       <section className="py-24 bg-gradient-to-r from-bot-green to-bot-blue text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -166,7 +167,7 @@ export default function ResourcesPage() {
           </p>
           <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 text-sm font-medium">
             <Calendar className="h-4 w-4 mr-2" />
-            September 26, 2025 • 19:00-20:00 CEST
+            {EVENT_DATE_DISPLAY} • {EVENT_TIME_DISPLAY}
           </div>
         </div>
       </section>
@@ -182,8 +183,8 @@ export default function ResourcesPage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-purple-50 rounded-2xl p-8 text-center">
-              <div className="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="bg-bot-green/10 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 bg-bot-green rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <FileText className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">1. Download Handbook</h3>
@@ -192,7 +193,7 @@ export default function ResourcesPage() {
               </p>
               <Link
                 href="/downloads/station-organizer-handbook.pdf"
-                className="inline-flex items-center bg-purple-500 text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors"
+                className="inline-flex items-center bg-bot-green text-white px-6 py-3 rounded-lg hover:bg-bot-dark-green transition-colors"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Download Handbook

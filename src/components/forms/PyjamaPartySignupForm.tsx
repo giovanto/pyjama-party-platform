@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Users, MapPin, Mail, Shield, CheckCircle, AlertCircle } from 'lucide-react';
+import { Users, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 
 interface FormData {
   name: string;
@@ -35,6 +35,18 @@ export default function PyjamaPartySignupForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+
+  // Derived readiness state to guide submit affordance
+  const isFormReady = () => {
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email || '');
+    return (
+      formData.name.trim() &&
+      formData.preferred_station.trim() &&
+      !!formData.participation_level &&
+      formData.privacy_consent === true &&
+      emailOk
+    );
+  };
 
   const participationLevels = [
     {
@@ -157,16 +169,16 @@ export default function PyjamaPartySignupForm() {
 
   if (submitStatus === 'success') {
     return (
-      <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <div className="bg-white rounded-2xl shadow-lg p-8 text-center" role="alert" aria-live="polite">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6" aria-hidden="true">
           <CheckCircle className="h-8 w-8 text-green-600" />
         </div>
         <h3 className="text-2xl font-bold text-gray-900 mb-4">Welcome to the Movement!</h3>
         <p className="text-gray-600 mb-6">{submitMessage}</p>
         
-        <div className="bg-purple-50 rounded-lg p-4 mb-6">
-          <h4 className="font-semibold text-purple-900 mb-2">What happens next?</h4>
-          <ul className="text-left text-purple-800 text-sm space-y-1">
+        <div className="bg-bot-green/10 rounded-lg p-4 mb-6">
+          <h4 className="font-semibold text-bot-dark-green mb-2">What happens next?</h4>
+          <ul className="text-left text-bot-dark-green text-sm space-y-1">
             <li>• You'll receive a verification email within a few minutes</li>
             <li>• After verification, get updates about your local station</li>
             <li>• Join our Discord community for real-time coordination</li>
@@ -177,7 +189,7 @@ export default function PyjamaPartySignupForm() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/community"
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+            className="px-6 py-3 bg-bot-green text-white rounded-lg hover:bg-bot-dark-green transition-colors font-medium"
           >
             Join Community
           </Link>
@@ -204,7 +216,7 @@ export default function PyjamaPartySignupForm() {
                 key={level.id}
                 className={`p-4 border rounded-lg cursor-pointer transition-all ${
                   formData.participation_level === level.id
-                    ? 'border-purple-500 bg-purple-50'
+                    ? 'border-bot-green bg-bot-green/10'
                     : 'border-gray-200 hover:bg-gray-50'
                 }`}
                 onClick={() => handleInputChange('participation_level', level.id)}
@@ -217,6 +229,7 @@ export default function PyjamaPartySignupForm() {
                     checked={formData.participation_level === level.id}
                     onChange={() => handleInputChange('participation_level', level.id)}
                     className="mr-3"
+                    aria-describedby={errors.participation_level ? 'participation_level-error' : undefined}
                   />
                   <div className="font-medium">{level.title}</div>
                 </div>
@@ -226,7 +239,7 @@ export default function PyjamaPartySignupForm() {
             ))}
           </div>
           {errors.participation_level && (
-            <p className="text-red-600 text-sm mt-2">{errors.participation_level}</p>
+            <p id="participation_level-error" className="text-red-600 text-sm mt-2" role="alert">{errors.participation_level}</p>
           )}
         </div>
 
@@ -243,13 +256,15 @@ export default function PyjamaPartySignupForm() {
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bot-green focus:border-transparent ${
                   errors.name ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Your full name"
                 disabled={isSubmitting}
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? 'name-error' : undefined}
               />
-              {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+              {errors.name && <p id="name-error" className="text-red-600 text-sm mt-1" role="alert">{errors.name}</p>}
             </div>
 
             {/* Email Field */}
@@ -261,13 +276,15 @@ export default function PyjamaPartySignupForm() {
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bot-green focus:border-transparent ${
                   errors.email ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="your@email.com"
                 disabled={isSubmitting}
+                aria-invalid={!!errors.email}
+                aria-describedby={errors.email ? 'email-error' : undefined}
               />
-              {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p id="email-error" className="text-red-600 text-sm mt-1" role="alert">{errors.email}</p>}
               <p className="text-xs text-gray-500 mt-1">
                 Required for verification and event updates
               </p>
@@ -282,13 +299,15 @@ export default function PyjamaPartySignupForm() {
                 type="text"
                 value={formData.preferred_station}
                 onChange={(e) => handleInputChange('preferred_station', e.target.value)}
-                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-bot-green focus:border-transparent ${
                   errors.preferred_station ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Search for your local train station"
                 disabled={isSubmitting}
+                aria-invalid={!!errors.preferred_station}
+                aria-describedby={errors.preferred_station ? 'preferred_station-error' : undefined}
               />
-              {errors.preferred_station && <p className="text-red-600 text-sm mt-1">{errors.preferred_station}</p>}
+              {errors.preferred_station && <p id="preferred_station-error" className="text-red-600 text-sm mt-1" role="alert">{errors.preferred_station}</p>}
             </div>
 
             {/* Message Field */}
@@ -300,7 +319,7 @@ export default function PyjamaPartySignupForm() {
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
                 rows={3}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bot-green focus:border-transparent"
                 placeholder="Tell us why you're joining, any special skills, or questions..."
                 disabled={isSubmitting}
               />
@@ -316,7 +335,7 @@ export default function PyjamaPartySignupForm() {
                   type="checkbox"
                   checked={formData.newsletter_consent}
                   onChange={(e) => handleInputChange('newsletter_consent', e.target.checked)}
-                  className="mt-1 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  className="mt-1 h-4 w-4 text-bot-green focus:ring-bot-green border-gray-300 rounded"
                   disabled={isSubmitting}
                 />
                 <div className="flex-1 text-sm">
@@ -334,11 +353,13 @@ export default function PyjamaPartySignupForm() {
                   type="checkbox"
                   checked={formData.privacy_consent}
                   onChange={(e) => handleInputChange('privacy_consent', e.target.checked)}
-                  className={`mt-1 h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded ${
+                  className={`mt-1 h-4 w-4 text-bot-green focus:ring-bot-green border-gray-300 rounded ${
                     errors.privacy_consent ? 'border-red-500' : ''
                   }`}
                   disabled={isSubmitting}
                   required
+                  aria-invalid={!!errors.privacy_consent}
+                  aria-describedby={errors.privacy_consent ? 'privacy-error' : undefined}
                 />
                 <div className="flex-1 text-sm">
                   <div className="font-medium text-gray-900">
@@ -346,11 +367,11 @@ export default function PyjamaPartySignupForm() {
                   </div>
                   <div className="text-gray-600">
                     I agree to the{' '}
-                    <Link href="/privacy" className="text-purple-600 hover:text-purple-700 underline">
+                    <Link href="/privacy" className="text-bot-green hover:text-bot-dark-green underline">
                       privacy policy
                     </Link>{' '}
                     and{' '}
-                    <Link href="/terms" className="text-purple-600 hover:text-purple-700 underline">
+                    <Link href="/terms" className="text-bot-green hover:text-bot-dark-green underline">
                       terms of service
                     </Link>
                     . I understand my data will be processed according to GDPR.
@@ -359,7 +380,7 @@ export default function PyjamaPartySignupForm() {
               </label>
               
               {errors.privacy_consent && (
-                <p className="text-red-600 text-sm">{errors.privacy_consent}</p>
+                <p id="privacy-error" className="text-red-600 text-sm" role="alert">{errors.privacy_consent}</p>
               )}
             </div>
 
@@ -383,7 +404,7 @@ export default function PyjamaPartySignupForm() {
 
             {/* Error Display */}
             {submitStatus === 'error' && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3" role="alert" aria-live="polite">
                 <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
                 <p className="text-red-700">{submitMessage}</p>
               </div>
@@ -392,8 +413,8 @@ export default function PyjamaPartySignupForm() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting || !formData.privacy_consent}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSubmitting || !isFormReady()}
+              className="w-full bg-gradient-to-r from-bot-green to-bot-dark-green text-white py-3 rounded-lg hover:from-bot-dark-green hover:to-bot-green transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <div className="flex items-center justify-center space-x-2">

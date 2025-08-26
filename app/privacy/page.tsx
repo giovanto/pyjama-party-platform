@@ -146,9 +146,9 @@ export default function PrivacyPage() {
             <h3 className="font-semibold text-green-900 mb-2">Purpose Limitation</h3>
             <p className="text-sm text-green-800">Data used only for stated advocacy and event purposes</p>
           </div>
-          <div className="bg-purple-50 rounded-lg p-4">
-            <h3 className="font-semibold text-purple-900 mb-2">Data Minimization</h3>
-            <p className="text-sm text-purple-800">Only essential data collected, optional fields clearly marked</p>
+          <div className="bg-bot-green/10 rounded-lg p-4">
+            <h3 className="font-semibold text-bot-dark-green mb-2">Data Minimization</h3>
+            <p className="text-sm text-bot-dark-green">Only essential data collected, optional fields clearly marked</p>
           </div>
           <div className="bg-orange-50 rounded-lg p-4">
             <h3 className="font-semibold text-orange-900 mb-2">Accuracy & Storage Limitation</h3>

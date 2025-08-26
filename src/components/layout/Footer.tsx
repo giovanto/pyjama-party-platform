@@ -25,17 +25,17 @@ export function Footer() {
             <h4 className="footer__title text-gray-900 font-semibold mb-4">Platform</h4>
             <ul className="footer__links space-y-2">
               <li>
-                <a href="#privacy" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
+                <a href="/privacy" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#terms" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
+                <a href="/terms" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
                   Terms of Use
                 </a>
               </li>
               <li>
-                <a href="#contact" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
+                <a href="/about#contact" className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm">
                   Contact
                 </a>
               </li>
@@ -120,12 +120,9 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a 
-                  href="#" 
-                  className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm"
-                >
-                  📦 Pajama Party Kit
-                </a>
+                <a href="https://toolkit.backontrack.eu/party-kit"
+                   className="footer__link text-gray-600 hover:text-bot-green transition-colors text-sm"
+                   target="_blank" rel="noopener noreferrer">📦 Pajama Party Kit</a>
               </li>
             </ul>
           </div>

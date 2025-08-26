@@ -66,9 +66,9 @@ export const PHASES: Phase[] = [
     description: 'Coordinate local events and build community at your station',
     icon: '📋',
     href: '/organize',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-200',
+    color: 'text-bot-green',
+    bgColor: 'bg-bot-green/10',
+    borderColor: 'border-bot-green/30',
     order: 4,
     category: 'activate'
   },
@@ -116,8 +116,8 @@ export const PHASE_CATEGORIES = {
   activate: {
     name: 'Activate',
     description: 'Lead and organize',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50'
+    color: 'text-bot-green',
+    bgColor: 'bg-bot-green/10'
   }
 } as const;
 
