@@ -66,10 +66,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // Handle batched events
-    let events = [];
+    let events: AnalyticsEvent[] = [];
     if (body.events && Array.isArray(body.events)) {
       // Batched events
-      events = body.events.map(sanitizeEventData).filter(Boolean);
+      events = (body.events
+        .map(sanitizeEventData)
+        .filter(Boolean) as AnalyticsEvent[]);
     } else {
       // Single event
       const eventData = sanitizeEventData(body);
