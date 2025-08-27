@@ -68,10 +68,10 @@ export async function checkRateLimit(
   remaining: number;
   resetTime: number;
   total: number;
+  backend: 'redis' | 'memory';
 } {
   const clientId = getClientId(request);
   const now = Date.now();
-  const windowStart = now;
   const windowEnd = now + config.windowMs;
   
   // Prefer Redis-backed rate limit if configured
@@ -90,6 +90,7 @@ export async function checkRateLimit(
         remaining: Math.max(0, config.max - count),
         resetTime: now + pttl,
         total: config.max,
+        backend: 'redis',
       };
     } catch (e) {
       // Fallback to in-memory if Redis fails
@@ -113,6 +114,7 @@ export async function checkRateLimit(
     remaining: Math.max(0, config.max - entry.count),
     resetTime: entry.resetTime,
     total: config.max,
+    backend: 'memory',
   };
 }
 
@@ -146,7 +148,7 @@ export function withRateLimit<T extends any[]>(
     
     if (!rateLimitResult.allowed) {
       // Rate limit exceeded
-      const headers = getRateLimitHeaders(rateLimitResult);
+      const headers = { ...getRateLimitHeaders(rateLimitResult), 'X-RateLimit-Backend': rateLimitResult.backend };
       
       return new Response(
         JSON.stringify({
@@ -169,7 +171,7 @@ export function withRateLimit<T extends any[]>(
       const response = await handler(...args);
       
       // Add rate limit headers to successful responses
-      const headers = getRateLimitHeaders(rateLimitResult);
+      const headers = { ...getRateLimitHeaders(rateLimitResult), 'X-RateLimit-Backend': rateLimitResult.backend } as Record<string, string>;
       for (const [key, value] of Object.entries(headers)) {
         response.headers.set(key, value);
       }

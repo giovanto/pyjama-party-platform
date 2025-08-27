@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 interface PyjamaPartyData {
   stationName: string;
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
     if (!stationName || !city || !country || !organizerName || !partyDate) {
       return NextResponse.json(
         { error: 'Required fields missing: stationName, city, country, organizerName, partyDate' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
     
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
     if (organizerEmail && !/\S+@\S+\.\S+/.test(organizerEmail)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -49,7 +50,7 @@ export async function POST(request: NextRequest) {
     if (isNaN(parsedDate.getTime())) {
       return NextResponse.json(
         { error: 'Invalid date format' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
     if (existingParty) {
       return NextResponse.json(
         { error: 'A pyjama party is already organized for this station on this date' },
-        { status: 409 }
+        { status: 409, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to create pyjama party' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -108,13 +109,13 @@ export async function POST(request: NextRequest) {
         attendeesCount: data.attendees_count,
         status: data.status
       }
-    }, { status: 201 });
+    }, { status: 201, headers: { ...corsHeaders(request, ['POST']) } });
 
   } catch (error) {
     console.error('Error creating pyjama party:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
     );
   }
 }
@@ -151,7 +152,7 @@ export async function GET(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to fetch pyjama parties' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -173,13 +174,13 @@ export async function GET(request: NextRequest) {
       total: count || 0,
       limit,
       offset
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('Error fetching pyjama parties:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }
@@ -194,7 +195,7 @@ export async function PUT(request: NextRequest) {
     if (!id) {
       return NextResponse.json(
         { error: 'Party ID is required' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['PUT']) } }
       );
     }
 
@@ -215,7 +216,7 @@ export async function PUT(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to update pyjama party' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['PUT']) } }
       );
     }
 
@@ -233,13 +234,18 @@ export async function PUT(request: NextRequest) {
         attendeesCount: data.attendees_count,
         status: data.status
       }
-    });
+    }, { headers: { ...corsHeaders(request, ['PUT']) } });
 
   } catch (error) {
     console.error('Error updating pyjama party:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['PUT']) } }
     );
   }
+}
+
+// Preflight for cross-origin POST/PUT to this collection endpoint
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: { ...corsHeaders(request, ['GET','POST','PUT','OPTIONS']) } });
 }

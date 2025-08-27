@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const eventId = Sentry.captureException(new Error('Sentry debug test event'));
     const headers = { ...corsHeaders(request, ['GET']), 'Cache-Control': 'no-store' };
     return NextResponse.json({ ok: true, eventId }, { status: 200, headers });
-  } catch (e) {
+  } catch {
     const headers = { ...corsHeaders(request, ['GET']) };
     return NextResponse.json({ ok: false, error: 'Failed to send event' }, { status: 500, headers });
   }

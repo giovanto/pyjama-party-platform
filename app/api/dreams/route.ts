@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
+import { corsHeaders } from '@/lib/cors';
 import { validateDreamSubmission, validatePaginationParams } from '@/lib/validation';
 
 // In-memory cache for hot data (production would use Redis)
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest) {
           message: 'You can submit up to 3 dreams every 30 minutes. Please try again later.',
           retry_after: retryAfterSec
         },
-        { status: 429, headers: getRateLimitHeaders(rl) }
+        { status: 429, headers: { ...getRateLimitHeaders(rl), 'X-RateLimit-Backend': (rl as any).backend || 'memory', ...corsHeaders(request, ['POST']) } }
       );
     }
     const supabase = await createClient();
@@ -116,7 +117,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: 'Dream route submitted successfully!',
       id: data.id
-    }, { status: 201 });
+    }, { status: 201, headers: { ...corsHeaders(request, ['POST']) } });
 
     // Add performance headers
     response.headers.set('Cache-Control', 'no-cache');
@@ -126,9 +127,14 @@ export async function POST(request: NextRequest) {
     console.error('Error processing dream submission:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
     );
   }
+}
+
+// Preflight for cross-origin POSTs
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: { ...corsHeaders(request, ['GET','POST','OPTIONS']) } });
 }
 
 export async function GET(request: NextRequest) {
@@ -148,7 +154,7 @@ export async function GET(request: NextRequest) {
     // Check cache first
     const cachedResult = getCachedData(cacheKey);
     if (cachedResult) {
-      const response = NextResponse.json(cachedResult);
+      const response = NextResponse.json(cachedResult, { headers: { ...corsHeaders(request, ['GET']) } });
       response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
       response.headers.set('X-Cache', 'HIT');
       return response;
@@ -190,7 +196,7 @@ export async function GET(request: NextRequest) {
     // Cache the result
     setCachedData(cacheKey, result);
 
-    const response = NextResponse.json(result);
+    const response = NextResponse.json(result, { headers: { ...corsHeaders(request, ['GET']) } });
     
     // Add performance and caching headers
     response.headers.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
@@ -203,7 +209,7 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching dreams:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }

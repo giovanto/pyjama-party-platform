@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 interface Station {
   id: string;
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         stations: [],
         query
-      });
+      }, { headers: { ...corsHeaders(request, ['GET']) } });
     }
 
     // Search stations in database using full-text search
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to search stations' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -50,13 +51,13 @@ export async function GET(request: NextRequest) {
       stations: formattedStations,
       query,
       total: formattedStations.length
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('Error searching stations:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }

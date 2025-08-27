@@ -236,7 +236,7 @@ function ParticipatePageContent() {
         const errorData = await response.json();
         setError(errorData.error || 'Failed to submit. Please try again.');
       }
-    } catch (error) {
+    } catch {
       setError('Network error. Please check your connection and try again.');
     } finally {
       setIsSubmitting(false);
@@ -257,15 +257,15 @@ function ParticipatePageContent() {
             </h1>
             
             <p className="text-xl text-gray-600 mb-8">
-              Thank you for joining the European Pajama Party! We'll send you updates about 
+              Thank you for joining the European Pajama Party! We&apos;ll send you updates about 
               {selectedStation ? ` ${selectedStation.name}` : ' your station'} and the movement.
             </p>
 
             <section className="bg-purple-50 rounded-2xl p-6 mb-8" aria-labelledby="next-steps-heading">
               <h2 id="next-steps-heading" className="font-semibold text-purple-900 mb-2">What happens next?</h2>
               <ul className="text-left text-purple-800 space-y-2">
-                <li>• You'll receive a welcome email with event details</li>
-                <li>• Get updates about your local station's organization</li>
+                <li>• You&apos;ll receive a welcome email with event details</li>
+                <li>• Get updates about your local station&apos;s organization</li>
                 <li>• Join our Discord community for real-time coordination</li>
                 <li>• Receive your digital pajama party badge</li>
               </ul>

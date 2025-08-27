@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import { corsHeaders } from '@/lib/cors';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -15,10 +16,10 @@ type StopRecord = {
 let cached: { data: any; ts: number } | null = null;
 const TTL_MS = 1000 * 60 * 10; // 10 minutes
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     if (cached && Date.now() - cached.ts < TTL_MS) {
-      return NextResponse.json(cached.data, { headers: { 'Cache-Control': 's-maxage=600, stale-while-revalidate=1200' } });
+      return NextResponse.json(cached.data, { headers: { 'Cache-Control': 's-maxage=600, stale-while-revalidate=1200', ...corsHeaders(request, ['GET']) } });
     }
 
     const base = path.join(process.cwd(), 'data', 'Back-on-Track_night-train-data', 'data', 'latest');
@@ -126,10 +127,9 @@ export async function GET() {
       lastUpdated: new Date().toISOString()
     };
     cached = { data: payload, ts: Date.now() };
-    return NextResponse.json(payload, { headers: { 'Cache-Control': 's-maxage=600, stale-while-revalidate=1200' } });
+    return NextResponse.json(payload, { headers: { 'Cache-Control': 's-maxage=600, stale-while-revalidate=1200', ...corsHeaders(request, ['GET']) } });
   } catch (e) {
     console.error('Reality map API error:', e);
-    return NextResponse.json({ error: 'Failed to load reality data' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to load reality data' }, { status: 500, headers: { ...corsHeaders(request as unknown as Request, ['GET']) } });
   }
 }
-

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to fetch station data' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -72,13 +73,13 @@ export async function GET(request: NextRequest) {
           generatedAt: new Date().toISOString()
         }
       }
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }

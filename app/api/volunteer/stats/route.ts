@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { VolunteerStats } from '@/types';
+import { corsHeaders } from '@/lib/cors';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +12,7 @@ export async function GET(request: NextRequest) {
     if (!sessionId || !stationCode) {
       return NextResponse.json(
         { error: 'Session ID and station code are required' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -78,7 +79,7 @@ export async function GET(request: NextRequest) {
       targetSubmissions: 50 // Default target, could be configurable
     };
 
-    return NextResponse.json(stats);
+    return NextResponse.json(stats, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('Volunteer stats error:', error);
@@ -93,7 +94,7 @@ export async function GET(request: NextRequest) {
       offlineQueueSize: 0
     };
 
-    return NextResponse.json(fallbackStats);
+    return NextResponse.json(fallbackStats, { headers: { ...corsHeaders(request, ['GET']) } });
   }
 }
 
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
     if (!sessionId || !stationCode || !action) {
       return NextResponse.json(
         { error: 'Session ID, station code, and action are required' },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -176,28 +177,22 @@ export async function POST(request: NextRequest) {
       default:
         return NextResponse.json(
           { error: 'Invalid action. Use start, end, or update' },
-          { status: 400 }
+          { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
         );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { headers: { ...corsHeaders(request, ['POST']) } });
 
   } catch (error) {
     console.error('Volunteer session update error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
     );
   }
 }
 
 // Options for CORS
 export async function OPTIONS(request: NextRequest) {
-  const headers = {
-    'Access-Control-Allow-Origin': request.headers.get('origin') || 'https://pyjama-party.back-on-track.eu',
-    'Vary': 'Origin',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-  };
-  return new NextResponse(null, { status: 200, headers });
+  return new NextResponse(null, { status: 204, headers: { ...corsHeaders(request, ['GET','POST','OPTIONS']) } });
 }

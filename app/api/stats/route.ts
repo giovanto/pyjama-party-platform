@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
+import { corsHeaders } from '@/lib/cors';
 
 interface StatsData {
   totalDreams: number;
@@ -40,7 +41,7 @@ export async function GET(request: Request) {
     if (!rl.allowed) {
       return NextResponse.json(
         { error: 'Rate limit exceeded' },
-        { status: 429, headers: getRateLimitHeaders(rl) }
+        { status: 429, headers: { ...getRateLimitHeaders(rl), ...corsHeaders(request as unknown as Request, ['GET']) } }
       );
     }
     const supabase = await createClient();
@@ -172,7 +173,7 @@ export async function GET(request: Request) {
       }))
     };
 
-    return NextResponse.json(stats);
+    return NextResponse.json(stats, { headers: { ...corsHeaders(request as unknown as Request, ['GET']) } });
 
   } catch (error) {
     console.error('Error fetching stats:', error);
@@ -193,7 +194,7 @@ export async function GET(request: Request) {
       criticalMassStations: []
     };
 
-    return NextResponse.json(fallbackStats);
+    return NextResponse.json(fallbackStats, { headers: { ...corsHeaders(request as unknown as Request, ['GET']) } });
   }
 }
 
