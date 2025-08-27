@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     // Batch insert for better performance
     const { error } = await dbPool.query(
       'analytics_events',
-      (client) => client
+      async (client) => await client
         .from('analytics_events')
         .insert(events.map(eventData => ({
           event_name: eventData.event,
