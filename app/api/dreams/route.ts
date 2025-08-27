@@ -45,8 +45,13 @@ export async function POST(request: NextRequest) {
     // Rate limit dream submissions
     const rl = await checkRateLimit(request as unknown as Request, RATE_LIMIT_CONFIGS.dreams);
     if (!rl.allowed) {
+      const retryAfterSec = Math.max(0, Math.ceil((rl.resetTime - Date.now()) / 1000));
       return NextResponse.json(
-        { error: 'Rate limit exceeded' },
+        {
+          error: 'Rate limit exceeded',
+          message: 'You can submit up to 3 dreams every 30 minutes. Please try again later.',
+          retry_after: retryAfterSec
+        },
         { status: 429, headers: getRateLimitHeaders(rl) }
       );
     }

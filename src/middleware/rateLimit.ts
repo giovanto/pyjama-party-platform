@@ -22,7 +22,8 @@ import { isRedisConfigured, redisIncr, redisPTTL, redisPExpire } from '@/lib/red
 export const RATE_LIMIT_CONFIGS = {
   search: { windowMs: 60000, max: 100 }, // 100 requests per minute
   details: { windowMs: 60000, max: 200 }, // 200 requests per minute
-  dreams: { windowMs: 300000, max: 10 }, // 10 dreams per 5 minutes
+  // Limit dream submissions to avoid flooding advocacy data
+  dreams: { windowMs: 1800000, max: 3 }, // 3 dreams per 30 minutes
   parties: { windowMs: 600000, max: 5 }, // 5 party submissions per 10 minutes
   analytics: { windowMs: 60000, max: 100 }, // analytics events per minute
   reads: { windowMs: 60000, max: 300 }, // read endpoints per minute
