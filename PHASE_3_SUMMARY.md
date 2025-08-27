@@ -1,5 +1,7 @@
 # Phase 3 Implementation Summary - Core User Journey
 
+> Note (2025‑08‑27): TripHop-related content in this summary is legacy. Current platform uses user‑submitted dreams and sanitized views, with planned OpenRailwayMap stations integration via offline fetch + viewport API. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 **Completion Date**: January 27, 2025  
 **Branch**: `feature/db-schema-multilingual`  
 **Status**: ✅ **Phase 3 Complete** - Core User Journey & Conversion Features Implemented

@@ -1,5 +1,7 @@
 # European Night Train Platform - Current Project Status
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Items referencing TripHop imports and places APIs are legacy. Current approach: text‑only station inputs; sanitized public views; OpenRailwayMap stations integration (offline fetch + viewport API) planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 **Date**: January 27, 2025  
 **Branch**: `release/phase-4-production`  
 **Overall Status**: ✅ **Ready for Production Deployment** 

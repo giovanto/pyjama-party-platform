@@ -1,5 +1,7 @@
 # Production Deployment Guide
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Use Supabase migrations for DB; dreams are exposed via sanitized views. Stations via OpenRailwayMap (offline fetch + viewport API) is planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 ## Overview
 
 This guide covers deploying the European Night Train Advocacy Platform to `pyjama-party.back-on-track.eu` on a Linux server.

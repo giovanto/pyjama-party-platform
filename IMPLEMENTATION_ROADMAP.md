@@ -4,6 +4,8 @@
 >
 > This roadmap guides the 8-week development timeline for the European Night Train Advocacy Platform, targeting the September 26, 2025 Pajama Party event.
 
+> Update (2025‑08‑27): TripHop integration and `/api/places` were removed. Steps referring to TripHop and places APIs are legacy. Current roadmap uses user‑submitted dreams and plans OpenRailwayMap stations via offline fetch + viewport API. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 ## 🎯 **Implementation Guidelines for Claude Code**
 
 When implementing this platform in future sessions, follow this structured approach:

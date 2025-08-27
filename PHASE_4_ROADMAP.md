@@ -1,5 +1,9 @@
 # Phase 4 Implementation Roadmap - Production Readiness & Launch
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Some legacy references remain below.
+> Current: text‑only station inputs; sanitized public views; OpenRailwayMap stations integration (offline fetch + viewport API) planned.
+> See `docs/CLAUDE_CODEX_COLLABORATION.md` for the current collaboration workflow.
+
 **Target Date**: February 2025  
 **Current Branch**: `feature/db-schema-multilingual`  
 **Status**: Ready to Begin Phase 4 - Production Deployment & Launch Preparation

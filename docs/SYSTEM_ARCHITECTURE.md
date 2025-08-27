@@ -1,5 +1,7 @@
 # Pyjama Party Platform - Complete System Architecture
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Sections describing the places table/endpoints reflect legacy design. Current approach: text‑only station inputs; dreams exposed via sanitized views; OpenRailwayMap stations via offline fetch + viewport API (planned). See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 ## Executive Summary
 
 This document defines the complete production-ready architecture for the European night train advocacy platform at `pyjama-party.back-on-track.eu`. The platform uses progressive disclosure to convert users from destination inspiration to climate activism participation.
