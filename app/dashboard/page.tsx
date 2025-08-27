@@ -97,7 +97,7 @@ export default function DashboardPage() {
         <div className="mt-12 bg-gradient-to-r from-bot-green/10 to-bot-blue/10 rounded-xl p-6 text-center">
           <p className="text-sm text-gray-600">
             <strong>Privacy Note:</strong> All analytics data is anonymized and automatically deleted after 30 days 
-            in compliance with GDPR. This dashboard helps us understand the movement's impact while respecting privacy.
+            in compliance with GDPR. This dashboard helps us understand the movement&apos;s impact while respecting privacy.
           </p>
         </div>
       </div>

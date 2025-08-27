@@ -1,14 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Metadata } from 'next';
 
-// Note: This would normally be generated server-side, but adding here for demo
-const metadata: Metadata = {
-  title: 'Data Rights Portal | Back-on-Track Pajama Party Platform',
-  description: 'Exercise your GDPR data rights including access, rectification, erasure, and data portability.',
-  keywords: 'GDPR rights, data access, data deletion, data export, privacy rights',
-};
+// Note: Metadata would normally be generated server-side
 
 export default function DataRightsPage() {
   const [selectedRight, setSelectedRight] = useState<string>('');
@@ -80,7 +74,7 @@ export default function DataRightsPage() {
       // In production, this would submit to an API endpoint
       await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
       setSubmitStatus('success');
-    } catch (error) {
+    } catch {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);

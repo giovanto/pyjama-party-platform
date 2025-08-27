@@ -223,7 +223,7 @@ export default async function DreamDestinationPage({ params }: DreamDestinationP
                   Why Night Trains Matter
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Traveling by night train to beautiful destinations like {place.name} is more than just a journey—it's a statement for sustainable travel and climate action.
+                  Traveling by night train to beautiful destinations like {place.name} is more than just a journey—it&apos;s a statement for sustainable travel and climate action.
                 </p>
                 <p className="text-gray-600 mb-4">
                   Every night train journey saves approximately 90% of CO₂ emissions compared to flying, while letting you wake up refreshed in incredible places across Europe.

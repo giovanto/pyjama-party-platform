@@ -24,6 +24,8 @@ export const RATE_LIMIT_CONFIGS = {
   details: { windowMs: 60000, max: 200 }, // 200 requests per minute
   dreams: { windowMs: 300000, max: 10 }, // 10 dreams per 5 minutes
   parties: { windowMs: 600000, max: 5 }, // 5 party submissions per 10 minutes
+  analytics: { windowMs: 60000, max: 100 }, // analytics events per minute
+  reads: { windowMs: 60000, max: 300 }, // read endpoints per minute
   default: { windowMs: 60000, max: 50 } // 50 requests per minute default
 } as const;
 

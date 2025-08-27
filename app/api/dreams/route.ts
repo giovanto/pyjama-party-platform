@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
 import { validateDreamSubmission, validatePaginationParams } from '@/lib/validation';
 
 // In-memory cache for hot data (production would use Redis)
@@ -41,6 +42,14 @@ async function getStationCoordinates(supabase: any, stationName: string) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit dream submissions
+    const rl = await checkRateLimit(request as unknown as Request, RATE_LIMIT_CONFIGS.dreams);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded' },
+        { status: 429, headers: getRateLimitHeaders(rl) }
+      );
+    }
     const supabase = await createClient();
     const body = await request.json();
     

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
 
 interface StatsData {
   totalDreams: number;
@@ -33,8 +34,15 @@ interface StatsData {
   }>;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const rl = await checkRateLimit(request, RATE_LIMIT_CONFIGS.reads);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded' },
+        { status: 429, headers: getRateLimitHeaders(rl) }
+      );
+    }
     const supabase = await createClient();
 
     // Get total dreams count

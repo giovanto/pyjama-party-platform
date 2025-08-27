@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Users, MapPin, Heart, Mail, Calendar, CheckCircle, AlertCircle, Star, Shield } from 'lucide-react';
+import { ArrowLeft, Users, MapPin, Heart, Calendar, CheckCircle, AlertCircle, Star } from 'lucide-react';
 
 interface Station {
   id: string;
@@ -74,7 +74,6 @@ function ParticipatePageContent() {
   // Pre-fill form if coming from a route
   useEffect(() => {
     const fromParam = searchParams.get('from');
-    const toParam = searchParams.get('to');
     
     if (fromParam) {
       // In a real implementation, fetch station details from the API

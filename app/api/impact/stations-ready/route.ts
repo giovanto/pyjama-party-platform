@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { corsHeaders } from '@/lib/cors';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
 
 const CACHE_CONTROL = 'public, max-age=600, stale-while-revalidate=1200';
 
@@ -12,6 +13,11 @@ const CRITICAL_MASS_THRESHOLDS = {
 };
 
 export async function GET(request: Request) {
+  const rl = await checkRateLimit(request, RATE_LIMIT_CONFIGS.reads);
+  if (!rl.allowed) {
+    const headers = { ...corsHeaders(request, ['GET']), ...getRateLimitHeaders(rl) };
+    return new NextResponse(JSON.stringify({ error: 'Rate limit exceeded' }), { status: 429, headers });
+  }
   try {
     const supabase = await createClient();
     
