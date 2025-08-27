@@ -6,9 +6,8 @@ import { ArrowLeft, Train, MapPin, Star, Heart, Users, Calendar } from 'lucide-r
 import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
 type DreamRouteParams = { placeId: string }
-
-// Helper to support Next.js typing that may pass `params` as a Promise
-async function resolveParams(p: DreamRouteParams | Promise<DreamRouteParams>): Promise<DreamRouteParams> {
+// Helper to support Next.js 15 typing where `params` may be a Promise
+async function resolveParams(p: any): Promise<DreamRouteParams> {
   return Promise.resolve(p as any)
 }
 
@@ -46,7 +45,8 @@ async function getPlaceData(placeId: string): Promise<Place | null> {
   }
 }
 
-export async function generateMetadata({ params }: { params: DreamRouteParams | Promise<DreamRouteParams> }): Promise<Metadata> {
+// Use `any` for the props to satisfy Next's internal PageProps constraint
+export async function generateMetadata({ params }: any): Promise<Metadata> {
   const { placeId } = await resolveParams(params)
   const place = await getPlaceData(placeId);
   
@@ -82,7 +82,8 @@ export async function generateMetadata({ params }: { params: DreamRouteParams | 
   };
 }
 
-export default async function DreamDestinationPage({ params }: { params: DreamRouteParams | Promise<DreamRouteParams> }) {
+// Likewise, loosen the prop type to `any` to avoid mismatches
+export default async function DreamDestinationPage({ params }: any) {
   const { placeId } = await resolveParams(params)
   const place = await getPlaceData(placeId);
 
