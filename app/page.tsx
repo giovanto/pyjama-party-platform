@@ -1,10 +1,7 @@
-import { Suspense } from 'react';
-import { Countdown } from '@/components/ui';
-import { DreamCounter } from '@/components/dashboard';
 import JourneyOverview from '@/components/journey/JourneyOverview';
-import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY, getCountdownTargetDate } from '@/lib/event';
 import { t } from '@/i18n';
 import HomeMapSection from '@/components/home/HomeMapSection';
+import Link from 'next/link';
 
 // Map section is encapsulated in a client component
 
@@ -46,21 +43,21 @@ export default function Home() {
 
             {/* Action CTAs */}
             <div className="grid md:grid-cols-3 gap-4">
-              <a href="/dream" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+              <Link href="/dream" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
                 <div className="text-3xl mb-2">✨</div>
                 <div className="font-bold text-lg">Add Your Dream</div>
                 <div className="text-gray-600 text-sm">Share your night train route</div>
-              </a>
-              <a href="/pyjama-party" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+              </Link>
+              <Link href="/pyjama-party" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
                 <div className="text-3xl mb-2">🎉</div>
                 <div className="font-bold text-lg">Join the Pajama Party</div>
                 <div className="text-gray-600 text-sm">Participate or organize locally</div>
-              </a>
-              <a href="/dashboard" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
+              </Link>
+              <Link href="/dashboard" className="bg-white rounded-xl border p-6 shadow-sm hover:shadow-md transition-all">
                 <div className="text-3xl mb-2">📊</div>
                 <div className="font-bold text-lg">Impact Dashboard</div>
                 <div className="text-gray-600 text-sm">Live data and exports</div>
-              </a>
+              </Link>
             </div>
           </div>
         </section>

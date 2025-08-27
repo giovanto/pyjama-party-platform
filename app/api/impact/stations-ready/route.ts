@@ -11,7 +11,7 @@ const CRITICAL_MASS_THRESHOLDS = {
   EMERGING: 5     // Early interest
 };
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     
@@ -134,7 +134,7 @@ export async function GET() {
       lastUpdated: new Date().toISOString(),
     };
 
-    const headers = { ...corsHeaders(new Request('')), 'Cache-Control': CACHE_CONTROL };
+    const headers = { ...corsHeaders(request, ['GET']), 'Cache-Control': CACHE_CONTROL };
     return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Stations ready API error:', error);

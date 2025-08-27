@@ -4,7 +4,7 @@ import { corsHeaders } from '@/lib/cors';
 
 const CACHE_CONTROL = 'public, max-age=600, stale-while-revalidate=1200';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     
@@ -92,7 +92,7 @@ export async function GET() {
       lastUpdated: new Date().toISOString(),
     };
 
-    const headers = { ...corsHeaders(new Request('')), 'Cache-Control': CACHE_CONTROL };
+    const headers = { ...corsHeaders(request, ['GET']), 'Cache-Control': CACHE_CONTROL };
     return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Popular routes API error:', error);
