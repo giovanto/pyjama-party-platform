@@ -5,10 +5,11 @@ import Image from 'next/image';
 import { ArrowLeft, Train, MapPin, Star, Heart, Users, Calendar } from 'lucide-react';
 import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
-interface DreamDestinationPageProps {
-  params: {
-    placeId: string;
-  };
+type DreamRouteParams = { placeId: string }
+
+// Helper to support Next.js typing that may pass `params` as a Promise
+async function resolveParams(p: DreamRouteParams | Promise<DreamRouteParams>): Promise<DreamRouteParams> {
+  return Promise.resolve(p as any)
 }
 
 interface Place {
@@ -45,8 +46,9 @@ async function getPlaceData(placeId: string): Promise<Place | null> {
   }
 }
 
-export async function generateMetadata({ params }: DreamDestinationPageProps): Promise<Metadata> {
-  const place = await getPlaceData(params.placeId);
+export async function generateMetadata({ params }: { params: DreamRouteParams | Promise<DreamRouteParams> }): Promise<Metadata> {
+  const { placeId } = await resolveParams(params)
+  const place = await getPlaceData(placeId);
   
   if (!place) {
     return {
@@ -80,8 +82,9 @@ export async function generateMetadata({ params }: DreamDestinationPageProps): P
   };
 }
 
-export default async function DreamDestinationPage({ params }: DreamDestinationPageProps) {
-  const place = await getPlaceData(params.placeId);
+export default async function DreamDestinationPage({ params }: { params: DreamRouteParams | Promise<DreamRouteParams> }) {
+  const { placeId } = await resolveParams(params)
+  const place = await getPlaceData(placeId);
 
   if (!place) {
     notFound();
