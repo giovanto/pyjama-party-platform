@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { headers } from 'next/headers';
 import { withRateLimit, RATE_LIMIT_CONFIGS } from '@/middleware/rateLimit';
+import { corsHeaders } from '@/lib/cors';
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Note: Do not initialize service-role clients at module scope in a file
+// that also exports GET handlers. Create inside POST-only handlers instead.
 
 // Validation schema for signup data
 const signupSchema = z.object({
@@ -33,6 +30,18 @@ const signupSchema = z.object({
 
 async function postHandler(request: NextRequest) {
   try {
+    // Initialize Supabase client (service role) only within POST handler, using dynamic import
+    // This avoids touching Supabase at module-evaluation/build time
+    const { createClient } = await import('@supabase/supabase-js');
+    const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_URL || !SERVICE_KEY) {
+      return NextResponse.json(
+        { error: 'Server not configured for sign-ups' },
+        { status: 503, headers: { ...corsHeaders(request, ['POST']) } }
+      );
+    }
+    const supabase = createClient(SUPABASE_URL, SERVICE_KEY);
     // Parse request body
     const body = await request.json();
     
@@ -60,7 +69,7 @@ async function postHandler(request: NextRequest) {
       console.error('Database check error:', checkError);
       return NextResponse.json(
         { error: 'Database error occurred' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -70,7 +79,7 @@ async function postHandler(request: NextRequest) {
           error: 'This email address is already registered. Please use a different email or contact support if you need to update your registration.',
           code: 'EMAIL_ALREADY_EXISTS'
         },
-        { status: 409 }
+        { status: 409, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -112,7 +121,7 @@ async function postHandler(request: NextRequest) {
       console.error('Database insert error:', insertError);
       return NextResponse.json(
         { error: 'Failed to save signup. Please try again.' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
@@ -132,7 +141,7 @@ async function postHandler(request: NextRequest) {
         'Join our Discord community for updates',
         'Mark September 26, 2025 in your calendar'
       ]
-    });
+    }, { headers: { ...corsHeaders(request, ['POST']) } });
 
   } catch (error) {
     console.error('Signup error:', error);
@@ -143,13 +152,13 @@ async function postHandler(request: NextRequest) {
           error: 'Invalid form data',
           details: error.errors.map(err => ({ field: err.path.join('.'), message: err.message }))
         },
-        { status: 400 }
+        { status: 400, headers: { ...corsHeaders(request, ['POST']) } }
       );
     }
 
     return NextResponse.json(
       { error: 'Internal server error. Please try again later.' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['POST']) } }
     );
   }
 }
@@ -171,3 +180,8 @@ export async function GET() {
 }
 
 export const POST = withRateLimit(postHandler as any, RATE_LIMIT_CONFIGS.parties);
+
+// Preflight for cross-origin POSTs
+export async function OPTIONS(request: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: { ...corsHeaders(request, ['POST','OPTIONS']) } });
+}
