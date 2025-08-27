@@ -23,7 +23,7 @@ export interface MapLayerManagerProps {
 /**
  * MapLayerManager - Handles dual-layer system for Dream ↔ Reality switching
  * 
- * Dream Layer: Shows inspirational destinations from TripHop data + user dreams
+ * Dream Layer: Shows user dream routes and inspirational destinations
  * Reality Layer: Shows current rail infrastructure + existing night train routes
  */
 export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerProps) {
@@ -473,7 +473,7 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
     }
   }, [map, layers]);
 
-  // Load TripHop places data for dream layer
+  // Load dream destinations data for dream layer
   const loadDreamPlacesData = useCallback(async () => {
     if (!map) return;
 

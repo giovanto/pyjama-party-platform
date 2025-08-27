@@ -189,3 +189,8 @@ Implement features that support these goals:
 **The platform is ready for immediate implementation. Start with Phase 1 database foundation and build systematically through the progressive disclosure user journey. Every component is documented and architected for success.**
 
 *Building the movement for sustainable European transport, one dream route at a time.* 🚂✨
+# Next Session Development Guide
+
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. This guide contains legacy references.
+> Current approach: text‑only station inputs; dreams via sanitized views; OpenRailwayMap stations integration planned (offline fetch → static JSON + viewport API).
+> See `docs/CLAUDE_CODEX_COLLABORATION.md` for the up‑to‑date workflow and next steps.

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Link from 'next/link';
 import { EVENT_DATE_DISPLAY, EVENT_TIME_DISPLAY } from '@/lib/event';
 
 export const metadata: Metadata = {
@@ -291,12 +292,12 @@ export default function AboutPage() {
           the {EVENT_DATE_DISPLAY} event, there&apos;s a place for you in the Back-on-Track community.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a 
+          <Link 
             href="/dream"
             className="bg-white text-bot-green px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200"
           >
             🌙 Share Your Dream Route
-          </a>
+          </Link>
           <a 
             href="/pyjama-party"
             className="bg-bot-light-green text-white px-8 py-3 rounded-lg font-semibold hover:bg-bot-green transition-colors duration-200"

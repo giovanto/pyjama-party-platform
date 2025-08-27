@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { ArrowLeft, Train, MapPin, Star, Heart, Users, Calendar } from 'lucide-react';
 import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
-interface DreamDestinationPageProps {
-  params: {
-    placeId: string;
-  };
+type DreamRouteParams = { placeId: string }
+// Helper to support Next.js 15 typing where `params` may be a Promise
+async function resolveParams(p: any): Promise<DreamRouteParams> {
+  return Promise.resolve(p as any)
 }
 
 interface Place {
@@ -45,8 +45,10 @@ async function getPlaceData(placeId: string): Promise<Place | null> {
   }
 }
 
-export async function generateMetadata({ params }: DreamDestinationPageProps): Promise<Metadata> {
-  const place = await getPlaceData(params.placeId);
+// Use `any` for the props to satisfy Next's internal PageProps constraint
+export async function generateMetadata({ params }: any): Promise<Metadata> {
+  const { placeId } = await resolveParams(params)
+  const place = await getPlaceData(placeId);
   
   if (!place) {
     return {
@@ -80,8 +82,10 @@ export async function generateMetadata({ params }: DreamDestinationPageProps): P
   };
 }
 
-export default async function DreamDestinationPage({ params }: DreamDestinationPageProps) {
-  const place = await getPlaceData(params.placeId);
+// Likewise, loosen the prop type to `any` to avoid mismatches
+export default async function DreamDestinationPage({ params }: any) {
+  const { placeId } = await resolveParams(params)
+  const place = await getPlaceData(placeId);
 
   if (!place) {
     notFound();
@@ -223,7 +227,7 @@ export default async function DreamDestinationPage({ params }: DreamDestinationP
                   Why Night Trains Matter
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Traveling by night train to beautiful destinations like {place.name} is more than just a journey—it's a statement for sustainable travel and climate action.
+                  Traveling by night train to beautiful destinations like {place.name} is more than just a journey—it&apos;s a statement for sustainable travel and climate action.
                 </p>
                 <p className="text-gray-600 mb-4">
                   Every night train journey saves approximately 90% of CO₂ emissions compared to flying, while letting you wake up refreshed in incredible places across Europe.

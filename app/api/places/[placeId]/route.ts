@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 // Supported languages for the platform
 const SUPPORTED_LANGUAGES = ['en', 'de', 'fr', 'es', 'it', 'nl', 'da', 'sv', 'no'] as const;
@@ -196,7 +197,7 @@ async function findRouteConnections(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { placeId: string } }
+  { params }: any
 ) {
   try {
     const supabase = await createClient();
@@ -237,7 +238,7 @@ export async function GET(
     if (error || !place) {
       return NextResponse.json(
         { error: 'Place not found', place_id: placeId },
-        { status: 404 }
+        { status: 404, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -299,13 +300,13 @@ export async function GET(
         },
         last_updated: place.updated_at
       }
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('Error fetching place details:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request as unknown as Request, ['GET']) } }
     );
   }
 }
@@ -315,7 +316,7 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { placeId: string } }
+  { params }: any
 ) {
   try {
     const supabase = await createClient();

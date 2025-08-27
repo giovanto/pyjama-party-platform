@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 // Supported languages for the platform
 const SUPPORTED_LANGUAGES = ['en', 'de', 'fr', 'es', 'it', 'nl', 'da', 'sv', 'no'] as const;
@@ -79,60 +80,60 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 /**
  * Build search query based on parameters
  */
-function buildSearchQuery(params: PlaceSearchParams, supabase: any) {
-  let query = supabase
-    .from('places')
-    .select(`
-      place_id,
-      place_lat,
-      place_lon,
-      place_country,
-      place_image,
-      image_attribution,
-      content,
-      place_type,
-      priority_score,
-      tags
-    `);
+// function buildSearchQuery(params: PlaceSearchParams, supabase: any) {
+//   let query = supabase
+//     .from('places')
+//     .select(`
+//       place_id,
+//       place_lat,
+//       place_lon,
+//       place_country,
+//       place_image,
+//       image_attribution,
+//       content,
+//       place_type,
+//       priority_score,
+//       tags
+//     `);
 
-  // Text search using the database function
-  if (params.q) {
-    query = query.rpc('search_places', {
-      search_query: params.q,
-      search_lang: params.lang || 'en',
-      limit_results: parseInt(params.limit || '50')
-    });
-  }
+//   // Text search using the database function
+//   if (params.q) {
+//     query = query.rpc('search_places', {
+//       search_query: params.q,
+//       search_lang: params.lang || 'en',
+//       limit_results: parseInt(params.limit || '50')
+//     });
+//   }
 
-  // Country filter
-  if (params.country) {
-    query = query.eq('place_country', params.country);
-  }
+//   // Country filter
+//   if (params.country) {
+//     query = query.eq('place_country', params.country);
+//   }
 
-  // Place type filter
-  if (params.type) {
-    query = query.eq('place_type', params.type);
-  }
+//   // Place type filter
+//   if (params.type) {
+//     query = query.eq('place_type', params.type);
+//   }
 
-  // Proximity search
-  if (params.lat && params.lon) {
-    const lat = parseFloat(params.lat);
-    const lon = parseFloat(params.lon);
-    const radius = parseFloat(params.radius || '100'); // Default 100km radius
+//   // Proximity search
+//   if (params.lat && params.lon) {
+//     const lat = parseFloat(params.lat);
+//     const lon = parseFloat(params.lon);
+//     const radius = parseFloat(params.radius || '100'); // Default 100km radius
 
-    // Use a bounding box for initial filtering (more efficient than distance calculation)
-    const latRange = radius / 111; // Rough conversion: 1 degree lat ≈ 111 km
-    const lonRange = radius / (111 * Math.cos(lat * Math.PI / 180));
+//     // Use a bounding box for initial filtering (more efficient than distance calculation)
+//     const latRange = radius / 111; // Rough conversion: 1 degree lat ≈ 111 km
+//     const lonRange = radius / (111 * Math.cos(lat * Math.PI / 180));
 
-    query = query
-      .gte('place_lat', lat - latRange)
-      .lte('place_lat', lat + latRange)
-      .gte('place_lon', lon - lonRange)
-      .lte('place_lon', lon + lonRange);
-  }
+//     query = query
+//       .gte('place_lat', lat - latRange)
+//       .lte('place_lat', lat + latRange)
+//       .gte('place_lon', lon - lonRange)
+//       .lte('place_lon', lon + lonRange);
+//   }
 
-  return query;
-}
+//   return query;
+// }
 
 export async function GET(request: NextRequest) {
   try {
@@ -196,7 +197,7 @@ export async function GET(request: NextRequest) {
           offset: 0,
           language,
           search_query: params.q
-        });
+        }, { headers: { ...corsHeaders(request, ['GET']) } });
       }
     }
 
@@ -265,7 +266,7 @@ export async function GET(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to fetch places', details: error.message },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -312,13 +313,13 @@ export async function GET(request: NextRequest) {
         center: { lat: centerLat, lon: centerLon },
         radius_km: parseFloat(params.radius || '100')
       } : null
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('Error processing places search:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }

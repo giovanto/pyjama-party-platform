@@ -1,5 +1,7 @@
 # Implementation Session Progress Report
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Items referencing TripHop imports and places APIs are legacy. Current approach: text‑only station inputs; sanitized public views; OpenRailwayMap stations integration (offline fetch + viewport API) planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 **Session Date**: January 27, 2025  
 **Branch**: `feature/db-schema-multilingual`  
 **Focus**: Phase 1 - Database Foundation & Places API

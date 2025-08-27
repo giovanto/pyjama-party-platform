@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
+import { corsHeaders } from '@/lib/cors';
 
 interface StatsData {
   totalDreams: number;
@@ -33,8 +35,15 @@ interface StatsData {
   }>;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const rl = await checkRateLimit(request, RATE_LIMIT_CONFIGS.reads);
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Rate limit exceeded' },
+        { status: 429, headers: { ...getRateLimitHeaders(rl), ...corsHeaders(request as unknown as Request, ['GET']) } }
+      );
+    }
     const supabase = await createClient();
 
     // Get total dreams count
@@ -42,13 +51,8 @@ export async function GET() {
       .from('dreams')
       .select('*', { count: 'exact', head: true });
 
-    // Get unique dreamers count
-    const { data: dreamersData } = await supabase
-      .from('dreams')
-      .select('dreamer_email');
-    
-    const uniqueDreamers = new Set(dreamersData?.map(d => d.dreamer_email) || []);
-    const totalDreamers = uniqueDreamers.size;
+    // Public endpoint: avoid PII fields; approximate dreamers by dreams
+    const totalDreamers = totalDreams || 0;
 
     // Get top routes
     const { data: routesData } = await supabase
@@ -62,7 +66,7 @@ export async function GET() {
 
     // Get country stats (extract from station names)
     const { data: dreamsWithStations } = await supabase
-      .from('dreams')
+      .from('public_dreams')
       .select('from_station, to_station');
 
     const countryCount: { [key: string]: number } = {};
@@ -82,7 +86,7 @@ export async function GET() {
 
     // Get recent dreams
     const { data: recentDreams } = await supabase
-      .from('dreams')
+      .from('public_dreams')
       .select('from_station, to_station, created_at')
       .order('created_at', { ascending: false })
       .limit(3);
@@ -96,13 +100,13 @@ export async function GET() {
 
     // Get pyjama parties count and critical mass detection
     const { count: currentParties } = await supabase
-      .from('pyjama_parties')
+      .from('public_pyjama_parties')
       .select('*', { count: 'exact', head: true });
 
     // Enhanced critical mass detection with better grouping
     const { data: allPartiesData } = await supabase
-      .from('pyjama_parties')
-      .select('station_name, city, country, attendees_count, status, latitude, longitude')
+      .from('public_pyjama_parties')
+      .select('station_name, city, country, attendees_count, status')
       .eq('status', 'planned');
 
     // Group nearby stations (within 50km) to avoid splitting large cities
@@ -169,7 +173,7 @@ export async function GET() {
       }))
     };
 
-    return NextResponse.json(stats);
+    return NextResponse.json(stats, { headers: { ...corsHeaders(request as unknown as Request, ['GET']) } });
 
   } catch (error) {
     console.error('Error fetching stats:', error);
@@ -190,7 +194,7 @@ export async function GET() {
       criticalMassStations: []
     };
 
-    return NextResponse.json(fallbackStats);
+    return NextResponse.json(fallbackStats, { headers: { ...corsHeaders(request as unknown as Request, ['GET']) } });
   }
 }
 

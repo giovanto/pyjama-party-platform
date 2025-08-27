@@ -290,7 +290,7 @@ export class MultilingualHelper {
     }
 
     // Fallback to any available language
-    for (const [lang, langContent] of Object.entries(content)) {
+    for (const [, langContent] of Object.entries(content)) {
       if (langContent[field]) {
         return langContent[field] || '';
       }

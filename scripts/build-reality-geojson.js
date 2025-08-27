@@ -12,6 +12,28 @@ async function main() {
   const outFile = path.join(outDir, 'reality-network.geojson');
 
   try {
+    // If the dataset (a git submodule) isn't available in the build
+    // environment (e.g. Vercel failed to fetch submodules), don't fail the
+    // build. Prefer any pre-committed output, otherwise emit a minimal
+    // placeholder to keep the app functional.
+    if (!fs.existsSync(base)) {
+      if (fs.existsSync(outFile)) {
+        console.log(`⚠︎ Dataset not found at ${base}. Using existing ${outFile}.`);
+        return;
+      }
+
+      console.log(`⚠︎ Dataset not found at ${base}. Emitting minimal placeholder ${outFile}.`);
+      if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+      const placeholder = {
+        type: 'RealityNetwork',
+        lastUpdated: new Date().toISOString(),
+        stations: { type: 'FeatureCollection', features: [] },
+        routes: { type: 'FeatureCollection', features: [] },
+      };
+      await fsp.writeFile(outFile, JSON.stringify(placeholder));
+      return;
+    }
+
     // Ensure output directory exists
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
@@ -110,9 +132,29 @@ async function main() {
     console.log(`✔︎ Wrote ${outFile} with ${stationFeatures.length} stations and ${routeFeatures.length} routes`);
   } catch (e) {
     console.error('✖ Failed to build reality-network.geojson:', e.message);
-    process.exitCode = 1;
+    // Do not fail the build on data issues; keep previous artifact if any.
+    // This is important for platforms that don't fetch git submodules.
+    // If there's no prior artifact, write a placeholder to keep the app alive.
+    const outDir = path.join(process.cwd(), 'public');
+    const outFile = path.join(outDir, 'reality-network.geojson');
+    try {
+      if (fs.existsSync(outFile)) {
+        console.log(`⚠︎ Keeping existing ${outFile} after failure.`);
+      } else {
+        if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+        const placeholder = {
+          type: 'RealityNetwork',
+          lastUpdated: new Date().toISOString(),
+          stations: { type: 'FeatureCollection', features: [] },
+          routes: { type: 'FeatureCollection', features: [] },
+        };
+        await fsp.writeFile(outFile, JSON.stringify(placeholder));
+        console.log(`⚠︎ Wrote placeholder ${outFile}.`);
+      }
+    } catch (writeErr) {
+      console.error('✖ Additionally failed to ensure placeholder artifact:', writeErr.message);
+    }
   }
 }
 
 main();
-

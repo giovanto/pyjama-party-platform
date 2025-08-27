@@ -1,5 +1,7 @@
 # 🚂 Development Rules: Pyjama Party Platform
 
+> Note (2025‑08‑27): TripHop/Howard’s dataset is no longer used; `/api/places` was removed. Current implementation uses user‑submitted dreams (sanitized views). Stations integration via OpenRailwayMap (offline fetch + viewport API) is planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 > **Core Principles for Implementation Sessions**
 
 ## 1. Platform Architecture Rules

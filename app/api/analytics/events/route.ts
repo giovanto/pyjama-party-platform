@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getDBPool } from '@/lib/db/connectionPool';
+import { checkRateLimit, RATE_LIMIT_CONFIGS, getRateLimitHeaders } from '@/middleware/rateLimit';
 
 interface AnalyticsEvent {
   event: string;
@@ -7,34 +8,6 @@ interface AnalyticsEvent {
   timestamp: string;
 }
 
-// Rate limiting storage (in production, use Redis)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
-
-function getRateLimitKey(ip: string): string {
-  return `analytics_${ip}`;
-}
-
-function checkRateLimit(ip: string): boolean {
-  const key = getRateLimitKey(ip);
-  const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-  const maxRequests = 100; // 100 requests per minute
-
-  let record = rateLimitStore.get(key);
-  
-  if (!record || now > record.resetTime) {
-    record = { count: 1, resetTime: now + windowMs };
-    rateLimitStore.set(key, record);
-    return true;
-  }
-  
-  if (record.count >= maxRequests) {
-    return false;
-  }
-  
-  record.count++;
-  return true;
-}
 
 function sanitizeEventData(data: any): AnalyticsEvent | null {
   try {
@@ -81,22 +54,24 @@ export async function POST(request: NextRequest) {
   const startTime = performance.now();
   
   try {
-    // Rate limiting
-    const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
-    if (!checkRateLimit(ip)) {
+    // Rate limiting (shared Redis if configured)
+    const rl = await checkRateLimit(request as unknown as Request, RATE_LIMIT_CONFIGS.analytics);
+    if (!rl.allowed) {
       return NextResponse.json(
         { error: 'Too many requests' },
-        { status: 429 }
+        { status: 429, headers: getRateLimitHeaders(rl) }
       );
     }
 
     const body = await request.json();
     
     // Handle batched events
-    let events = [];
+    let events: AnalyticsEvent[] = [];
     if (body.events && Array.isArray(body.events)) {
       // Batched events
-      events = body.events.map(sanitizeEventData).filter(Boolean);
+      events = (body.events
+        .map(sanitizeEventData)
+        .filter(Boolean) as AnalyticsEvent[]);
     } else {
       // Single event
       const eventData = sanitizeEventData(body);
@@ -116,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Batch insert for better performance
     const { error } = await dbPool.query(
       'analytics_events',
-      (client) => client
+      async (client) => await client
         .from('analytics_events')
         .insert(events.map(eventData => ({
           event_name: eventData.event,
@@ -160,12 +135,4 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Clean up expired rate limit entries periodically
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, record] of rateLimitStore.entries()) {
-    if (now > record.resetTime) {
-      rateLimitStore.delete(key);
-    }
-  }
-}, 5 * 60 * 1000); // Clean up every 5 minutes
+// No in-process interval cleanup needed when using shared Redis

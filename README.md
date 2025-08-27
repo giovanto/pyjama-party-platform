@@ -39,9 +39,9 @@ Map Inspiration → Dream Destination → Train Connection → Movement Info →
 ### **Technology Stack**
 - **Frontend**: Next.js 14 with TypeScript, Tailwind CSS, Framer Motion
 - **Backend**: Supabase (PostgreSQL + Auth + Storage)
-- **Maps**: Mapbox GL JS with TripHop places data (726 European destinations)
-- **Train Data**: OpenRailMaps API integration for station information
-- **Deployment**: Linux server at `pyjama-party.back-on-track.eu`
+- **Maps**: Mapbox GL JS — Dream layer (user-submitted) + Reality network overlay
+- **Stations**: OpenRailwayMap (Overpass) offline fetch → static JSON (planned)
+- **Deployment**: Vercel preview domains (custom domain to be added)
 
 ### **Multilingual Support**
 - **Phase 1**: English, German, French
@@ -59,18 +59,15 @@ pajama-party-platform/
 │   └── docs/DEVELOPMENT_GUIDE.md       # Development workflow
 │
 ├── 🗄️ Database & Data
-│   ├── data/places-setup.sql           # TripHop places schema
-│   ├── data/triphop-places.json        # 726 European destinations
-│   └── setup-database.sql              # Current schema (legacy)
+│   └── setup-database.sql              # Legacy (see supabase/migrations for current)
 │
 ├── 🌐 Application
 │   ├── app/                            # Next.js 14 app router
 │   │   ├── page.tsx                    # Map-centric homepage
-│   │   ├── dream/[placeId]/page.tsx    # Destination showcase
 │   │   └── api/                        # RESTful API endpoints
 │   │
 │   ├── src/components/                 # React components
-│   │   ├── map/PlaceSelectionMap.tsx   # Interactive map
+│   │   ├── map/                        # Map components (Dream/Reality layers)
 │   │   ├── forms/DreamForm.tsx         # Participation forms
 │   │   └── layout/                     # Header, nav, footer
 │   │
@@ -82,7 +79,6 @@ pajama-party-platform/
 │   └── tests/components/               # Component unit tests
 │
 └── 🛠️ Scripts & Config
-    ├── scripts/fetch-places.js         # TripHop data fetcher
     └── [config files]                  # Next.js, Tailwind, etc.
 ```
 
@@ -106,7 +102,8 @@ cp .env.example .env.local
 # Add your API keys (see docs/DEPLOYMENT_GUIDE.md)
 
 # Database setup
-psql -d your_database < data/places-setup.sql
+# Use Supabase migrations under `supabase/migrations`.
+# TripHop and /api/places were removed on 2025‑08‑27.
 
 # Development server
 npm run dev
@@ -127,17 +124,15 @@ SENTRY_DSN=your_sentry_dsn
 
 ## 📊 **Core Features**
 
-### **🗺️ Interactive Destination Map**
-- 726 European places from TripHop data
-- Search functionality with autocomplete
+### **🗺️ Dream & Reality Map**
+- Visualizes user-submitted dream routes (sanitized database view)
+- Reality network overlay (prebuilt GeoJSON; OpenRailwayMap planned)
 - Responsive design with touch optimization
-- Beautiful imagery and descriptions
 
-### **🚂 Train Route Planning**
-- OpenRailMaps integration for station data
-- Route visualization and feasibility
-- Climate impact calculations
-- Sustainable travel advocacy
+### **🚉 Stations (Planned)**
+- Offline Overpass fetch → static JSON per country
+- Viewport-based API for 30k+ stations
+- GL clustering + feature caps for performance
 
 ### **🎉 Event Coordination**
 - Participation level selection (dream only, join party, organize)
@@ -185,17 +180,15 @@ npm run deploy
 
 ### **✅ Completed**
 - [x] System architecture design
-- [x] Database schema with multilingual support
-- [x] TripHop places data integration (726 destinations)
+- [x] Database hardening (sanitized views, RLS, CORS)
+- [x] TripHop removal; text-only station inputs
 - [x] Progressive disclosure user journey design
 - [x] Testing strategy framework
 
 ### **🚧 In Progress**
-- [ ] Core page implementations
-- [ ] API endpoint development  
-- [ ] OpenRailMaps integration
+- [ ] OpenRailwayMap integration (offline fetch, viewport API, clustering)
 - [ ] Multilingual content system
-- [ ] Form validation and error handling
+- [ ] CI lint/TS cleanup
 
 ### **📋 Planned**
 - [ ] Production deployment pipeline

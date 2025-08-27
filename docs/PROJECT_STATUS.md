@@ -1,5 +1,7 @@
 # Project Status - Ready for Implementation
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Items referencing TripHop imports and places APIs are legacy. Current approach: text‑only station inputs; sanitized public views; OpenRailwayMap stations integration (offline fetch + viewport API) planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 ## 🎯 **Current State**
 
 The European Night Train Advocacy Platform has been completely architected and organized for production implementation. The codebase is clean, documented, and ready for development.
@@ -15,9 +17,9 @@ The European Night Train Advocacy Platform has been completely architected and o
 - [x] Production deployment plan for `pyjama-party.back-on-track.eu`
 
 ### **Data Integration**
-- [x] TripHop places data integrated (726 European destinations)
-- [x] Places API endpoint created (`/api/places/search`)
-- [x] Database setup scripts prepared
+- [x] Sanitized public views in Supabase (`public_dreams`, `public_pyjama_parties`)
+- [x] Rate limiting and CORS allowlist configured
+- [ ] OpenRailwayMap stations (offline fetch + viewport API)
 - [x] Data fetching automation (`scripts/fetch-places.js`)
 
 ### **Documentation**

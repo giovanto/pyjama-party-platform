@@ -1,5 +1,7 @@
 # Phase 2 Implementation Summary - Dual-Layer Map System
 
+> Note (2025‑08‑27): TripHop references in this summary are legacy. Current map shows user‑submitted dreams and a reality network overlay, with OpenRailwayMap stations integration planned via offline fetch + viewport API. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 **Completion Date**: January 27, 2025  
 **Branch**: `feature/db-schema-multilingual`  
 **Status**: ✅ **Phase 2 Complete** - Map Dual-Layer System Implemented

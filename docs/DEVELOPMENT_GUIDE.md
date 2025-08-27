@@ -1,5 +1,7 @@
 # Development Guide
 
+> Note (2025‑08‑27): TripHop integration and `/api/places` were removed. Use dreams endpoints and sanitized views; stations integration via OpenRailwayMap (offline fetch + viewport API) is planned. See `docs/CLAUDE_CODEX_COLLABORATION.md`.
+
 ## Local Development Setup
 
 ### Prerequisites

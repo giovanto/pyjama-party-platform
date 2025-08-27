@@ -4,11 +4,11 @@ const nextConfig: NextConfig = {
   // Note: App Router uses route groups for i18n. Remove legacy i18n config to avoid warnings.
   // Build optimizations - Enable strict checking for production quality
   typescript: {
-    // Temporarily ignore TS errors during builds to unblock deployment
+    // Temporarily ignore TS errors in CI to unblock deploy
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Temporarily ignore ESLint during builds to unblock deployment
+    // Temporarily ignore ESLint errors in CI to unblock deploy
     ignoreDuringBuilds: true,
   },
   

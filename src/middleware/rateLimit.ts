@@ -14,15 +14,19 @@ interface RateLimitConfig {
   message?: string;  // Custom error message
 }
 
-// In-memory store for rate limiting (use Redis in production)
+// In-memory fallback store for rate limiting
 const store = new Map<string, RateLimitEntry>();
+import { isRedisConfigured, redisIncr, redisPTTL, redisPExpire } from '@/lib/redis';
 
 // Default configurations for different endpoint types
 export const RATE_LIMIT_CONFIGS = {
   search: { windowMs: 60000, max: 100 }, // 100 requests per minute
   details: { windowMs: 60000, max: 200 }, // 200 requests per minute
-  dreams: { windowMs: 300000, max: 10 }, // 10 dreams per 5 minutes
+  // Limit dream submissions to avoid flooding advocacy data
+  dreams: { windowMs: 1800000, max: 3 }, // 3 dreams per 30 minutes
   parties: { windowMs: 600000, max: 5 }, // 5 party submissions per 10 minutes
+  analytics: { windowMs: 60000, max: 100 }, // analytics events per minute
+  reads: { windowMs: 60000, max: 300 }, // read endpoints per minute
   default: { windowMs: 60000, max: 50 } // 50 requests per minute default
 } as const;
 
@@ -56,7 +60,7 @@ function cleanupExpiredEntries(): void {
 /**
  * Check rate limit for a client
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   request: Request,
   config: RateLimitConfig = RATE_LIMIT_CONFIGS.default
 ): {
@@ -64,41 +68,53 @@ export function checkRateLimit(
   remaining: number;
   resetTime: number;
   total: number;
+  backend: 'redis' | 'memory';
 } {
   const clientId = getClientId(request);
   const now = Date.now();
-  const windowStart = now;
   const windowEnd = now + config.windowMs;
   
-  // Clean up expired entries periodically
-  if (Math.random() < 0.01) { // 1% chance
-    cleanupExpiredEntries();
+  // Prefer Redis-backed rate limit if configured
+  if (isRedisConfigured()) {
+    const key = `ratelimit:${config.windowMs}:${clientId}`;
+    try {
+      const count = await redisIncr(key);
+      let pttl = await redisPTTL(key);
+      if (pttl < 0) {
+        await redisPExpire(key, config.windowMs);
+        pttl = config.windowMs;
+      }
+      const allowed = count <= config.max;
+      return {
+        allowed,
+        remaining: Math.max(0, config.max - count),
+        resetTime: now + pttl,
+        total: config.max,
+        backend: 'redis',
+      };
+    } catch (e) {
+      // Fallback to in-memory if Redis fails
+      console.warn('Redis rate limit failed, falling back to memory:', e);
+    }
   }
-  
-  // Get or create entry for this client
+
+  // In-memory fallback
+  if (Math.random() < 0.01) cleanupExpiredEntries();
   let entry = store.get(clientId);
-  
   if (!entry || now > entry.resetTime) {
-    // Create new entry or reset expired entry
-    entry = {
-      count: 0,
-      resetTime: windowEnd
-    };
+    entry = { count: 0, resetTime: windowEnd };
   }
-  
-  // Check if limit exceeded
   const allowed = entry.count < config.max;
-  
   if (allowed) {
     entry.count++;
     store.set(clientId, entry);
   }
-  
   return {
     allowed,
     remaining: Math.max(0, config.max - entry.count),
     resetTime: entry.resetTime,
-    total: config.max
+    total: config.max,
+    backend: 'memory',
   };
 }
 
@@ -128,11 +144,11 @@ export function withRateLimit<T extends any[]>(
     const request = args[0] as Request;
     
     // Check rate limit
-    const rateLimitResult = checkRateLimit(request, config);
+    const rateLimitResult = await checkRateLimit(request, config);
     
     if (!rateLimitResult.allowed) {
       // Rate limit exceeded
-      const headers = getRateLimitHeaders(rateLimitResult);
+      const headers = { ...getRateLimitHeaders(rateLimitResult), 'X-RateLimit-Backend': rateLimitResult.backend };
       
       return new Response(
         JSON.stringify({
@@ -155,7 +171,7 @@ export function withRateLimit<T extends any[]>(
       const response = await handler(...args);
       
       // Add rate limit headers to successful responses
-      const headers = getRateLimitHeaders(rateLimitResult);
+      const headers = { ...getRateLimitHeaders(rateLimitResult), 'X-RateLimit-Backend': rateLimitResult.backend } as Record<string, string>;
       for (const [key, value] of Object.entries(headers)) {
         response.headers.set(key, value);
       }

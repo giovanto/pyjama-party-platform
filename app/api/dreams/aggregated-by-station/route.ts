@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 export async function GET(request: NextRequest) {
   try {
+    const supabase = await createClient();
     const { searchParams } = new URL(request.url);
     const minDreams = parseInt(searchParams.get('minDreams') || '2');
 
@@ -26,7 +23,7 @@ export async function GET(request: NextRequest) {
       console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to fetch station data' },
-        { status: 500 }
+        { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
       );
     }
 
@@ -76,13 +73,13 @@ export async function GET(request: NextRequest) {
           generatedAt: new Date().toISOString()
         }
       }
-    });
+    }, { headers: { ...corsHeaders(request, ['GET']) } });
 
   } catch (error) {
     console.error('API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: { ...corsHeaders(request, ['GET']) } }
     );
   }
 }
