@@ -23,7 +23,7 @@ export interface MapLayerManagerProps {
 /**
  * MapLayerManager - Handles dual-layer system for Dream ↔ Reality switching
  * 
- * Dream Layer: Shows inspirational destinations from TripHop data + user dreams
+ * Dream Layer: Shows user dream routes and destinations
  * Reality Layer: Shows current rail infrastructure + existing night train routes
  */
 export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerProps) {
@@ -473,59 +473,52 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
     }
   }, [map, layers]);
 
-  // Load TripHop places data for dream layer
+  // Load user dream data for dream layer
   const loadDreamPlacesData = useCallback(async () => {
     if (!map) return;
 
     try {
-      const response = await fetch('/api/places/search?limit=1000');
-      if (!response.ok) throw new Error('Failed to fetch places');
+      const response = await fetch('/api/dreams');
+      if (!response.ok) throw new Error('Failed to fetch dreams');
       
       const data = await response.json();
       
-      const placesFeatures = data.places.map((place: {
-        place_id: string;
-        name: string;
-        country: string;
-        longitude: number;
-        latitude: number;
-        place_type: string;
-        priority_score: number;
-        tags: string[];
-      }) => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [place.longitude, place.latitude]
-        },
-        properties: {
-          place_id: place.place_id,
-          name: place.name,
-          country: place.country,
-          place_type: place.place_type,
-          priority_score: place.priority_score,
-          tags: place.tags
-        }
-      }));
+      // Convert user dreams to GeoJSON features for visualization
+      const dreamFeatures = data.dreams
+        .filter((dream: any) => dream.origin_lat && dream.origin_lng && dream.destination_lat && dream.destination_lng)
+        .map((dream: any) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: [
+              [dream.origin_lng, dream.origin_lat],
+              [dream.destination_lng, dream.destination_lat]
+            ]
+          },
+          properties: {
+            dream_id: dream.id,
+            origin_station: dream.origin_station,
+            destination_city: dream.destination_city,
+            dreamer_name: dream.dreamer_name,
+            created_at: dream.created_at
+          }
+        }));
 
-      // Update dream places source
-      const dreamPlacesSource = map.getSource('dream-places') as mapboxgl.GeoJSONSource;
-      if (dreamPlacesSource) {
-        dreamPlacesSource.setData({
+      // Update dream layer source
+      const dreamSource = map.getSource('dream-routes') as mapboxgl.GeoJSONSource;
+      if (dreamSource) {
+        dreamSource.setData({
           type: 'FeatureCollection',
-          features: placesFeatures
+          features: dreamFeatures
         });
       } else {
-        // Add new source with clustering
-        map.addSource('dream-places', {
+        // Add new source for dream routes
+        map.addSource('dream-routes', {
           type: 'geojson',
           data: {
             type: 'FeatureCollection',
-            features: placesFeatures
-          },
-          cluster: true,
-          clusterMaxZoom: 14,
-          clusterRadius: 60
+            features: dreamFeatures
+          }
         });
 
         // Add dream layer configurations
@@ -540,7 +533,15 @@ export default function MapLayerManager({ map, onLayerChange }: MapLayerManagerP
       }
 
     } catch (error) {
-      console.error('Error loading dream places data:', error);
+      console.error('Error loading user dreams data:', error);
+      // Fallback to empty FeatureCollection
+      const dreamSource = map.getSource('dream-routes') as mapboxgl.GeoJSONSource;
+      if (dreamSource) {
+        dreamSource.setData({
+          type: 'FeatureCollection',
+          features: []
+        });
+      }
     }
   }, [map, layers]);
 

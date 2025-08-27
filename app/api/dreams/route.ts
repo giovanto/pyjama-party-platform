@@ -142,14 +142,13 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createClient();
 
-    // Optimize query - only select needed fields for map display
+    // Optimize query - only select non-PII fields for map display
     const { data: dreams, error, count } = await supabase
-      .from('dreams')
+      .from('public_dreams')
       .select(`
         id, 
         from_station, 
         to_station, 
-        dreamer_name, 
         from_latitude, 
         from_longitude, 
         to_latitude, 

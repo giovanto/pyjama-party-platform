@@ -1,20 +1,17 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
 // Cache control headers for public dashboard data
-const CACHE_HEADERS = {
-  'Cache-Control': 'public, max-age=300, stale-while-revalidate=600', // 5 min cache, 10 min stale
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET',
-};
+const CACHE_CONTROL = 'public, max-age=300, stale-while-revalidate=600';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const supabase = await createClient();
     
     // Get total dreams count
     const { count: totalDreams, error: dreamsError } = await supabase
-      .from('dreams')
+      .from('public_dreams')
       .select('*', { count: 'exact', head: true });
 
     if (dreamsError) {
@@ -26,23 +23,12 @@ export async function GET() {
     }
 
     // Get participation signups count
-    const { count: participationCount, error: participationError } = await supabase
-      .from('dreams')
-      .select('*', { count: 'exact', head: true })
-      .not('email', 'is', null);
-
-    if (participationError) {
-      console.error('Error fetching participation count:', participationError);
-      return NextResponse.json(
-        { error: 'Failed to fetch participation count' },
-        { status: 500 }
-      );
-    }
+    const participationCount = 0;
 
     // Get today's dreams count
     const today = new Date().toISOString().split('T')[0];
     const { count: todayDreams, error: todayError } = await supabase
-      .from('dreams')
+      .from('public_dreams')
       .select('*', { count: 'exact', head: true })
       .gte('created_at', `${today}T00:00:00Z`)
       .lt('created_at', `${today}T23:59:59Z`);
@@ -64,9 +50,8 @@ export async function GET() {
       }
     };
 
-    return NextResponse.json(responseData, {
-      headers: CACHE_HEADERS
-    });
+    const headers = { ...corsHeaders(request, ['GET']), 'Cache-Control': CACHE_CONTROL };
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Dreams count API error:', error);
     return NextResponse.json(

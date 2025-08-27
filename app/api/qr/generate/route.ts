@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create the interview URL with parameters
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+    // Create the interview URL with parameters (prefer current request origin)
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || new URL(request.url).origin || 'http://localhost:3000';
     const interviewUrl = new URL('/interview', baseUrl);
     
     // Add query parameters
@@ -117,20 +117,20 @@ export async function GET(request: NextRequest) {
       language: language as 'en' | 'de' | 'fr',
       volunteerId,
       eventDate
-    })
-  } as NextRequest;
+    }),
+    url: request.url
+  } as unknown as NextRequest;
 
   return POST(mockRequest);
 }
 
 // Options for CORS
 export async function OPTIONS(request: NextRequest) {
-  return new NextResponse(null, {
-    status: 200,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-    },
-  });
+  const headers = {
+    'Access-Control-Allow-Origin': request.headers.get('origin') || 'https://pyjama-party.back-on-track.eu',
+    'Vary': 'Origin',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+  };
+  return new NextResponse(null, { status: 200, headers });
 }

@@ -14,8 +14,9 @@ interface RateLimitConfig {
   message?: string;  // Custom error message
 }
 
-// In-memory store for rate limiting (use Redis in production)
+// In-memory fallback store for rate limiting
 const store = new Map<string, RateLimitEntry>();
+import { isRedisConfigured, redisIncr, redisPTTL, redisPExpire } from '@/lib/redis';
 
 // Default configurations for different endpoint types
 export const RATE_LIMIT_CONFIGS = {
@@ -56,7 +57,7 @@ function cleanupExpiredEntries(): void {
 /**
  * Check rate limit for a client
  */
-export function checkRateLimit(
+export async function checkRateLimit(
   request: Request,
   config: RateLimitConfig = RATE_LIMIT_CONFIGS.default
 ): {
@@ -70,35 +71,45 @@ export function checkRateLimit(
   const windowStart = now;
   const windowEnd = now + config.windowMs;
   
-  // Clean up expired entries periodically
-  if (Math.random() < 0.01) { // 1% chance
-    cleanupExpiredEntries();
+  // Prefer Redis-backed rate limit if configured
+  if (isRedisConfigured()) {
+    const key = `ratelimit:${config.windowMs}:${clientId}`;
+    try {
+      const count = await redisIncr(key);
+      let pttl = await redisPTTL(key);
+      if (pttl < 0) {
+        await redisPExpire(key, config.windowMs);
+        pttl = config.windowMs;
+      }
+      const allowed = count <= config.max;
+      return {
+        allowed,
+        remaining: Math.max(0, config.max - count),
+        resetTime: now + pttl,
+        total: config.max,
+      };
+    } catch (e) {
+      // Fallback to in-memory if Redis fails
+      console.warn('Redis rate limit failed, falling back to memory:', e);
+    }
   }
-  
-  // Get or create entry for this client
+
+  // In-memory fallback
+  if (Math.random() < 0.01) cleanupExpiredEntries();
   let entry = store.get(clientId);
-  
   if (!entry || now > entry.resetTime) {
-    // Create new entry or reset expired entry
-    entry = {
-      count: 0,
-      resetTime: windowEnd
-    };
+    entry = { count: 0, resetTime: windowEnd };
   }
-  
-  // Check if limit exceeded
   const allowed = entry.count < config.max;
-  
   if (allowed) {
     entry.count++;
     store.set(clientId, entry);
   }
-  
   return {
     allowed,
     remaining: Math.max(0, config.max - entry.count),
     resetTime: entry.resetTime,
-    total: config.max
+    total: config.max,
   };
 }
 
@@ -128,7 +139,7 @@ export function withRateLimit<T extends any[]>(
     const request = args[0] as Request;
     
     // Check rate limit
-    const rateLimitResult = checkRateLimit(request, config);
+    const rateLimitResult = await checkRateLimit(request, config);
     
     if (!rateLimitResult.allowed) {
       // Rate limit exceeded

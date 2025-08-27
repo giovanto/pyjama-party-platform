@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -15,7 +15,7 @@ type StopRecord = {
 let cached: { data: any; ts: number } | null = null;
 const TTL_MS = 1000 * 60 * 10; // 10 minutes
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   try {
     if (cached && Date.now() - cached.ts < TTL_MS) {
       return NextResponse.json(cached.data, { headers: { 'Cache-Control': 's-maxage=600, stale-while-revalidate=1200' } });
@@ -132,4 +132,3 @@ export async function GET(_req: NextRequest) {
     return NextResponse.json({ error: 'Failed to load reality data' }, { status: 500 });
   }
 }
-
