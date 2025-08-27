@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
-const CACHE_HEADERS = {
-  'Cache-Control': 'public, max-age=600, stale-while-revalidate=1200', // 10 min cache, 20 min stale
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET',
-};
+const CACHE_CONTROL = 'public, max-age=600, stale-while-revalidate=1200';
 
 // Critical mass thresholds for stations
 const CRITICAL_MASS_THRESHOLDS = {
@@ -20,8 +17,8 @@ export async function GET() {
     
     // Get all dreams with station and email data
     const { data: dreams, error } = await supabase
-      .from('dreams')
-      .select('from_station, to_station, email, participation_level, created_at')
+      .from('public_dreams')
+      .select('from_station, to_station, created_at')
       .not('from_station', 'is', null);
 
     if (error) {
@@ -46,8 +43,8 @@ export async function GET() {
 
     dreams?.forEach((dream) => {
       const stations = [dream.from_station, dream.to_station].filter(Boolean);
-      const isParticipant = !!dream.email;
-      const isOrganizer = dream.participation_level === 'organize_party';
+      const isParticipant = false;
+      const isOrganizer = false;
       const dreamDate = dream.created_at;
       const isRecent = new Date(dreamDate) > oneWeekAgo;
 
@@ -137,9 +134,8 @@ export async function GET() {
       lastUpdated: new Date().toISOString(),
     };
 
-    return NextResponse.json(responseData, {
-      headers: CACHE_HEADERS
-    });
+    const headers = { ...corsHeaders(new Request('')), 'Cache-Control': CACHE_CONTROL };
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Stations ready API error:', error);
     return NextResponse.json(

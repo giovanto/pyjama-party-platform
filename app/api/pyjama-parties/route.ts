@@ -129,8 +129,8 @@ export async function GET(request: NextRequest) {
     const upcoming = searchParams.get('upcoming') === 'true';
 
     let query = supabase
-      .from('pyjama_parties')
-      .select('*', { count: 'exact' });
+      .from('public_pyjama_parties')
+      .select('id, station_name, city, country, party_date, description, attendees_count, status, created_at', { count: 'exact' });
 
     // Filter by station if provided
     if (station) {
@@ -161,8 +161,6 @@ export async function GET(request: NextRequest) {
       stationName: party.station_name,
       city: party.city,
       country: party.country,
-      organizerName: party.organizer_name,
-      organizerEmail: party.organizer_email,
       partyDate: party.party_date,
       description: party.description,
       attendeesCount: party.attendees_count,

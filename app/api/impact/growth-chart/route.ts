@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { corsHeaders } from '@/lib/cors';
 
-const CACHE_HEADERS = {
-  'Cache-Control': 'public, max-age=900, stale-while-revalidate=1800', // 15 min cache, 30 min stale
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET',
-};
+const CACHE_CONTROL = 'public, max-age=900, stale-while-revalidate=1800';
 
 export async function GET() {
   try {
@@ -16,8 +13,8 @@ export async function GET() {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
     const { data: dreams, error } = await supabase
-      .from('dreams')
-      .select('created_at, email')
+      .from('public_dreams')
+      .select('created_at')
       .gte('created_at', thirtyDaysAgo.toISOString())
       .order('created_at', { ascending: true });
 
@@ -46,9 +43,7 @@ export async function GET() {
       const existing = dailyData.get(date);
       if (existing) {
         existing.dreams++;
-        if (dream.email) {
-          existing.participants++;
-        }
+        // participants omitted in public view
       }
     });
 
@@ -83,7 +78,7 @@ export async function GET() {
 
     // Calculate growth metrics
     const totalDreams = cumulativeDreams;
-    const totalParticipants = cumulativeParticipants;
+    const totalParticipants = 0;
     const last7Days = chartData.slice(-7).reduce((sum, day) => sum + day.dreams, 0);
     const previous7Days = chartData.slice(-14, -7).reduce((sum, day) => sum + day.dreams, 0);
     const weeklyGrowthRate = previous7Days > 0 ? ((last7Days - previous7Days) / previous7Days * 100) : 0;
@@ -111,9 +106,8 @@ export async function GET() {
       lastUpdated: new Date().toISOString(),
     };
 
-    return NextResponse.json(responseData, {
-      headers: CACHE_HEADERS
-    });
+    const headers = { ...corsHeaders(new Request('')), 'Cache-Control': CACHE_CONTROL };
+    return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Growth chart API error:', error);
     return NextResponse.json(

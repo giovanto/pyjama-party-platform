@@ -196,7 +196,7 @@ async function findRouteConnections(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { placeId: string } }
+  { params }: any
 ) {
   try {
     const supabase = await createClient();
@@ -315,7 +315,7 @@ export async function GET(
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { placeId: string } }
+  { params }: any
 ) {
   try {
     const supabase = await createClient();

@@ -16,9 +16,10 @@ const STATIC_ASSETS = [
 
 // API endpoints to cache with strategy
 const API_ENDPOINTS = [
-  '/api/dreams',
+  // Only cache non-PII endpoints
   '/api/stats',
   '/api/impact',
+  '/api/reality',
 ];
 
 self.addEventListener('install', (event) => {
@@ -65,8 +66,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Handle API requests with network-first strategy
-  if (url.pathname.startsWith('/api/')) {
+  // Handle only whitelisted API requests with network-first strategy
+  if (API_ENDPOINTS.some((p) => url.pathname.startsWith(p))) {
     event.respondWith(networkFirstStrategy(request));
     return;
   }
