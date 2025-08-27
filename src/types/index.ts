@@ -72,3 +72,73 @@ export interface ApiError {
   error: string;
   status?: number;
 }
+
+// Interview Mode Types (Phase 2C)
+export interface InterviewDreamData {
+  dreamerName: string;
+  originStation: string;
+  destinationCity: string;
+  email?: string;
+  why?: string;
+  collectedBy?: string; // Volunteer identifier
+  sessionId?: string; // For tracking volunteer sessions
+  language: 'en' | 'de' | 'fr';
+  source: 'interview';
+}
+
+export interface VolunteerSession {
+  id: string;
+  volunteerId: string;
+  stationCode: string;
+  language: 'en' | 'de' | 'fr';
+  startTime: string;
+  endTime?: string;
+  submissionsCount: number;
+  lastActivity: string;
+}
+
+export interface OfflineQueueItem {
+  id: string;
+  data: InterviewDreamData;
+  timestamp: string;
+  retryCount: number;
+  status: 'pending' | 'syncing' | 'failed' | 'completed';
+}
+
+export interface QRCodeRequest {
+  stationCode: string;
+  stationName: string;
+  language: 'en' | 'de' | 'fr';
+  volunteerId?: string;
+  eventDate?: string;
+}
+
+export interface QRCodeResponse {
+  id: string;
+  qrCodeDataUrl: string;
+  url: string;
+  stationCode: string;
+  expiresAt: string;
+}
+
+export interface BulkQRRequest {
+  stations: Array<{
+    code: string;
+    name: string;
+    country: string;
+  }>;
+  language: 'en' | 'de' | 'fr';
+  eventDate: string;
+  coordinatorEmail: string;
+}
+
+export interface VolunteerStats {
+  sessionId: string;
+  stationCode: string;
+  submissionsToday: number;
+  submissionsTotal: number;
+  avgTimePerSubmission: number;
+  lastSubmissionTime?: string;
+  offlineQueueSize: number;
+  targetSubmissions?: number;
+}

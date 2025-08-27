@@ -32,7 +32,7 @@ Root Directory: . (leave empty or use . for root)
 Add these in Vercel project settings:
 
 ```bash
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoiZ2lvdmFudG8iLCJhIjoiY21jdnA4c3p0MDE1cDJqcXJjejE3Ymg3YiJ9.OKkbmDiZosRlNgJP-H86XA
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.eyJ1IjoiZ2lvdmFudG8iLCJhIjoiY21jdnA4c3p0MDE1cDJqcXJjejE3Ymg3YiJ9.OKkbmDiZosRlNgJP-H86XA
 
 NEXT_PUBLIC_SUPABASE_URL=https://ouzeawngrhmbyrhkypfu.supabase.co
 

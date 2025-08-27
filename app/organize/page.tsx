@@ -1,5 +1,6 @@
 import { PyjamaPartyForm } from '@/components/forms';
 import { FloatingNav } from '@/components/layout';
+import { UniversalMessage, PhaseNavigation } from '@/components/journey';
 
 export default function OrganizePage() {
   return (
@@ -9,9 +10,21 @@ export default function OrganizePage() {
         {/* Hero Section */}
         <section className="hero py-16 sm:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-bot-blue to-bot-green" id="hero">
           <div className="hero__container max-w-5xl mx-auto text-center">
-            <h1 className="hero__title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 sm:mb-8 leading-tight">
-              🎪 Organize a Pyjama Party
-            </h1>
+            <UniversalMessage 
+              variant="hero"
+              customMessage="Ready to lead your station?"
+              showIcon={true}
+              animated={true}
+              className="text-white mb-6"
+            />
+            
+            <div className="mb-8">
+              <PhaseNavigation 
+                currentPhase="organize"
+                variant="arrows"
+                className="max-w-2xl mx-auto"
+              />
+            </div>
             <p className="hero__subtitle text-lg sm:text-xl md:text-2xl text-gray-100 mb-8 sm:mb-10 max-w-4xl mx-auto px-2 leading-relaxed font-medium">
               Lead the climate movement at your train station! Organize a pyjama party for September 26th and 
               connect with thousands of activists across Europe advocating for sustainable night trains.

@@ -161,7 +161,7 @@ export default function StatsPanel({ className = '' }: StatsPanelProps) {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <motion.div 
-                className="bg-purple-500 h-2 rounded-full"
+                className="bg-bot-green h-2 rounded-full"
                 initial={{ width: 0 }}
                 animate={{ width: `${getProgressPercentage(stats.campaignGoals.currentParties, stats.campaignGoals.partiesTarget)}%` }}
                 transition={{ duration: 1, delay: 0.6 }}

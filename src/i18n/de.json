@@ -1,0 +1,23 @@
+{
+  "home": {
+    "hero": {
+      "title": "Wo möchtest du morgen aufwachen?",
+      "subtitle": "Teile deine Traum-Nachtzugstrecke. Hilf uns, die Nachfrage nach nachhaltigem Verkehr sichtbar zu machen."
+    },
+    "map": {
+      "title": "Traumrouten in Europa",
+      "subtitle": "Erkunde die Nachfrage der Community nach Nachtzugverbindungen. Jede Route steht für Engagement."
+    },
+    "communityTeaser": {
+      "title": "Unsere wachsende Aktionsgruppe",
+      "subtitle": "Schließe dich Klima-Aktivist:innen in Europa an und baue gemeinsam Momentum für Nachtzüge auf."
+    }
+  },
+  "dreamForm": {
+    "labels": {
+      "name": "Wie heißt du? (Vorname reicht)",
+      "from": "Welcher Bahnhof repräsentiert dich?",
+      "to": "Wo möchtest du aufwachen?"
+    }
+  }
+}

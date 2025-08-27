@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useAnalytics } from '@/components/layout/AnalyticsProvider';
+import { t } from '@/i18n';
 
 interface StationSuggestion {
   id: string;
@@ -26,9 +28,12 @@ interface DreamFormData {
 interface DreamFormProps {
   onSubmit?: (data: DreamFormData) => Promise<void>;
   className?: string;
+  mode?: 'dream_only' | 'full';
 }
 
-export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) {
+export default function DreamForm({ onSubmit, className = '', mode = 'full' }: DreamFormProps) {
+  const { trackEvent } = useAnalytics();
+  
   const [formData, setFormData] = useState<DreamFormData>({
     dreamerName: '',
     from: '',
@@ -49,6 +54,19 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showTierTwo, setShowTierTwo] = useState(false);
+
+  useEffect(() => {
+    if (mode === 'dream_only') {
+      setFormData(prev => ({
+        ...prev,
+        tier: 'dreamer',
+        pyjamaPartyInterest: false,
+        participationLevel: 'dream_only',
+        email: ''
+      }));
+      setShowTierTwo(false);
+    }
+  }, [mode]);
 
   const searchStations = async (query: string): Promise<StationSuggestion[]> => {
     if (query.length < 2) return [];
@@ -82,6 +100,14 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     const stationName = `${station.name}, ${station.city}, ${station.country}`;
     setFormData(prev => ({ ...prev, [field]: stationName }));
     
+    // Track station selection
+    trackEvent('station_selected', {
+      field,
+      station: station.name,
+      city: station.city,
+      country: station.country
+    });
+    
     if (field === 'from') {
       setShowFromSuggestions(false);
       setFromSuggestions([]);
@@ -99,7 +125,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
     if (!formData.dreamerName.trim()) newErrors.dreamerName = 'Name is required';
     
     // Email validation based on tier
-    if (formData.tier === 'participant' || formData.pyjamaPartyInterest) {
+    if (mode !== 'dream_only' && (formData.tier === 'participant' || formData.pyjamaPartyInterest)) {
       if (!formData.email.trim()) {
         newErrors.email = 'Email is required for pyjama party participation';
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -118,9 +144,24 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      // Track validation errors
+      trackEvent('form_validation_error', {
+        errors: Object.keys(errors).join(','),
+        participationLevel: formData.participationLevel
+      });
+      return;
+    }
 
     setIsSubmitting(true);
+    
+    // Track dream submission attempt
+    trackEvent('dream_submission_started', {
+      participationLevel: formData.participationLevel,
+      hasEmail: !!formData.email,
+      tier: formData.tier
+    });
+    
     try {
       if (onSubmit) {
         await onSubmit(formData);
@@ -135,6 +176,17 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           throw new Error('Failed to submit dream');
         }
       }
+
+      // Track successful submission
+      trackEvent('dream_submission_completed', {
+        participationLevel: formData.participationLevel,
+        hasEmail: !!formData.email,
+        tier: formData.tier,
+        fromCountry: formData.from.split(',').pop()?.trim() || 'unknown',
+        toCountry: formData.to.split(',').pop()?.trim() || 'unknown',
+        isOrganizer: formData.participationLevel === 'organize_party',
+        isParticipant: formData.participationLevel !== 'dream_only'
+      });
 
       // Show success message
       setShowSuccess(true);
@@ -162,6 +214,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
       setTimeout(() => setShowSuccess(false), 8000);
     } catch (error) {
       console.error('Error submitting dream:', error);
+      
+      // Track submission error
+      trackEvent('dream_submission_error', {
+        participationLevel: formData.participationLevel,
+        error: error instanceof Error ? error.message : 'unknown'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -174,11 +232,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
+      aria-label="Share your dream night train route"
+      role="main"
     >
       <div className="text-center mb-8">
-        <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-bot-green to-bot-blue bg-clip-text text-transparent mb-4 leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-bot-green to-bot-blue bg-clip-text text-transparent mb-4 leading-tight">
           Where would you like to wake up tomorrow?
-        </h2>
+        </h1>
         <p className="text-gray-600 text-lg font-medium">
           Share your dream night train route and help build the movement for sustainable European travel
         </p>
@@ -192,7 +252,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.1, duration: 0.5 }}
         >
           <label htmlFor="dreamerName" className="block text-sm font-semibold text-gray-800 mb-2">
-            What&apos;s your name? (First name is enough)
+            {t('dreamForm.labels.name')}
           </label>
           <input
             type="text"
@@ -204,9 +264,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
             }`}
             placeholder="Maria, João, Emma, Lars..."
             required
+            aria-required="true"
+            aria-describedby="dreamerName-help dreamerName-error"
+            aria-invalid={errors.dreamerName ? 'true' : 'false'}
           />
-          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
-          {errors.dreamerName && <p className="text-red-500 text-sm mt-1">{errors.dreamerName}</p>}
+          <p id="dreamerName-help" className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          {errors.dreamerName && <p id="dreamerName-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.dreamerName}</p>}
         </motion.div>
 
         <motion.div 
@@ -216,7 +279,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.15, duration: 0.5 }}
         >
           <label htmlFor="from" className="block text-sm font-semibold text-gray-800 mb-2">
-            Which station represents you?
+            {t('dreamForm.labels.from')}
           </label>
           <input
             type="text"
@@ -229,18 +292,35 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.from ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Amsterdam Central, Milano Centrale, Berlin Hbf..."
+            required
+            aria-required="true"
+            aria-describedby="from-help from-error"
+            aria-invalid={errors.from ? 'true' : 'false'}
+            aria-expanded={showFromSuggestions}
+            aria-haspopup="listbox"
+            aria-controls={showFromSuggestions ? 'from-suggestions' : undefined}
+            role="combobox"
+            aria-autocomplete="list"
           />
-          <p className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
-          {errors.from && <p className="text-red-500 text-sm mt-1">{errors.from}</p>}
+          <p id="from-help" className="text-xs text-gray-600 mt-1">We&apos;ll use this to connect you with fellow travelers from your area</p>
+          {errors.from && <p id="from-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.from}</p>}
           
           {showFromSuggestions && fromSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
-              {fromSuggestions.map((station) => (
+            <div 
+              id="from-suggestions"
+              className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Station suggestions"
+            >
+              {fromSuggestions.map((station, index) => (
                 <button
                   key={station.id}
                   type="button"
                   onClick={() => selectStation('from', station)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0 focus:bg-gray-100 focus:outline-none"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={index === 0 ? 0 : -1}
                 >
                   <div className="font-medium">{station.name}</div>
                   <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
@@ -257,7 +337,7 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <label htmlFor="to" className="block text-sm font-semibold text-gray-800 mb-2">
-            Where would you like to wake up?
+            {t('dreamForm.labels.to')}
           </label>
           <input
             type="text"
@@ -270,17 +350,34 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.to ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Barcelona beach sunrise, Prague castle view, Stockholm archipelago..."
+            required
+            aria-required="true"
+            aria-describedby="to-error"
+            aria-invalid={errors.to ? 'true' : 'false'}
+            aria-expanded={showToSuggestions}
+            aria-haspopup="listbox"
+            aria-controls={showToSuggestions ? 'to-suggestions' : undefined}
+            role="combobox"
+            aria-autocomplete="list"
           />
-          {errors.to && <p className="text-red-500 text-sm mt-1">{errors.to}</p>}
+          {errors.to && <p id="to-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.to}</p>}
           
           {showToSuggestions && toSuggestions.length > 0 && (
-            <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto">
-              {toSuggestions.map((station) => (
+            <div 
+              id="to-suggestions"
+              className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 shadow-lg max-h-60 overflow-y-auto"
+              role="listbox"
+              aria-label="Destination station suggestions"
+            >
+              {toSuggestions.map((station, index) => (
                 <button
                   key={station.id}
                   type="button"
                   onClick={() => selectStation('to', station)}
-                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0"
+                  className="w-full text-left px-3 py-2 hover:bg-gray-100 border-b border-gray-100 last:border-b-0 focus:bg-gray-100 focus:outline-none"
+                  role="option"
+                  aria-selected="false"
+                  tabIndex={index === 0 ? 0 : -1}
                 >
                   <div className="font-medium">{station.name}</div>
                   <div className="text-sm text-gray-600">{station.city}, {station.country}</div>
@@ -291,19 +388,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
         </motion.div>
 
         {/* Two-Tier Engagement System */}
+        {mode !== 'dream_only' && (
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.25, duration: 0.5 }}
         >
-          <div className="bg-gradient-to-br from-bot-green/8 to-bot-blue/8 rounded-3xl p-8 border-2 border-bot-green/30 shadow-xl backdrop-blur-sm">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">🌙 Join the Great European Pajama Party</h3>
+          <div className="bg-gradient-to-br from-bot-green/8 to-bot-blue/8 rounded-3xl p-8 border-2 border-bot-green/30 shadow-xl backdrop-blur-sm" role="group" aria-labelledby="participation-heading">
+            <h2 id="participation-heading" className="text-xl font-bold text-gray-900 mb-4">🌙 Join the Great European Pajama Party</h2>
             <p className="text-gray-700 mb-6 text-base leading-relaxed">
               September 26th, 2025: Thousands of climate advocates will gather in their pajamas at train stations across Europe, 
               creating the most epic demonstration for night trains ever seen. How do you want to participate?
             </p>
             
-            <div className="space-y-4">
+            <div className="space-y-4" role="radiogroup" aria-labelledby="participation-heading" aria-required="true">
               <label className="flex items-start space-x-4 p-5 rounded-2xl border-2 border-white/50 bg-white/40 hover:border-bot-green/50 hover:bg-white/60 cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl backdrop-blur-sm">
                 <input
                   type="radio"
@@ -311,19 +409,27 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="dream_only"
                   checked={formData.participationLevel === 'dream_only'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: false,
                       tier: 'dreamer'
                     }));
                     setShowTierTwo(false);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="dream-supporter-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🗺️ Dream Route Supporter</span>
-                  <p className="text-gray-600 text-sm mt-1">Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.</p>
+                  <p id="dream-supporter-desc" className="text-gray-600 text-sm mt-1">Add your dream route to our map and join the movement for night trains. No email required - just your vision for better European travel.</p>
                 </div>
               </label>
               
@@ -334,19 +440,27 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="join_party"
                   checked={formData.participationLevel === 'join_party'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: true,
                       tier: 'participant'
                     }));
                     setShowTierTwo(true);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="join-party-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🌙 Pajama Party Participant</span>
-                  <p className="text-gray-600 text-sm mt-1">Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.</p>
+                  <p id="join-party-desc" className="text-gray-600 text-sm mt-1">Join the fun at your local station! Get access to our Discord community, party coordination kit, and connect with fellow climate advocates.</p>
                 </div>
               </label>
               
@@ -357,35 +471,45 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                   value="organize_party"
                   checked={formData.participationLevel === 'organize_party'}
                   onChange={(e) => {
+                    const newLevel = e.target.value as 'dream_only' | 'organize_party' | 'join_party';
                     setFormData(prev => ({ 
                       ...prev, 
-                      participationLevel: e.target.value as 'dream_only' | 'organize_party' | 'join_party',
+                      participationLevel: newLevel,
                       pyjamaPartyInterest: true,
                       tier: 'participant'
                     }));
                     setShowTierTwo(true);
+                    
+                    // Track participation level selection
+                    trackEvent('participation_level_selected', {
+                      level: newLevel,
+                      previousLevel: formData.participationLevel
+                    });
                   }}
-                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green"
+                  className="mt-1 w-4 h-4 text-bot-green border-2 border-bot-green focus:ring-bot-green focus:ring-4"
+                  aria-describedby="organize-party-desc"
                 />
                 <div className="flex-1">
                   <span className="font-semibold text-gray-900 text-lg block">🎪 Station Host & Organizer</span>
-                  <p className="text-gray-600 text-sm mt-1">Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.</p>
+                  <p id="organize-party-desc" className="text-gray-600 text-sm mt-1">Lead the movement at your station! Receive organizer training, exclusive resources, and become a local champion for the night train revolution.</p>
                 </div>
               </label>
             </div>
           </div>
         </motion.div>
+        )}
 
         {/* Tier 2: Email Collection */}
-        {showTierTwo && (
+        {mode !== 'dream_only' && showTierTwo && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
+            aria-live="polite"
           >
-            <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20">
-              <h4 className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h4>
+            <div className="bg-gradient-to-r from-bot-blue/10 to-bot-green/10 rounded-xl p-6 border-2 border-bot-blue/20" role="region" aria-labelledby="email-section-heading">
+              <h3 id="email-section-heading" className="text-lg font-bold text-bot-dark mb-3">✨ Activate Your Participation</h3>
               <p className="text-sm text-gray-700 mb-4">
                 Join the Back-on-Track Action Group coordination! We&apos;ll send you:
               </p>
@@ -409,10 +533,13 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
                 }`}
                 placeholder="your.email@example.com"
                 required={formData.pyjamaPartyInterest}
+                aria-required={formData.pyjamaPartyInterest ? 'true' : 'false'}
+                aria-describedby="email-error email-privacy"
+                aria-invalid={errors.email ? 'true' : 'false'}
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+              {errors.email && <p id="email-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.email}</p>}
               
-              <p className="text-xs text-bot-blue mt-2">
+              <p id="email-privacy" className="text-xs text-bot-blue mt-2">
                 Privacy-first: Used only for September 26th coordination, never spam
               </p>
             </div>
@@ -436,8 +563,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
               errors.why ? 'border-red-400 ring-4 ring-red-400/20' : 'border-bot-green/40 hover:border-bot-green'
             }`}
             placeholder="Tell us about your connection to this route, why it&apos;s important for sustainability, or how it would impact your travel..."
+            required
+            aria-required="true"
+            aria-describedby="why-error"
+            aria-invalid={errors.why ? 'true' : 'false'}
           />
-          {errors.why && <p className="text-red-500 text-sm mt-1">{errors.why}</p>}
+          {errors.why && <p id="why-error" className="text-red-500 text-sm mt-1" role="alert" aria-live="polite">{errors.why}</p>}
         </motion.div>
 
         <motion.button
@@ -449,17 +580,20 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
+          aria-describedby={isSubmitting ? 'submit-status' : undefined}
         >
           {isSubmitting ? (
             <>
-              <span className="inline-block animate-spin mr-2">🌍</span>
-              {formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
+              <span className="inline-block animate-spin mr-2" aria-hidden="true">🌍</span>
+              <span id="submit-status" aria-live="polite">
+                {mode === 'dream_only' || formData.participationLevel === 'dream_only' ? 'Sharing Your Dream...' : 'Joining the Movement...'}
+              </span>
             </>
           ) : (
             <>
-              {formData.participationLevel === 'dream_only' && '🗺️ Add my dream to the map'}
-              {formData.participationLevel === 'join_party' && '🎉 Join pyjama party + add dream'}
-              {formData.participationLevel === 'organize_party' && '🎪 Organize pyjama party + add dream'}
+              {(mode === 'dream_only' || formData.participationLevel === 'dream_only') && '🗺️ Add my dream to the map'}
+              {mode !== 'dream_only' && formData.participationLevel === 'join_party' && '🎉 Join pyjama party + add dream'}
+              {mode !== 'dream_only' && formData.participationLevel === 'organize_party' && '🎪 Organize pyjama party + add dream'}
             </>
           )}
         </motion.button>
@@ -476,9 +610,12 @@ export default function DreamForm({ onSubmit, className = '' }: DreamFormProps) 
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           className="mt-6 bg-bot-green text-white p-4 rounded-lg shadow-lg"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
         >
           <div className="text-center">
-            <h3 className="font-bold text-lg mb-2">Your dream is on the map! 🌟</h3>
+            <h3 className="font-bold text-lg mb-2">Your dream is on the map! <span aria-hidden="true">🌟</span></h3>
             <p className="text-sm">{successMessage}</p>
             <div className="mt-3">
               <p className="text-xs opacity-90">

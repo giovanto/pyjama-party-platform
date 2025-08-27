@@ -1,0 +1,23 @@
+{
+  "home": {
+    "hero": {
+      "title": "Where Would You Like to Wake Up Tomorrow?",
+      "subtitle": "Share your dream night train route. Help us demonstrate demand for sustainable transport across Europe."
+    },
+    "map": {
+      "title": "Dream Routes Across Europe",
+      "subtitle": "Explore community demand for night train connections. Each route represents advocacy for sustainable transport."
+    },
+    "communityTeaser": {
+      "title": "Our Growing Action Group",
+      "subtitle": "Join climate activists across Europe coordinating station events and building momentum for night trains."
+    }
+  },
+  "dreamForm": {
+    "labels": {
+      "name": "What’s your name? (First name is enough)",
+      "from": "Which station represents you?",
+      "to": "Where would you like to wake up?"
+    }
+  }
+}

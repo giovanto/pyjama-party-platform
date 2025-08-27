@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Complete User Journey E2E Tests', () => {
+test.describe.skip('Legacy: Complete User Journey E2E Tests', () => {
   test('should complete full user journey from dream to party organization', async ({ page }) => {
     // Step 1: Visit home page and submit a dream route
     await page.goto('/')

@@ -1,0 +1,29 @@
+
+Running 24 tests using 6 workers
+
+[1A[2K[1/24] [chromium] › tests/e2e/dream-qr.spec.ts:4:7 › Legacy: Dream QR flow › generates QR and opens interview
+[1A[2K[2/24] [chromium] › tests/e2e/dream-submission.spec.ts:9:7 › Legacy: Dream Route Submission Workflow › should complete full dream submission workflow
+[1A[2K[3/24] [chromium] › tests/e2e/dream-submission.spec.ts:31:7 › Legacy: Dream Route Submission Workflow › should show validation errors for empty dream form
+[1A[2K[4/24] [chromium] › tests/e2e/dream-submission.spec.ts:45:7 › Legacy: Dream Route Submission Workflow › should validate email format in dream form
+[1A[2K[5/24] [chromium] › tests/e2e/dream-submission.spec.ts:66:7 › Legacy: Dream Route Submission Workflow › should show loading state during dream submission
+[1A[2K[6/24] [chromium] › tests/e2e/dream-submission.spec.ts:84:7 › Legacy: Dream Route Submission Workflow › should handle station autocomplete
+[1A[2K[7/24] [chromium] › tests/e2e/dream-submission.spec.ts:101:7 › Legacy: Dream Route Submission Workflow › should preserve form data on validation errors
+[1A[2K[8/24] [chromium] › tests/e2e/dream-submission.spec.ts:128:7 › Legacy: Dream Route Submission Workflow › should update map after successful dream submission
+[1A[2K[9/24] [chromium] › tests/e2e/submission-workflow.spec.ts:9:7 › Legacy: Pyjama Party Submission Workflow › should complete full submission workflow
+[1A[2K[10/24] [chromium] › tests/e2e/submission-workflow.spec.ts:31:7 › Legacy: Pyjama Party Submission Workflow › should show validation errors for empty form
+[1A[2K[11/24] [chromium] › tests/e2e/submission-workflow.spec.ts:43:7 › Legacy: Pyjama Party Submission Workflow › should validate email format
+[1A[2K[12/24] [chromium] › tests/e2e/submission-workflow.spec.ts:59:7 › Legacy: Pyjama Party Submission Workflow › should show loading state during submission
+[1A[2K[13/24] [chromium] › tests/e2e/submission-workflow.spec.ts:76:7 › Legacy: Pyjama Party Submission Workflow › should navigate back to home and see updated map
+[1A[2K[14/24] [chromium] › tests/e2e/submission-workflow.spec.ts:100:7 › Legacy: Pyjama Party Submission Workflow › should handle form autocomplete for stations
+[1A[2K[15/24] [chromium] › tests/e2e/submission-workflow.spec.ts:119:7 › Legacy: Pyjama Party Submission Workflow › should preserve form data on validation errors
+[1A[2K[16/24] [chromium] › tests/e2e/user-journey.spec.ts:4:7 › Legacy: Complete User Journey E2E Tests › should complete full user journey from dream to party organization
+[1A[2K[17/24] [chromium] › tests/e2e/user-journey.spec.ts:70:7 › Legacy: Complete User Journey E2E Tests › should handle complete pyjama party participation flow
+[1A[2K[18/24] [chromium] › tests/e2e/user-journey.spec.ts:101:7 › Legacy: Complete User Journey E2E Tests › should handle organizer participation flow
+[1A[2K[19/24] [chromium] › tests/e2e/user-journey.spec.ts:127:7 › Legacy: Complete User Journey E2E Tests › should validate form interactions and error states
+[1A[2K[20/24] [chromium] › tests/e2e/user-journey.spec.ts:163:7 › Legacy: Complete User Journey E2E Tests › should test responsive design and mobile experience
+[1A[2K[21/24] [chromium] › tests/e2e/user-journey.spec.ts:200:7 › Legacy: Complete User Journey E2E Tests › should test accessibility features
+[1A[2K[22/24] [chromium] › tests/e2e/user-journey.spec.ts:244:7 › Legacy: Complete User Journey E2E Tests › should test page performance and loading states
+[1A[2K[23/24] [chromium] › tests/e2e/dashboard-basic.spec.ts:4:7 › Dashboard renders key sections › shows counter and charts containers
+[1A[2K[24/24] [chromium] › tests/e2e/community-basic.spec.ts:4:7 › Community basic flow › loads simplified community page with map or fallback
+[1A[2K  22 skipped
+  2 passed (2.5s)

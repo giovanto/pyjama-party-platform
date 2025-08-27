@@ -115,7 +115,7 @@ npm run dev
 ### **Environment Variables**
 ```bash
 # Required
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.your_token
 DATABASE_URL=postgresql://user:pass@localhost:5432/pyjama_party
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key

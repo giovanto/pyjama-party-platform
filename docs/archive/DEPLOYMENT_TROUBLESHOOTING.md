@@ -101,7 +101,7 @@ Before deploying to Vercel, ensure:
 Required environment variables in Vercel dashboard:
 
 ```
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_token
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 NEXT_PUBLIC_APP_URL=https://your-vercel-app.vercel.app

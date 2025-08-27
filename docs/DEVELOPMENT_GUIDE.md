@@ -33,7 +33,7 @@ Create `.env.local` with:
 
 ```bash
 # Required for development
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.your_mapbox_token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.your_mapbox_token
 DATABASE_URL=postgresql://user:pass@localhost:5432/pyjama_party_dev
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key

@@ -25,7 +25,7 @@
 # Create .env.local file with:
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_MAPBOX_TOKEN=your_mapbox_access_token
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=your_mapbox_access_token
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
 # Get these from:

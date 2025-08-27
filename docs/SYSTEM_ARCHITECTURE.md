@@ -572,7 +572,7 @@ jobs:
 # Production environment variables
 NODE_ENV=production
 DATABASE_URL=postgresql://user:pass@localhost:5432/pyjama_party
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.xxx
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=pk.xxx
 OPENRAILMAPS_API_KEY=xxx
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_ANON_KEY=xxx

@@ -1,0 +1,23 @@
+{
+  "home": {
+    "hero": {
+      "title": "Où aimeriez-vous vous réveiller demain ?",
+      "subtitle": "Partagez votre trajet de nuit rêvé. Aidons à démontrer la demande pour un transport durable en Europe."
+    },
+    "map": {
+      "title": "Itinéraires rêvés à travers l’Europe",
+      "subtitle": "Explorez la demande de la communauté pour des trains de nuit. Chaque trajet représente une action."
+    },
+    "communityTeaser": {
+      "title": "Notre groupe d’action grandissant",
+      "subtitle": "Rejoignez des militants pour le climat partout en Europe pour coordonner des événements en gare."
+    }
+  },
+  "dreamForm": {
+    "labels": {
+      "name": "Comment vous appelez-vous ? (Le prénom suffit)",
+      "from": "Quelle gare vous représente ?",
+      "to": "Où aimeriez-vous vous réveiller ?"
+    }
+  }
+}

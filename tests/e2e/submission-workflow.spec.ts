@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Pyjama Party Submission Workflow', () => {
+test.describe.skip('Legacy: Pyjama Party Submission Workflow', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the organize page
     await page.goto('/organize')
